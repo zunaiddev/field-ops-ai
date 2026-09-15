@@ -1,5 +1,5 @@
 import {Module} from '@nestjs/common';
-import {HealthModule} from './modules/health/health.module.js';
+import {HealthModule} from './health/health.module.js';
 import {DatabaseModule} from "./database/database.module.js";
 import {OrganisationModule} from "./modules/orgnization/organisation.module.js";
 import {OrganisationMemberModule} from "./modules/orgnization-member/organisation-member.module.js";
@@ -15,7 +15,6 @@ import configuration from "./config/configuration.js";
       OrganisationMemberModule,
       DatabaseModule,
       HealthModule,
-
   ],
 })
 export class AppModule {}
