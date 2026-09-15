@@ -1,18 +1,24 @@
 import {Module} from '@nestjs/common';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {DatabaseLifecycleService} from './database-lifecycle.service.js';
+import {ConfigService} from "@nestjs/config";
 
 @Module({
-    imports: [TypeOrmModule.forRoot({
-        type: 'postgres',
-        url: process.env.DATABASE_URL,
-        host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT as string, 10),
-        username: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
-        autoLoadEntities: true,
-        synchronize: true,
+    imports: [TypeOrmModule.forRootAsync({
+        inject: [ConfigService],
+
+        useFactory: (configService: ConfigService) => ({
+            type: 'postgres',
+
+            host: configService.get<string>('database.host'),
+            port: configService.get<number>('database.port'),
+            username: configService.get<string>('database.username'),
+            password: configService.get<string>('database.password'),
+            database: configService.get<string>('database.name'),
+
+            autoLoadEntities: true,
+            synchronize: false,
+        }),
     })],
     providers: [DatabaseLifecycleService],
     exports: [TypeOrmModule]
