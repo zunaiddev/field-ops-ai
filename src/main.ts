@@ -3,7 +3,7 @@ import {AppModule} from './app.module.js';
 import {ValidationPipe} from "@nestjs/common";
 import helmet from "helmet";
 import {HttpExceptionFilter} from "./common/filters/http-exception.filter.js";
-import {LogDetailsInterceptor} from "./common/interceptors/log-details/log-details.interceptor.js";
+import {LogDetailsInterceptor} from "./common/interceptors/log-details.interceptor.js";
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3000;

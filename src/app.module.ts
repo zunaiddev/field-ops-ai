@@ -6,6 +6,10 @@ import {OrganisationMemberModule} from "./modules/orgnization-member/organisatio
 import {UsersModule} from "./modules/users/users.module.js";
 import {ConfigModule} from "@nestjs/config";
 import configuration from "./config/configuration.js";
+import {GuardModule} from "./common/guards/guard.module.js";
+import {APP_GUARD} from "@nestjs/core";
+import {AuthGuard} from "./common/guards/auth-guard.guard.js";
+import {JwtModule} from "./modules/jwt/jwt.module.js";
 
 @Module({
   imports: [
@@ -15,6 +19,8 @@ import configuration from "./config/configuration.js";
       OrganisationMemberModule,
       DatabaseModule,
       HealthModule,
-  ],
+      GuardModule,
+      JwtModule
+  ], providers: [{provide: APP_GUARD, useClass: AuthGuard}],
 })
 export class AppModule {}
