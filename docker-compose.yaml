@@ -1,2 +1,11 @@
 services:
-  $END$
+  postgres:
+    image: postgres:17
+    container_name: fieldops-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: fieldops
+    ports:
+      - "5432:5432"
