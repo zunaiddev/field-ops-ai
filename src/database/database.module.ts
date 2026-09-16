@@ -17,10 +17,11 @@ import {ConfigService} from "@nestjs/config";
             database: configService.getOrThrow<string>('database.name'),
 
             autoLoadEntities: true,
-            synchronize: false,
+            synchronize: true,
         }),
     })],
     providers: [DatabaseLifecycleService],
     exports: [TypeOrmModule]
 })
-export class DatabaseModule {}
+export class DatabaseModule {
+}
