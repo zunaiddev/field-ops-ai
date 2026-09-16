@@ -4,6 +4,10 @@ export default () => ({
     jwt: {
         secret: process.env.JWT_SECRET,
     },
+  redis: {
+      host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT as string),
+  },
 
     database: {
         host: process.env.DB_HOST,

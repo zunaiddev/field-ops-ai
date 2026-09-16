@@ -1,25 +1,21 @@
-import {Controller, Get} from '@nestjs/common';
-import {Public} from "../common/decorators/public.decorator.js";
-import {JwtService} from "../modules/jwt/jwt.service.js";
+import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Public } from "../common/decorators/public.decorator.js";
+import { CacheService } from "../modules/cache/cache.service.js";
 
 @Public()
-@Controller('health')
+@Controller("health")
 export class HealthController {
+  constructor(private readonly cacheService: CacheService) {}
 
-    constructor(private readonly jwtService: JwtService) {}
+  @Get()
+  checkHealth() {
+    return { message: "UP", timestamp: new Date().toISOString() };
+  }
 
-    @Get()
-    checkHealth(){
-        return {message: "UP", timestamp: new Date().toISOString()};
-    }
+  @Post("test")
+  async getTest(@Body() body: any) {
+    const { key, value } = body;
 
-    @Get('test')
-    getTest(){
-        return {
-            "auth": this.jwtService.generateAuthToken("1"),
-            "refresh": this.jwtService.generateRefreshToken("1"),
-            "resetPassword": this.jwtService.generateResetPasswordToken("john@gmail.com"),
-            "verifyEmail": this.jwtService.generateEmailVerifyToken("john@gmail.com")
-        }
-    }
+    return await this.cacheService.set(key, value);
+  }
 }

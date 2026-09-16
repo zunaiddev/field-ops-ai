@@ -1,5 +1,7 @@
 export interface JwtPayload {
-
+    sub: string;
+    type: JwtType;
+    details?: object;
 }
 
 export enum JwtType {
