@@ -3,10 +3,10 @@ import type {Cache} from "cache-manager";
 import {CACHE_MANAGER} from "@nestjs/cache-manager";
 
 export const TTL = {
-    ofSeconds: (seconds: number): number => seconds,
-    ofMinutes: (minutes: number): number => minutes * 60,
-    ofHours: (hours: number): number => hours * 60 * 60,
-    ofDays: (days: number): number => days * 24 * 60 * 60,
+    ofSeconds: (seconds: number): number => seconds * 1000,
+    ofMinutes: (minutes: number): number => minutes * 60 * 1000,
+    ofHours: (hours: number): number => hours * 60 * 60 * 1000,
+    ofDays: (days: number): number => days * 24 * 60 * 60 * 1000,
 };
 
 @Injectable()

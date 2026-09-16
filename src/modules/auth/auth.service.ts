@@ -15,8 +15,10 @@ import {AuthRes} from "./dto/auth-res.dto.js";
 import {LoginReq} from "./dto/login-req.dto.js";
 import {User} from "../users/entity/user.entity.js";
 import {EmailRes} from "./dto/email-res.dto.js";
-import {CacheKeys} from "../../utils/CacheKeys.js";
+import {CacheKeys} from "../../utils/cache.keys.utils.js";
 import * as argon2 from "argon2";
+import {JwtPayload, JwtType} from "../jwt/jwt.types.js";
+import {RefreshTokenRes} from "./dto/refresh-token-res.dto.js";
 
 @Injectable()
 export class AuthService {
@@ -34,7 +36,7 @@ export class AuthService {
             throw new ConflictException(`user with ${email} already exists`);
         }
 
-        await this.cacheService.set<SignupReq>(CacheKeys.signup(email),
+        await this.cacheService.set<SignupReq>(CacheKeys.unverifiedUser(email),
             {...req, password: await argon2.hash(req.password)},
             TTL.ofHours(5),
         );
@@ -51,7 +53,7 @@ export class AuthService {
 
         if (!user) {
             const message: string = (await this.cacheService.get<SignupReq>(
-                `signup:${req.email}`,
+                CacheKeys.unverifiedUser(req.email),
             ))
                 ? "Please Verify your email address"
                 : "User is not registered";
@@ -81,7 +83,10 @@ export class AuthService {
             throw new UnauthorizedException("Invalid password");
         }
 
-        const accessToken: string = this.jwtService.generateAuthToken(user.id);
+        await this.cacheService.remove(CacheKeys.failedPasswordAttempts(user.email));
+        await this.userService.update({...user, lastLoginAt: new Date()});
+
+        const accessToken: string = this.jwtService.generateAccessToken(user.id);
         const refreshToken: string = this.jwtService.generateRefreshToken(user.id);
 
         return new AuthRes(user, accessToken, refreshToken);
@@ -95,10 +100,9 @@ export class AuthService {
             );
         }
 
-        if (!(await this.cacheService.exists(CacheKeys.resendVerifyEmail(email)))) {
+        if (!(await this.cacheService.exists(CacheKeys.unverifiedUser(email)))) {
             throw new BadRequestException(`user with ${email} does not exists`);
         }
-
 
         await this.cacheService.set(CacheKeys.resendVerifyEmail(email),
             Date.now().toString(), TTL.ofMinutes(3));
@@ -107,5 +111,16 @@ export class AuthService {
         console.log("Resend verify email: ", token);
 
         return new EmailRes(email);
+    }
+
+    async refreshToken(token: string): Promise<RefreshTokenRes> {
+        if (!token) {
+            throw new UnauthorizedException("refresh-token cookie is missing");
+        }
+
+        const payload: JwtPayload = this.jwtService.validateToken(token, JwtType.REFRESH);
+        const accessToken: string = this.jwtService.generateAccessToken(payload.sub);
+
+        return new RefreshTokenRes(payload.sub, accessToken);
     }
 }

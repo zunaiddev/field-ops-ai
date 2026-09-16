@@ -12,6 +12,7 @@ import {AuthGuard} from "./common/guards/auth-guard.guard.js";
 import {JwtModule} from "./modules/jwt/jwt.module.js";
 import {RedisCacheModule} from "./modules/cache/redis-cache-module.js";
 import {AuthModule} from "./modules/auth/auth.module.js";
+import { VerifyModule } from './modules/verify/verify.module.js';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import {AuthModule} from "./modules/auth/auth.module.js";
         HealthModule,
         GuardModule,
         JwtModule,
+        VerifyModule,
     ],
     providers: [{provide: APP_GUARD, useClass: AuthGuard}],
 })
