@@ -44,7 +44,7 @@ export class AuthController {
     }
 
     @Get('logout')
-    logout(@Res() res: Response): void {
+    logout(@Res({passthrough: true}) res: Response): void {
         removeRefreshCookie(res);
     }
 }
