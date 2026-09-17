@@ -1,4 +1,4 @@
-export interface JwtPayload {
+export interface CustomJwtPayload {
     sub: string;
     type: JwtType;
     jti: string;

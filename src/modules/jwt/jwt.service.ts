@@ -1,7 +1,7 @@
 import {Injectable, UnauthorizedException} from "@nestjs/common";
 import jwt from "jsonwebtoken";
 import {ConfigService} from "@nestjs/config";
-import {JwtPayload, JwtType} from "./jwt.types.js";
+import {CustomJwtPayload, JwtType} from "./jwt.types.js";
 import {randomUUID} from "node:crypto";
 
 @Injectable()
@@ -41,7 +41,7 @@ export class JwtService {
         return this.generateToken(id, JwtType.VERIFY_EMAIL, "15m");
     }
 
-    validateToken(token: string, type: JwtType): JwtPayload {
+    validateToken(token: string, type: JwtType): CustomJwtPayload {
         let payload: string | jwt.JwtPayload;
         try {
             payload = jwt.verify(token, this.SECRET);

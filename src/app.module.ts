@@ -2,7 +2,7 @@ import {Module} from "@nestjs/common";
 import {HealthModule} from "./health/health.module.js";
 import {DatabaseModule} from "./database/database.module.js";
 import {OrganisationModule} from "./modules/orgnization/organisation.module.js";
-import {OrganisationMemberModule} from "./modules/orgnization-member/organisation-member.module.js";
+import {OrganizationMemberModule} from "./modules/orgnization-member/organization-member.module.js";
 import {UsersModule} from "./modules/users/users.module.js";
 import {ConfigModule} from "@nestjs/config";
 import configuration from "./config/configuration.js";
@@ -12,7 +12,7 @@ import {AuthGuard} from "./common/guards/auth-guard.guard.js";
 import {JwtModule} from "./modules/jwt/jwt.module.js";
 import {RedisCacheModule} from "./modules/cache/redis-cache-module.js";
 import {AuthModule} from "./modules/auth/auth.module.js";
-import { VerifyModule } from './modules/verify/verify.module.js';
+import {VerifyModule} from './modules/verify/verify.module.js';
 
 @Module({
     imports: [
@@ -21,7 +21,7 @@ import { VerifyModule } from './modules/verify/verify.module.js';
         RedisCacheModule,
         UsersModule,
         OrganisationModule,
-        OrganisationMemberModule,
+        OrganizationMemberModule,
         DatabaseModule,
         HealthModule,
         GuardModule,

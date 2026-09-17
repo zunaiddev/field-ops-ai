@@ -4,10 +4,10 @@ import {AuthService} from "./auth.service.js";
 import {JwtModule} from "../jwt/jwt.module.js";
 import {UsersModule} from "../users/users.module.js";
 import {OrganisationModule} from "../orgnization/organisation.module.js";
-import {OrganisationMemberModule} from "../orgnization-member/organisation-member.module.js";
+import {OrganizationMemberModule} from "../orgnization-member/organization-member.module.js";
 
 @Module({
-    imports: [JwtModule, UsersModule, OrganisationModule, OrganisationMemberModule],
+    imports: [JwtModule, UsersModule, OrganisationModule, OrganizationMemberModule],
     controllers: [AuthController],
     providers: [AuthService],
 })

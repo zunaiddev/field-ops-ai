@@ -17,13 +17,13 @@ import {User} from "../users/entity/user.entity.js";
 import {EmailRes} from "./dto/email-res.dto.js";
 import {CacheKeys} from "../../utils/cache.keys.utils.js";
 import * as argon2 from "argon2";
-import {JwtPayload, JwtType} from "../jwt/jwt.types.js";
+import {CustomJwtPayload, JwtType} from "../jwt/jwt.types.js";
 import {RefreshTokenRes} from "./dto/refresh-token-res.dto.js";
 import orgNameToSlug from "../../utils/orgNameToSlug.js";
 import {OrganizationService} from "../orgnization/organization.service.js";
 import {Organization} from "../orgnization/entity/organization.entity.js";
 import {OrganizationMemberService} from "../orgnization-member/organization-member.service.js";
-import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity/orgnization-member.entity.js";
+import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
 import {DataSource, EntityManager} from "typeorm";
 import {InjectDataSource} from "@nestjs/typeorm";
 
@@ -162,7 +162,7 @@ export class AuthService {
             throw new UnauthorizedException("refresh-token cookie is missing");
         }
 
-        const payload: JwtPayload = this.jwtService.validateToken(token, JwtType.REFRESH);
+        const payload: CustomJwtPayload = this.jwtService.validateToken(token, JwtType.REFRESH);
         const accessToken: string = this.jwtService.generateAccessToken(payload.sub);
 
         return new RefreshTokenRes(payload.sub, accessToken);

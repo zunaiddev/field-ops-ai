@@ -35,7 +35,16 @@ export class UsersService {
         return await this.userRepo.findOneByOrFail({email});
     }
 
-    async findById(id: string): Promise<User> {
+    async findByIdOrFail(id: string): Promise<User> {
         return await this.userRepo.findOneByOrFail({id});
+    }
+
+    async findById(id: string): Promise<User | null> {
+        return await this.userRepo.findOneBy({id});
+    }
+
+    async delete(id: string, entityManager?: EntityManager): Promise<void> {
+        const repo = entityManager ? entityManager.getRepository(User) : this.userRepo;
+        await repo.delete({id});
     }
 }

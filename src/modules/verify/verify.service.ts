@@ -1,6 +1,6 @@
 import {BadRequestException, Injectable} from '@nestjs/common';
 import {JwtService} from "../jwt/jwt.service.js";
-import {JwtPayload, JwtType} from "../jwt/jwt.types.js";
+import {CustomJwtPayload, JwtType} from "../jwt/jwt.types.js";
 import {Public} from "../../common/decorators/public.decorator.js";
 import {CacheService, TTL} from "../cache/cache.service.js";
 import {CacheKeys} from "../../utils/cache.keys.utils.js";
@@ -18,7 +18,7 @@ export class VerifyService {
     }
 
     async verifyEmail(token: string): Promise<AuthRes> {
-        const payload: JwtPayload = this.jwtService.validateToken(token, JwtType.VERIFY_EMAIL);
+        const payload: CustomJwtPayload = this.jwtService.validateToken(token, JwtType.VERIFY_EMAIL);
 
         if (await this.cacheService.exists(CacheKeys.usedToken(payload.jti))) {
             throw new BadRequestException("user has already been verified");
