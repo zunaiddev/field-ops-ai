@@ -1,7 +1,36 @@
-import {IsEmail, IsNotEmpty, IsString, IsStrongPassword, MaxLength, MinLength,} from "class-validator";
-import {CleanEmail, CleanName,} from "../../../common/decorators/transform.decorators.js";
+import {
+    IsEmail,
+    IsNotEmpty,
+    IsOptional,
+    IsString,
+    IsStrongPassword,
+    Length,
+    Matches,
+    MaxLength,
+    MinLength
+} from "class-validator";
+import {CleanEmail, CleanName} from "../../../common/decorators/transform.decorators.js";
 
 export class SignupReqDto {
+    @IsNotEmpty({message: "First name is required"})
+    @IsString({message: "First name must be a string"})
+    @MaxLength(150, {message: "First name cannot exceed 150 characters"})
+    orgName: string;
+
+    @IsOptional()
+    @IsString()
+    @Matches(/^[a-z0-9-]+$/, {message: 'slug must be lowercase, alphanumeric, hyphens only'})
+    orgSlug?: string;
+
+    @IsOptional()
+    @IsString()
+    timezone?: string;
+
+    @IsOptional()
+    @IsString()
+    @Length(3, 3)
+    currency?: string;
+
     @CleanName()
     @IsNotEmpty({message: "First name is required"})
     @IsString({message: "First name must be a string"})
@@ -40,4 +69,4 @@ export class SignupReqDto {
     password: string;
 }
 
-export {SignupReqDto as SignupReq};
+export {SignupReqDto as RegistrationReq};

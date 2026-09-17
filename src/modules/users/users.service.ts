@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {Repository} from "typeorm";
+import {EntityManager, Repository} from "typeorm";
 import {User} from "./entity/user.entity.js";
 import {InjectRepository} from "@nestjs/typeorm";
 
@@ -14,8 +14,9 @@ export class UsersService {
         return this.userRepo.existsBy({email});
     }
 
-    async save(user: User): Promise<User> {
-        return await this.userRepo.save(user);
+    async save(user: Partial<User>, entityManager?: EntityManager): Promise<User> {
+        const repo = entityManager ? entityManager.getRepository(User) : this.userRepo;
+        return await repo.save(user);
     }
 
     async update(user: User): Promise<User> {

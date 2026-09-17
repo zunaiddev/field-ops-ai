@@ -6,8 +6,8 @@ import {
     Injectable,
     UnauthorizedException,
 } from "@nestjs/common";
-import {SignupReq} from "./dto/signup-req.dto.js";
-import {SignupRes} from "./dto/signup-res.dto.js";
+import {RegistrationReq} from "./dto/signup-req.dto.js";
+import {RegistrationRes} from "./dto/signup-res.dto.js";
 import {UsersService} from "../users/users.service.js";
 import {CacheService, TTL} from "../cache/cache.service.js";
 import {JwtService} from "../jwt/jwt.service.js";
@@ -19,46 +19,84 @@ import {CacheKeys} from "../../utils/cache.keys.utils.js";
 import * as argon2 from "argon2";
 import {JwtPayload, JwtType} from "../jwt/jwt.types.js";
 import {RefreshTokenRes} from "./dto/refresh-token-res.dto.js";
+import orgNameToSlug from "../../utils/orgNameToSlug.js";
+import {OrganizationService} from "../orgnization/organization.service.js";
+import {Organization} from "../orgnization/entity/organization.entity.js";
+import {OrganizationMemberService} from "../orgnization-member/organization-member.service.js";
+import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity/orgnization-member.entity.js";
+import {DataSource, EntityManager} from "typeorm";
+import {InjectDataSource} from "@nestjs/typeorm";
 
 @Injectable()
 export class AuthService {
     constructor(
+        @InjectDataSource() private readonly dataSource: DataSource,
         private readonly userService: UsersService,
         private readonly jwtService: JwtService,
+        private readonly organizationService: OrganizationService,
+        private readonly organizationMemberService: OrganizationMemberService,
         private readonly cacheService: CacheService,
     ) {
     }
 
-    async signup(req: SignupReq): Promise<SignupRes> {
+    async register(req: RegistrationReq): Promise<RegistrationRes> {
         const {email} = req;
 
-        if (await this.userService.existsByEmail(email)) {
+        const existingUser: User | null = await this.userService.findByEmail(email);
+
+        if (existingUser) {
             throw new ConflictException(`user with ${email} already exists`);
         }
 
-        await this.cacheService.set<SignupReq>(CacheKeys.unverifiedUser(email),
-            {...req, password: await argon2.hash(req.password)},
-            TTL.ofHours(5),
-        );
+        const slug: string = req.orgSlug ?? orgNameToSlug(req.orgName);
 
-        const emailToken: string = this.jwtService.generateEmailVerifyToken(email);
+        if (await this.organizationService.existsBySlug(slug)) {
+            throw new ConflictException({message: `organization with ${slug} already exists`, slug});
+        }
+
+        const {
+            user,
+            organization,
+        } = await this.dataSource.transaction(async (manager: EntityManager) => {
+            const user: User = await this.userService.save({
+                firstName: req.firstName,
+                lastName: req.lastName,
+                email: req.email,
+                passwordHash: await argon2.hash(req.password)
+            }, manager);
+
+            const organization: Organization = await this.organizationService.save({
+                name: req.orgName,
+                slug: slug,
+                currency: req.currency,
+                timezone: req.timezone,
+            }, manager);
+
+            const organizationMember: OrganizationMember = await this.organizationMemberService.save({
+                organization: organization,
+                user: user,
+                role: OrganizationRole.ORG_OWNER
+            }, manager);
+
+            return {user, organization, organizationMember};
+        });
+
+        const emailToken: string = this.jwtService.generateEmailVerifyToken(user.id, email);
 
         console.log("Email Verification token: ", emailToken);
 
-        return new SignupRes(req);
+        return new RegistrationRes({...user, organizationId: organization.id});
     }
 
     async login(req: LoginReq): Promise<AuthRes> {
         const user: User | null = await this.userService.findByEmail(req.email);
 
         if (!user) {
-            const message: string = (await this.cacheService.get<SignupReq>(
-                CacheKeys.unverifiedUser(req.email),
-            ))
-                ? "Please Verify your email address"
-                : "User is not registered";
+            throw new BadRequestException(`could not find user with ${req.email}`);
+        }
 
-            throw new BadRequestException(message);
+        if (!user.emailVerifiedAt) {
+            throw new UnauthorizedException("Please verify your email first to login");
         }
 
         if (await this.cacheService.get<boolean>(CacheKeys.accountLocked(user.email))) {

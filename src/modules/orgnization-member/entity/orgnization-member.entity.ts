@@ -2,6 +2,17 @@ import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typ
 import {User} from "../../users/entity/user.entity.js";
 import {Organization} from "../../orgnization/entity/organization.entity.js";
 
+export enum OrganizationRole {
+    ORG_OWNER = 'ORG_OWNER',
+    ORG_ADMIN = 'ORG_ADMIN',
+    DISPATCHER = 'DISPATCHER',
+    MANAGER = 'MANAGER',
+    TECHNICIAN = 'TECHNICIAN',
+    INVENTORY_MANAGER = 'INVENTORY_MANAGER',
+    FINANCE = 'FINANCE',
+    VIEWER = 'VIEWER',
+}
+
 @Entity('organization_members')
 export class OrganizationMember {
     @PrimaryGeneratedColumn('uuid')
@@ -13,8 +24,11 @@ export class OrganizationMember {
     @Column({ name: 'user_id' })
     userId: string;
 
-    @Column({ default: 'VIEWER' })
-    role: string;
+    @Column({
+        type: 'enum',
+        enum: OrganizationRole,
+    })
+    role: OrganizationRole;
 
     @ManyToOne(() => Organization, {
         onDelete: 'CASCADE',

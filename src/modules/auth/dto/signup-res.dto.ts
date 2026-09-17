@@ -1,19 +1,23 @@
-import { Exclude, Expose } from "class-transformer";
+import {Exclude, Expose} from "class-transformer";
 
 @Exclude()
-export class SignupRes {
-  @Expose()
-  email: string;
+export class RegistrationRes {
+    @Expose()
+    email: string;
 
-  @Expose()
-  firstName: string;
+    @Expose()
+    firstName: string;
 
-  @Expose()
-  lastName: string;
+    @Expose()
+    lastName: string;
 
-  constructor(req: SignupRes) {
-    this.email = req.email;
-    this.firstName = req.firstName;
-    this.lastName = req.lastName;
-  }
+    @Expose()
+    organizationId: string;
+
+    constructor({email, firstName, lastName, organizationId}: RegistrationRes) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.organizationId = organizationId;
+    }
 }

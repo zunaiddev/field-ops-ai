@@ -37,8 +37,8 @@ export class JwtService {
         return this.generateToken(email, JwtType.RESET_PASSWORD, "30d");
     }
 
-    generateEmailVerifyToken(email: string): string {
-        return this.generateToken(email, JwtType.VERIFY_EMAIL, "15m");
+    generateEmailVerifyToken(id: string, email?: string): string {
+        return this.generateToken(id, JwtType.VERIFY_EMAIL, "15m", {email});
     }
 
     validateToken(token: string, type: JwtType): JwtPayload {
