@@ -24,27 +24,24 @@ export class VerifyService {
             throw new BadRequestException("user has already been verified");
         }
 
-        const response = await this.cacheService.get<any>(CacheKeys.unverifiedUser(payload.sub));
+        const user: User | null = await this.userService.findById(payload.sub);
 
-        if (!response) {
-            throw new BadRequestException("user not found");
+        if (!user) {
+            throw new BadRequestException(`user not found`);
         }
 
-        const user: User = new User();
-        user.firstName = response.firstName;
-        user.lastName = response.lastName;
-        user.email = response.email;
-        user.status = "ACTIVE";
-        user.passwordHash = response.password;
-        user.lastLoginAt = new Date();
+        if (user.emailVerifiedAt) {
+            throw new BadRequestException("user already verified");
+        }
 
-        await this.userService.save(user);
+        user.emailVerifiedAt = new Date();
 
-        await this.cacheService.remove(CacheKeys.unverifiedUser(user.email));
-        await this.cacheService.set(CacheKeys.usedToken(payload.jti), {email: response.email}, TTL.ofMinutes(15));
+        await this.userService.update(user);
 
-        const accessToken = this.jwtService.generateAccessToken(user.id);
-        const refreshToken = this.jwtService.generateRefreshToken(user.id);
+        await this.cacheService.set(CacheKeys.usedToken(payload.jti), {email: user.email}, TTL.ofMinutes(16));
+
+        const accessToken: string = this.jwtService.generateAccessToken(user.id);
+        const refreshToken: string = this.jwtService.generateRefreshToken(user.id);
 
         return new AuthRes(user, accessToken, refreshToken);
     }

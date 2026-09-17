@@ -81,7 +81,7 @@ export class AuthService {
             return {user, organization, organizationMember};
         });
 
-        const emailToken: string = this.jwtService.generateEmailVerifyToken(user.id, email);
+        const emailToken: string = this.jwtService.generateEmailVerifyToken(user.id);
 
         console.log("Email Verification token: ", emailToken);
 
@@ -138,14 +138,20 @@ export class AuthService {
             );
         }
 
-        if (!(await this.cacheService.exists(CacheKeys.unverifiedUser(email)))) {
+        const user: User | null = await this.userService.findByEmail(email);
+
+        if (!user) {
             throw new BadRequestException(`user with ${email} does not exists`);
+        }
+
+        if (user.emailVerifiedAt) {
+            throw new BadRequestException(`user with ${email} has been verified`);
         }
 
         await this.cacheService.set(CacheKeys.resendVerifyEmail(email),
             Date.now().toString(), TTL.ofMinutes(3));
 
-        const token: string = this.jwtService.generateEmailVerifyToken(email);
+        const token: string = this.jwtService.generateEmailVerifyToken(user.id);
         console.log("Resend verify email: ", token);
 
         return new EmailRes(email);
