@@ -1,5 +1,4 @@
-import {Column, CreateDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
-import {CustomerAddress} from "./customer-address.entity.js";
+import {Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
 
 @Entity("customers")
 @Index(['organizationId'])
@@ -26,9 +25,9 @@ export class Customer {
     })
     externalReference?: string;
 
-    @OneToMany(() => CustomerAddress,
-        (address) => address.customer)
-    addresses: CustomerAddress[];
+    // @OneToMany(() => CustomerAddress,
+    //     (address) => address.customer)
+    // addresses: CustomerAddress[];
 
     @Column({default: 'ACTIVE'})
     status: string;
