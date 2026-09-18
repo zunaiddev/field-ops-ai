@@ -45,10 +45,10 @@ export class OrganizationMemberService {
     async findMemberInOrg(id: string, organizationId: string): Promise<OrganizationMember | null> {
         return await this.organizationMemberRepo.findOne({
             where: [
-                { id, organizationId },
-                { userId: id, organizationId }
+                {id, organizationId},
+                {userId: id, organizationId}
             ],
-            relations: { user: true, organization: true }
+            relations: {user: true, organization: true}
         });
     }
 
@@ -61,5 +61,18 @@ export class OrganizationMemberService {
 
     async existsByEmail(email: string): Promise<boolean> {
         return await this.organizationMemberRepo.existsBy({user: {email}});
+    }
+
+    async getMemberByOrgId(orgId: string): Promise<OrganizationMember> {
+        const member: OrganizationMember | null = await this.organizationMemberRepo.findOne({
+            where: {organizationId: orgId},
+            relations: {organization: true, user: false}
+        });
+
+        if (!member) {
+            throw new UnauthorizedException("Could not find organization member");
+        }
+
+        return member;
     }
 }

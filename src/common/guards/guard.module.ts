@@ -1,11 +1,11 @@
 import {Module} from "@nestjs/common";
-import {AuthGuard} from "./auth-guard.guard.js";
 import {OrganizationMemberModule} from "../../modules/orgnization-member/organization-member.module.js";
+import {OrgGuard} from "./org.guard.js";
 
 @Module({
     imports: [OrganizationMemberModule],
-    providers: [AuthGuard],
-    exports: [AuthGuard],
+    providers: [OrgGuard],
+    exports: [OrgGuard],
 })
 export class GuardModule {
 }

@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import {ConfigService} from "@nestjs/config";
 import {CustomJwtPayload, JwtType} from "./jwt.types.js";
 import {randomUUID} from "node:crypto";
+import {OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
 
 @Injectable()
 export class JwtService {
@@ -22,6 +23,24 @@ export class JwtService {
             algorithm: "HS256",
             expiresIn: expiry,
             subject,
+        });
+    }
+
+    /**
+     * Expires in 15 minutes
+     */
+    orgAccessToken(userId: string, orgId: string, role: OrganizationRole): string {
+        return this.generateToken(userId, JwtType.AUTH, "15m", {
+            orgId, role
+        });
+    }
+
+    /**
+     * Expires in 30 Days
+     */
+    orgRefreshToken(userId: string, orgId: string, role: OrganizationRole): string {
+        return this.generateToken(userId, JwtType.REFRESH, "30d", {
+            orgId, role
         });
     }
 
@@ -68,7 +87,8 @@ export class JwtService {
             sub: payload.sub,
             type: payload.type,
             jti: payload.jti,
-            ...(payload.details ? {details: payload.details} : {}),
+            orgId: payload.orgId,
+            role: payload.role,
         };
     }
 }

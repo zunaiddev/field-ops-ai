@@ -1,8 +1,9 @@
 export interface CustomJwtPayload {
     sub: string;
     type: JwtType;
+    orgId: string;
+    role: string;
     jti: string;
-    details?: object;
 }
 
 export enum JwtType {

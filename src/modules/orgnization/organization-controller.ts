@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
 import {OrganizationService} from "./organization.service.js";
 import {OrganizationRes} from "./dto/organization-res.dto.js";
 import {OrganizationUpdateReq} from "./dto/organization-update-req.dto.js";
@@ -10,7 +10,9 @@ import {AddMemberDto} from "./dto/add-member.dto.js";
 import {OrganizationMembersRes} from "./dto/organization-members-res.dto.js";
 import {UpdateMemberReq} from "./dto/update-member.dto.js";
 import {UserDto} from "../users/dto/user.dto.js";
+import {OrgGuard} from "../../common/guards/org.guard.js";
 
+@UseGuards(OrgGuard)
 @Controller('organizations')
 export class OrganizationController {
     constructor(private readonly organizationService: OrganizationService) {

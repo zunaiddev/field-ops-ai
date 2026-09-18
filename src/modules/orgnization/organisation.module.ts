@@ -5,9 +5,11 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {Organization} from "./entity/organization.entity.js";
 import {OrganizationMemberModule} from "../orgnization-member/organization-member.module.js";
 import {UsersModule} from "../users/users.module.js";
+import {GuardModule} from "../../common/guards/guard.module.js";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Organization]), OrganizationMemberModule, UsersModule],
+    imports: [TypeOrmModule.forFeature([Organization]),
+        OrganizationMemberModule, UsersModule, GuardModule],
     providers: [OrganizationService],
     controllers: [OrganizationController],
     exports: [OrganizationService],

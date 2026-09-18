@@ -8,12 +8,12 @@ import {ConfigModule} from "@nestjs/config";
 import configuration from "./config/configuration.js";
 import {GuardModule} from "./common/guards/guard.module.js";
 import {APP_GUARD} from "@nestjs/core";
-import {AuthGuard} from "./common/guards/auth-guard.guard.js";
 import {JwtModule} from "./modules/jwt/jwt.module.js";
 import {RedisCacheModule} from "./modules/cache/redis-cache-module.js";
 import {AuthModule} from "./modules/auth/auth.module.js";
 import {VerifyModule} from './modules/verify/verify.module.js';
-import { MailModule } from './mail/mail.module.js';
+import {MailModule} from './mail/mail.module.js';
+import {JwtGuard} from "./common/guards/jwt.guard.js";
 
 @Module({
     imports: [
@@ -30,7 +30,7 @@ import { MailModule } from './mail/mail.module.js';
         VerifyModule,
         MailModule,
     ],
-    providers: [{provide: APP_GUARD, useClass: AuthGuard}],
+    providers: [{provide: APP_GUARD, useClass: JwtGuard}],
 })
 export class AppModule {
 }

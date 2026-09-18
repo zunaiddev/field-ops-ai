@@ -1,4 +1,10 @@
-import {BadRequestException, ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    ForbiddenException,
+    Injectable,
+    NotFoundException
+} from '@nestjs/common';
 import {DataSource, EntityManager, Repository} from "typeorm";
 import {Organization} from "./entity/organization.entity.js";
 import {InjectDataSource, InjectRepository} from "@nestjs/typeorm";
@@ -75,6 +81,7 @@ export class OrganizationService {
         const orgMember: OrganizationMember = await this.dataSource.transaction(async (manager: EntityManager): Promise<OrganizationMember> => {
             const user: User = await this.userService.save({
                 ...dto,
+                emailVerifiedAt: new Date(),
                 passwordHash: await argon2.hash(dto.password)
             }, manager);
             return await this.orgMemberService.save({user, organization, role: dto.role}, manager);
@@ -91,8 +98,8 @@ export class OrganizationService {
             throw new NotFoundException("Member not found in this organization");
         }
 
-        if (dto.role && member.role === OrganizationRole.ORG_OWNER) {
-            throw new BadRequestException("Organization owner role cannot be modified");
+        if (member.role === OrganizationRole.ORG_OWNER) {
+            throw new BadRequestException("Organization owner details cannot be modified");
         }
 
         if (dto.email && dto.email !== member.user.email) {
@@ -139,6 +146,14 @@ export class OrganizationService {
 
         if (!member) {
             throw new NotFoundException("Member not found in this organization");
+        }
+
+        if (member.userId === orgMember.userId) {
+            throw new BadRequestException("You can't delete yourself");
+        }
+
+        if (member.role === OrganizationRole.ORG_OWNER) {
+            throw new ForbiddenException("You can't delete an owner");
         }
 
         await this.userService.delete(member.userId);
