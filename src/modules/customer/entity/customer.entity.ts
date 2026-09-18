@@ -25,10 +25,6 @@ export class Customer {
     })
     externalReference?: string;
 
-    // @OneToMany(() => CustomerAddress,
-    //     (address) => address.customer)
-    // addresses: CustomerAddress[];
-
     @Column({default: 'ACTIVE'})
     status: string;
 
