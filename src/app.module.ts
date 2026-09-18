@@ -13,6 +13,7 @@ import {JwtModule} from "./modules/jwt/jwt.module.js";
 import {RedisCacheModule} from "./modules/cache/redis-cache-module.js";
 import {AuthModule} from "./modules/auth/auth.module.js";
 import {VerifyModule} from './modules/verify/verify.module.js';
+import { MailModule } from './mail/mail.module.js';
 
 @Module({
     imports: [
@@ -27,6 +28,7 @@ import {VerifyModule} from './modules/verify/verify.module.js';
         GuardModule,
         JwtModule,
         VerifyModule,
+        MailModule,
     ],
     providers: [{provide: APP_GUARD, useClass: AuthGuard}],
 })
