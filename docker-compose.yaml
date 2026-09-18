@@ -21,8 +21,6 @@ services:
     image: axllent/mailpit:latest
     container_name: mailpit
     restart: unless-stopped
-    environment:
-      MP_SMTP_AUTH_ACCEPT_ANY: "true"
     ports:
       - "8025:8025"
       - "1025:1025"

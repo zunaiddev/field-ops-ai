@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import {RegistrationReq} from "./dto/signup-req.dto.js";
 import {RegistrationRes} from "./dto/signup-res.dto.js";
-import {UsersService} from "../users/users.service.js";
+import {UserService} from "../users/user.service.js";
 import {CacheService, TTL} from "../cache/cache.service.js";
 import {JwtService} from "../jwt/jwt.service.js";
 import {AuthRes} from "./dto/auth-res.dto.js";
@@ -26,16 +26,18 @@ import {OrganizationMemberService} from "../orgnization-member/organization-memb
 import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
 import {DataSource, EntityManager} from "typeorm";
 import {InjectDataSource} from "@nestjs/typeorm";
+import {MailService} from "../../mail/mail.service.js";
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectDataSource() private readonly dataSource: DataSource,
-        private readonly userService: UsersService,
+        private readonly userService: UserService,
         private readonly jwtService: JwtService,
         private readonly organizationService: OrganizationService,
         private readonly organizationMemberService: OrganizationMemberService,
         private readonly cacheService: CacheService,
+        private readonly mailService: MailService,
     ) {
     }
 
@@ -82,6 +84,12 @@ export class AuthService {
         });
 
         const emailToken: string = this.jwtService.generateEmailVerifyToken(user.id);
+        await this.mailService.sendVerificationEmail({
+            to: user.email,
+            organizationName: organization.name,
+            token: emailToken,
+            userName: `${user.firstName} ${user.lastName}`
+        });
 
         console.log("Email Verification token: ", emailToken);
 

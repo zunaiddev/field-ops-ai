@@ -24,7 +24,7 @@ import {MailService} from './mail.service.js';
                 from: configService.getOrThrow<string>("mail.from")
             },
             template: {
-                dir: join(__dirname, 'templates'),
+                dir: join(process.cwd(), 'templates'),
                 adapter: new HandlebarsAdapter(),
                 options: {strict: true}
             }

@@ -37,6 +37,10 @@ export class JwtService {
         return this.generateToken(email, JwtType.RESET_PASSWORD, "30d");
     }
 
+    /**
+     * expires in 15 minutes
+     * @param id - user id for token
+     */
     generateEmailVerifyToken(id: string): string {
         return this.generateToken(id, JwtType.VERIFY_EMAIL, "15m");
     }

@@ -9,7 +9,7 @@ import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity
 import {OrganizationUpdateReq} from "./dto/organization-update-req.dto.js";
 import {AddMemberDto} from "./dto/add-member.dto.js";
 import {UpdateMemberDto} from "./dto/update-member.dto.js";
-import {UsersService} from "../users/users.service.js";
+import {UserService} from "../users/user.service.js";
 import * as argon2 from "argon2";
 import {OrganizationMembersRes} from "./dto/organization-members-res.dto.js";
 import {UserDto} from "../users/dto/user.dto.js";
@@ -18,7 +18,7 @@ import {UserDto} from "../users/dto/user.dto.js";
 export class OrganizationService {
     constructor(@InjectRepository(Organization) private readonly organizationRepo: Repository<Organization>,
                 @InjectDataSource() private readonly dataSource: DataSource,
-                private readonly userService: UsersService,
+                private readonly userService: UserService,
                 private readonly orgMemberService: OrganizationMemberService) {
     }
 

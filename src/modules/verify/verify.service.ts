@@ -4,7 +4,7 @@ import {CustomJwtPayload, JwtType} from "../jwt/jwt.types.js";
 import {Public} from "../../common/decorators/public.decorator.js";
 import {CacheService, TTL} from "../cache/cache.service.js";
 import {CacheKeys} from "../../utils/cache.keys.utils.js";
-import {UsersService} from "../users/users.service.js";
+import {UserService} from "../users/user.service.js";
 import {User} from "../users/entity/user.entity.js";
 import {AuthRes} from "../auth/dto/auth-res.dto.js";
 
@@ -14,7 +14,7 @@ export class VerifyService {
 
     constructor(private readonly cacheService: CacheService,
                 private readonly jwtService: JwtService,
-                private readonly userService: UsersService) {
+                private readonly userService: UserService) {
     }
 
     async verifyEmail(token: string): Promise<AuthRes> {
