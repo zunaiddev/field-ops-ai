@@ -12,6 +12,8 @@ import {CustomerRes} from "./dto/customer-res.dto.js";
 import {PaginatedCustomersRes} from "./dto/paginated-customers-res.dto.js";
 import {UpdateCustomerDto} from "./dto/update-customer.dto.js";
 import {CustomerHistory, CustomerHistoryAction} from "./entity/customer-history.js";
+import {EventBusService} from "../../common/events/event-bus.service.js";
+import {EventName} from "../../common/events/event.types.js";
 
 export interface CustomerSearchOptions {
     email?: string;
@@ -29,7 +31,8 @@ export class CustomerService {
     constructor(@InjectRepository(Customer) private readonly customerRepo: Repository<Customer>,
                 @InjectDataSource() private readonly dataSource: DataSource,
                 @InjectRepository(CustomerAddress) private readonly addressRepo: Repository<CustomerAddress>,
-                @InjectRepository(CustomerHistory) private readonly historyRepo: Repository<CustomerHistory>) {
+                @InjectRepository(CustomerHistory) private readonly historyRepo: Repository<CustomerHistory>,
+                private readonly eventBusService: EventBusService) {
     }
 
     private async existsByEmail(email: string): Promise<boolean> {
@@ -126,6 +129,12 @@ export class CustomerService {
             return customer;
         });
 
+        await this.eventBusService.publish(EventName.CUSTOMER_CREATED, {
+            customerId: customer.id,
+            organizationId: customer.organizationId,
+            userId: membership.userId,
+        });
+
         return new CustomerRes(customer);
     }
 
@@ -144,6 +153,12 @@ export class CustomerService {
             }, manager);
 
             return address;
+        });
+
+        await this.eventBusService.publish(EventName.CUSTOMER_ADDRESS_CREATED, {
+            customerId: customer.id,
+            organizationId: customer.organizationId,
+            userId: membership.userId,
         });
 
         return new CustomerAddressRes(address);
@@ -237,6 +252,12 @@ export class CustomerService {
             return updatedCustomer;
         });
 
+        await this.eventBusService.publish(EventName.CUSTOMER_UPDATED, {
+            customerId: customer.id,
+            organizationId: customer.organizationId,
+            userId: membership.userId,
+        });
+
         return new CustomerRes(updatedCustomer);
     }
 
@@ -257,6 +278,12 @@ export class CustomerService {
                 createdBy: membership.userId,
                 organizationId: membership.organizationId
             }, manager);
+        });
+
+        await this.eventBusService.publish(EventName.CUSTOMER_DELETED, {
+            customerId: customer.id,
+            organizationId: customer.organizationId,
+            userId: membership.userId,
         });
     }
 

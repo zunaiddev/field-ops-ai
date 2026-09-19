@@ -37,6 +37,7 @@
     "class-validator": "^0.15.1",
     "handlebars": "^4.7.9",
     "helmet": "^8.3.0",
+    "ioredis": "^5.11.1",
     "jsonwebtoken": "^9.0.3",
     "keyv": "^5.6.0",
     "nodemailer": "^10.0.10",
