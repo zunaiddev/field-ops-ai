@@ -30,6 +30,10 @@ export class CustomerService {
         return customer;
     }
 
+    async findAllByOrgId(orgId: string): Promise<Customer[]> {
+        return await this.repo.find({where: {organizationId: orgId}});
+    }
+
     async deleteByIdAndOrgId(customerId: string, orgId: string): Promise<void> {
         await this.repo.delete({id: customerId, organizationId: orgId});
     }
@@ -56,6 +60,12 @@ export class CustomerService {
         const addresses = await this.addressRepo.findBy({customerId: customer.id});
 
         return new CustomerRes(customer, addresses);
+    }
+
+    async getCustomers(membership: OrganizationMember): Promise<CustomerRes[]> {
+        const customers: Customer[] = await this.findAllByOrgId(membership.organizationId);
+
+        return customers.map(customer => new CustomerRes(customer));
     }
 
     async updateCustomer(customerId: string, dto: UpdateCustomerDto,

@@ -34,6 +34,12 @@ export class CustomerController {
         return await this.customerService.create(member, dto);
     }
 
+    @Get()
+    async getCustomers(@CurrentMember() member: OrganizationMember):
+        Promise<CustomerRes[]> {
+        return await this.customerService.getCustomers(member);
+    }
+
     @Get(':id')
     async getCustomer(
         @Param('id', ParseUUIDPipe) id: string,

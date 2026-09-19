@@ -28,7 +28,7 @@ export class CustomerRes {
 
     @Expose()
     @Type((): typeof CustomerAddressRes => CustomerAddressRes)
-    addresses: CustomerAddressRes[];
+    addresses: CustomerAddressRes[] | undefined;
 
     @Expose()
     createdAt: Date;
@@ -36,7 +36,7 @@ export class CustomerRes {
     @Expose()
     updatedAt: Date;
 
-    constructor(customer: Customer, addresses: CustomerAddress[] = []) {
+    constructor(customer: Customer, addresses: CustomerAddress[] | undefined = undefined) {
         this.id = customer.id;
         this.organizationId = customer.organizationId;
         this.name = customer.name;
@@ -44,7 +44,7 @@ export class CustomerRes {
         this.email = customer.email;
         this.externalReference = customer.externalReference;
         this.status = customer.status;
-        this.addresses = addresses.map((address) => new CustomerAddressRes(address));
+        this.addresses = addresses ? addresses?.map((address) => new CustomerAddressRes(address)) : undefined;
         this.createdAt = customer.createdAt;
         this.updatedAt = customer.updatedAt;
     }

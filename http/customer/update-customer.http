@@ -1,4 +1,4 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6ImZjMWQ5NDI1LTQyMGYtNDdjYi1iMzMwLTc3OTAwZTgwZWIzOCIsImlhdCI6MTc4OTgwMjM1MSwiZXhwIjoxNzg5ODAzMjUxLCJzdWIiOiIxNWMzMTU4MS0yOTk5LTQ0NDYtYTY1Ni03MjgzNTBiZDgwZWMifQ.ipeH4Nw1HIcP_PSYTOijp686SRkTHs6ssBI9w3vJNfA
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6IjkxMjUxNWE4LTIwODUtNDY3Ny1iNmUxLTQzMzBmZjc5NmQ4MCIsImlhdCI6MTc4OTgwMzI1NiwiZXhwIjoxNzg5ODA0MTU2LCJzdWIiOiIxNWMzMTU4MS0yOTk5LTQ0NDYtYTY1Ni03MjgzNTBiZDgwZWMifQ.mG79EmtnjmcLf5NLTV0H2FU1n1z5uLMLWtK28qHKgm8
 @id = f7b0e576-5201-4e35-af68-17842449f0bb
 
 PATCH {{baseUrl}}/customers/{{id}}
@@ -6,9 +6,9 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-  "name": "Updated Customer Name",
+  "name": "Rio is me",
   "phone": "9876543210",
-  "email": "updated.customer@example.com",
+  "email": "rio.customer@example.com",
   "externalReference": "EXT-1001",
   "status": "ACTIVE"
 }
