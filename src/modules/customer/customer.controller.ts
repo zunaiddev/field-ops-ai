@@ -17,8 +17,8 @@ import {CustomerService} from "./customer.service.js";
 import {CurrentMember} from "../../common/decorators/current-member.decorator.js";
 import {OrganizationMember} from "../orgnization-member/entity/organization-member.entity.js";
 import {CreateCustomerReq} from "./dto/create-customer.dto.js";
-import {Customer} from "./entity/customer.entity.js";
 import {CreateAddressDto} from "./dto/create-address.dto.js";
+import {UpdateAddressDto} from "./dto/update-address.dto.js";
 import {CustomerAddressRes} from "./dto/customer-address-res.dto.js";
 import {CustomerRes} from "./dto/customer-res.dto.js";
 import {PaginatedCustomersRes} from "./dto/paginated-customers-res.dto.js";
@@ -33,7 +33,7 @@ export class CustomerController {
 
     @Post()
     async create(@CurrentMember() member: OrganizationMember,
-                 @Body() dto: CreateCustomerReq): Promise<Customer> {
+                 @Body() dto: CreateCustomerReq): Promise<CustomerRes> {
         return await this.customerService.create(member, dto);
     }
 
@@ -79,5 +79,30 @@ export class CustomerController {
         @CurrentMember() member: OrganizationMember,
     ): Promise<CustomerAddressRes> {
         return await this.customerService.addAddress(customerId, dto, member);
+    }
+
+    @Get(':customerId/addresses')
+    async getAddress(@Param('customerId', ParseUUIDPipe) customerId: string,
+                     @CurrentMember() member: OrganizationMember)
+        : Promise<CustomerAddressRes[]> {
+        return await this.customerService.getAddress(customerId, member);
+    }
+
+    @Patch('addresses/:addressId')
+    async updateAddress(
+        @Param('addressId', ParseUUIDPipe) addressId: string,
+        @Body() dto: UpdateAddressDto,
+        @CurrentMember() member: OrganizationMember,
+    ): Promise<CustomerAddressRes> {
+        return await this.customerService.updateAddress(addressId, dto, member);
+    }
+
+    @Delete('addresses/:addressId')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteAddress(
+        @Param('addressId', ParseUUIDPipe) addressId: string,
+        @CurrentMember() member: OrganizationMember,
+    ): Promise<void> {
+        await this.customerService.deleteAddress(addressId, member);
     }
 }

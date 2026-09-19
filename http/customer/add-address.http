@@ -1,7 +1,7 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6Ijg0MmM3YzdlLWViMWQtNDlmOC04NDFlLWNmN2E1MDE3OGRmYiIsImlhdCI6MTc4OTgwMDcyOSwiZXhwIjoxNzg5ODAxNjI5LCJzdWIiOiJiODdhMjRiOC0yMWYyLTQ1NzQtYjUzYi01YTVhOGJiZjg1OWIifQ.M3ndpigEM6InDdWpB6lmny3dytdX8EWERZuHC26W-QM
-@id = f7b0e576-5201-4e35-af68-17842449f0bb
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6Ijk3NWFlY2IwLWZlZTMtNDI0MS05NDI4LTc2NGVkZTI5YjQxYSIsImlhdCI6MTc4OTgxNjAxNywiZXhwIjoxNzg5ODE2OTE3LCJzdWIiOiIxNWMzMTU4MS0yOTk5LTQ0NDYtYTY1Ni03MjgzNTBiZDgwZWMifQ.OtoWDCsw8zkqFsJphroO3IRl2UWOt1n-vdxrmzYpRWI
 
-POST {{baseUrl}}/customers/{{id}}/addresses
+### Customer 1
+POST {{baseUrl}}/customers/1eb629ed-d2f2-4a00-b46e-073135c5c319/addresses
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -11,6 +11,126 @@ Content-Type: application/json
   "city": "Bengaluru",
   "state": "Karnataka",
   "postalCode": "560078",
+  "country": "India",
+  "isPrimary": true
+}
+
+### Customer 2
+POST {{baseUrl}}/customers/5c36c571-4dc2-4b4a-9003-a70052456275/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "102 Silver Oak Residency, 3rd Cross",
+  "addressLine2": "Koramangala 5th Block",
+  "city": "Bengaluru",
+  "state": "Karnataka",
+  "postalCode": "560095",
+  "country": "India",
+  "isPrimary": true
+}
+
+### Customer 3
+POST {{baseUrl}}/customers/398f6d07-b85f-4f0f-955f-a850aa722d98/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "Flat 401, Lotus Towers",
+  "addressLine2": "Andheri West, Link Road",
+  "city": "Mumbai",
+  "state": "Maharashtra",
+  "postalCode": "400053",
+  "country": "India",
+  "isPrimary": true
+}
+
+### Customer 4
+POST {{baseUrl}}/customers/6ab5a423-dfe3-444b-b240-a9234ce12e72/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "Plot No. 18, Road No. 12",
+  "addressLine2": "Banjara Hills",
+  "city": "Hyderabad",
+  "state": "Telangana",
+  "postalCode": "500034",
+  "country": "India",
+  "isPrimary": true
+}
+
+### Customer 5
+POST {{baseUrl}}/customers/ef0a7b4b-a638-456e-b88e-09c733438b15/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "B-24, Sector 62",
+  "addressLine2": "Near Electronic City Metro",
+  "city": "Noida",
+  "state": "Uttar Pradesh",
+  "postalCode": "201309",
+  "country": "India",
+  "isPrimary": true
+}
+
+### Customer 6
+POST {{baseUrl}}/customers/d5a6955e-aeb9-49e1-9804-4ce0d83ecf66/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "14/A South Extension Part 2",
+  "addressLine2": "Main Market",
+  "city": "New Delhi",
+  "state": "Delhi",
+  "postalCode": "110049",
+  "country": "India",
+  "isPrimary": true
+}
+
+### Customer 7
+POST {{baseUrl}}/customers/68822ca3-1869-4a7d-a0d4-d577de2e30ad/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "78 MG Road, Camp",
+  "addressLine2": "Near East Street",
+  "city": "Pune",
+  "state": "Maharashtra",
+  "postalCode": "411001",
+  "country": "India",
+  "isPrimary": true
+}
+
+### Customer 8 (Secondary address for Customer 4)
+POST {{baseUrl}}/customers/6ab5a423-dfe3-444b-b240-a9234ce12e72/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "Unit 502, Cyber Gateway",
+  "addressLine2": "HITEC City",
+  "city": "Hyderabad",
+  "state": "Telangana",
+  "postalCode": "500081",
+  "country": "India",
+  "isPrimary": false
+}
+
+### Customer 9
+POST {{baseUrl}}/customers/5a0ed5e2-c552-4044-b322-a369b7403436/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "21 Anna Salai",
+  "addressLine2": "Opposite Spencer Plaza",
+  "city": "Chennai",
+  "state": "Tamil Nadu",
+  "postalCode": "600002",
   "country": "India",
   "isPrimary": true
 }

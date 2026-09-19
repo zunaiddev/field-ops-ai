@@ -1,0 +1,5 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6ImI5Njk5NzE5LTBjMzMtNGFiZS1iNzUyLTg0NjEzMjU5MGIxMiIsImlhdCI6MTc4OTgxNjU2MiwiZXhwIjoxNzg5ODE3NDYyLCJzdWIiOiJiODdhMjRiOC0yMWYyLTQ1NzQtYjUzYi01YTVhOGJiZjg1OWIifQ.jWuGcD74PsJHU6CdalaZ8iSfnvqFOTLp-MFjONwspxU
+@addressId = 192b5b1e-dd75-4134-ab9c-f8461e46d067
+
+DELETE {{baseUrl}}/customers/addresses/{{addressId}}
+Authorization: Bearer {{accessToken}}
