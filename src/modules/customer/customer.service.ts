@@ -8,6 +8,7 @@ import {CustomerAddress} from "./entity/customer-address.entity.js";
 import {CreateAddressDto} from "./dto/create-address.dto.js";
 import {CustomerAddressRes} from "./dto/customer-address-res.dto.js";
 import {CustomerRes} from "./dto/customer-res.dto.js";
+import {UpdateCustomerDto} from "./dto/update-customer.dto.js";
 
 @Injectable()
 export class CustomerService {
@@ -55,6 +56,23 @@ export class CustomerService {
         const addresses = await this.addressRepo.findBy({customerId: customer.id});
 
         return new CustomerRes(customer, addresses);
+    }
+
+    async updateCustomer(customerId: string, dto: UpdateCustomerDto,
+                         membership: OrganizationMember): Promise<CustomerRes> {
+        const customer: Customer = await this.findByIdAndOrgId(customerId, membership.organizationId);
+
+        if (!customer) {
+            throw new NotFoundException("could not find customer in current organization");
+        }
+
+        if (dto.email && await this.existsByEmail(dto.email)) {
+            throw new ConflictException(`Customer with email ${dto.email} already exists`);
+        }
+
+        const updatedCustomer: Customer = await this.repo.save({...customer, ...dto});
+
+        return new CustomerRes(updatedCustomer);
     }
 
     async deleteCustomer(customerId: string, membership: OrganizationMember): Promise<void> {

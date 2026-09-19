@@ -7,6 +7,7 @@ import {
     HttpStatus,
     Param,
     ParseUUIDPipe,
+    Patch,
     Post,
     UseGuards
 } from '@nestjs/common';
@@ -19,6 +20,7 @@ import {Customer} from "./entity/customer.entity.js";
 import {CreateAddressDto} from "./dto/create-address.dto.js";
 import {CustomerAddressRes} from "./dto/customer-address-res.dto.js";
 import {CustomerRes} from "./dto/customer-res.dto.js";
+import {UpdateCustomerDto} from "./dto/update-customer.dto.js";
 
 @UseGuards(OrgGuard)
 @Controller('customers')
@@ -38,6 +40,15 @@ export class CustomerController {
         @CurrentMember() member: OrganizationMember,
     ): Promise<CustomerRes> {
         return await this.customerService.getCustomer(id, member);
+    }
+
+    @Patch(':id')
+    async updateCustomer(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Body() dto: UpdateCustomerDto,
+        @CurrentMember() member: OrganizationMember,
+    ): Promise<CustomerRes> {
+        return await this.customerService.updateCustomer(id, dto, member);
     }
 
     @Delete(':id')
