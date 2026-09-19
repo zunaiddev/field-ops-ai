@@ -1,4 +1,8 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6IjQ1ZDg5YTEyLTE4NzYtNDNhMS04Y2FlLTExYzE1NmRmMGI2ZSIsImlhdCI6MTc4OTgwNDMyMCwiZXhwIjoxNzg5ODA1MjIwLCJzdWIiOiIxNWMzMTU4MS0yOTk5LTQ0NDYtYTY1Ni03MjgzNTBiZDgwZWMifQ.Dn4kRFoAFiZM20SgzQW8C5C262Tovjnqkf2qfQwNB0M
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6IjM3MjQ3ZjZlLWEyMzItNDNlYi05YzAyLTA3ZjY0ZTBhNTA4NSIsImlhdCI6MTc4OTgwNzU1OSwiZXhwIjoxNzg5ODA4NDU5LCJzdWIiOiIxNWMzMTU4MS0yOTk5LTQ0NDYtYTY1Ni03MjgzNTBiZDgwZWMifQ.kMQGamEEPV-ZmjmelWPjqVOI1AIPaoQYTWrxWOAb_5I
+@page = 1
+@pageSize = 2
+@name =
+@email = com
 
-GET {{baseUrl}}/customers
+GET {{baseUrl}}/customers?name={{name}}&email={{email}}&pageSize={{pageSize}}
 Authorization: Bearer {{accessToken}}

@@ -9,6 +9,7 @@ import {
     ParseUUIDPipe,
     Patch,
     Post,
+    Query,
     UseGuards
 } from '@nestjs/common';
 import {OrgGuard} from "../../common/guards/org.guard.js";
@@ -20,7 +21,9 @@ import {Customer} from "./entity/customer.entity.js";
 import {CreateAddressDto} from "./dto/create-address.dto.js";
 import {CustomerAddressRes} from "./dto/customer-address-res.dto.js";
 import {CustomerRes} from "./dto/customer-res.dto.js";
+import {PaginatedCustomersRes} from "./dto/paginated-customers-res.dto.js";
 import {UpdateCustomerDto} from "./dto/update-customer.dto.js";
+import {GetCustomersQueryDto} from "./dto/get-customers-query.dto.js";
 
 @UseGuards(OrgGuard)
 @Controller('customers')
@@ -35,16 +38,21 @@ export class CustomerController {
     }
 
     @Get()
-    async getCustomers(@CurrentMember() member: OrganizationMember):
-        Promise<CustomerRes[]> {
-        return await this.customerService.getCustomers(member);
+    async getCustomers(@CurrentMember() member: OrganizationMember,
+                       @Query() query: GetCustomersQueryDto): Promise<PaginatedCustomersRes> {
+        return await this.customerService.getCustomers(member, {
+            page: query.page,
+            pageSize: query.pageSize,
+            search: {
+                name: query.name,
+                email: query.email,
+            },
+        });
     }
 
     @Get(':id')
-    async getCustomer(
-        @Param('id', ParseUUIDPipe) id: string,
-        @CurrentMember() member: OrganizationMember,
-    ): Promise<CustomerRes> {
+    async getCustomer(@Param('id', ParseUUIDPipe) id: string,
+                      @CurrentMember() member: OrganizationMember): Promise<CustomerRes> {
         return await this.customerService.getCustomer(id, member);
     }
 

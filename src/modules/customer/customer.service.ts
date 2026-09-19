@@ -1,5 +1,5 @@
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
-import {Repository} from "typeorm";
+import {FindOptionsWhere, ILike, Repository} from "typeorm";
 import {Customer} from "./entity/customer.entity.js";
 import {InjectRepository} from "@nestjs/typeorm";
 import {OrganizationMember} from "../orgnization-member/entity/organization-member.entity.js";
@@ -8,7 +8,19 @@ import {CustomerAddress} from "./entity/customer-address.entity.js";
 import {CreateAddressDto} from "./dto/create-address.dto.js";
 import {CustomerAddressRes} from "./dto/customer-address-res.dto.js";
 import {CustomerRes} from "./dto/customer-res.dto.js";
+import {PaginatedCustomersRes} from "./dto/paginated-customers-res.dto.js";
 import {UpdateCustomerDto} from "./dto/update-customer.dto.js";
+
+export interface CustomerSearchOptions {
+    email?: string;
+    name?: string;
+}
+
+export interface GetCustomersOptions {
+    page?: number;
+    pageSize?: number;
+    search?: CustomerSearchOptions;
+}
 
 @Injectable()
 export class CustomerService {
@@ -30,8 +42,27 @@ export class CustomerService {
         return customer;
     }
 
-    async findAllByOrgId(orgId: string): Promise<Customer[]> {
-        return await this.repo.find({where: {organizationId: orgId}});
+    async findAllByOrgIdAndOptions(orgId: string, options?: GetCustomersOptions): Promise<[Customer[], number]> {
+        const where: FindOptionsWhere<Customer> = {
+            organizationId: orgId,
+        };
+
+        if (options?.search?.name) {
+            where.name = ILike(`%${options.search.name}%`);
+        }
+
+        if (options?.search?.email) {
+            where.email = ILike(`%${options.search.email}%`);
+        }
+
+        const page = options?.page ?? 1;
+        const pageSize = options?.pageSize ?? 10;
+
+        return await this.repo.findAndCount({
+            where,
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+        });
     }
 
     async deleteByIdAndOrgId(customerId: string, orgId: string): Promise<void> {
@@ -62,10 +93,21 @@ export class CustomerService {
         return new CustomerRes(customer, addresses);
     }
 
-    async getCustomers(membership: OrganizationMember): Promise<CustomerRes[]> {
-        const customers: Customer[] = await this.findAllByOrgId(membership.organizationId);
+    async getCustomers(
+        membership: OrganizationMember,
+        {
+            page = 1,
+            pageSize = 10,
+            search = {email: '', name: ''}
+        }: GetCustomersOptions = {}): Promise<PaginatedCustomersRes> {
+        const [customers, total] = await this.findAllByOrgIdAndOptions(membership.organizationId, {
+            page,
+            pageSize,
+            search,
+        });
 
-        return customers.map(customer => new CustomerRes(customer));
+        const customerResponses = customers.map(customer => new CustomerRes(customer));
+        return new PaginatedCustomersRes(customerResponses, total, page, pageSize);
     }
 
     async updateCustomer(customerId: string, dto: UpdateCustomerDto,
