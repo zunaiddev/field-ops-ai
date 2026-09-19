@@ -1,0 +1,4 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6Ijk4ZjViNzUxLTFmZTQtNDM3NS1iNjI2LWRmNmQyODczYjU2NiIsImlhdCI6MTc4OTc5ODgyMiwiZXhwIjoxNzg5Nzk5NzIyLCJzdWIiOiIxNWMzMTU4MS0yOTk5LTQ0NDYtYTY1Ni03MjgzNTBiZDgwZWMifQ.XOZxk8yeG2eqGTNC8iVVPMQB6DFjs-8ScmnCJ7X05NI
+
+GET {{baseUrl}}/organizations/current/members
+Authorization: Bearer {{accessToken}}

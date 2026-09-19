@@ -1,0 +1,104 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6IjcxYjlkNDVlLWNmNzEtNDk4OS05ODU1LTk3Zjc0MzA3Mjc1ZCIsImlhdCI6MTc4OTc5ODU2NywiZXhwIjoxNzg5Nzk5NDY3LCJzdWIiOiJkMDUwNmRkMi00M2QwLTRkZjctODZmMS1mMjFhZDlhN2U0NmEifQ.FmedWj3o1PesOpvseLsKAMpwhZtZnkU1u25mMeQXenw
+
+### Add organization admin
+POST {{baseUrl}}/organizations/current/members
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Harper",
+  "lastName": "Bennett",
+  "email": "harper.bennett@redwood.example",
+  "role": "ORG_ADMIN",
+  "password": "HarperAdmin9$"
+}
+
+###
+
+### Add dispatcher
+POST {{baseUrl}}/organizations/current/members
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Noah",
+  "lastName": "Sinclair",
+  "email": "noah.sinclair@redwood.example",
+  "role": "DISPATCHER",
+  "password": "NoahDispatch9$"
+}
+
+###
+
+### Add manager
+POST {{baseUrl}}/organizations/current/members
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Amara",
+  "lastName": "Holloway",
+  "email": "amara.holloway@redwood.example",
+  "role": "MANAGER",
+  "password": "AmaraManager9$"
+}
+
+###
+
+### Add technician
+POST {{baseUrl}}/organizations/current/members
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Liam",
+  "lastName": "Donovan",
+  "email": "liam.donovan@redwood.example",
+  "role": "TECHNICIAN",
+  "password": "LiamTech9$"
+}
+
+###
+
+### Add inventory manager
+POST {{baseUrl}}/organizations/current/members
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Zoe",
+  "lastName": "Fairchild",
+  "email": "zoe.fairchild@redwood.example",
+  "role": "INVENTORY_MANAGER",
+  "password": "ZoeInventory9$"
+}
+
+###
+
+### Add finance member
+POST {{baseUrl}}/organizations/current/members
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Iris",
+  "lastName": "Kensington",
+  "email": "iris.kensington@redwood.example",
+  "role": "FINANCE",
+  "password": "IrisFinance9$"
+}
+
+###
+
+### Add viewer
+POST {{baseUrl}}/organizations/current/members
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Finn",
+  "lastName": "Ashford",
+  "email": "finn.ashford@redwood.example",
+  "role": "VIEWER",
+  "password": "FinnViewer9$"
+}

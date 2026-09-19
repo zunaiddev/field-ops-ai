@@ -1,0 +1,59 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6ImFkOGVmZGZiLTVmOTctNDM4Ni04OThhLWFmOTdkZjAzYmExOCIsImlhdCI6MTc4OTc5OTgyNywiZXhwIjoxNzg5ODAwNzI3LCJzdWIiOiJiODdhMjRiOC0yMWYyLTQ1NzQtYjUzYi01YTVhOGJiZjg1OWIifQ.cpHifkpNXnuYKVHXy-khEeghKBl59A7L6wnTj4nUAQ4
+
+POST {{baseUrl}}/customers
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Neha",
+  "email": "neha.chopra@example.com",
+  "phone": "9831762450"
+}
+
+###
+
+POST {{baseUrl}}/customers
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Manish",
+  "email": "manish.gupta@example.com",
+  "phone": "8246391570"
+}
+
+###
+
+POST {{baseUrl}}/customers
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Kavya",
+  "email": "kavya.reddy@example.com",
+  "phone": "9174526380"
+}
+
+###
+
+POST {{baseUrl}}/customers
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Harsh",
+  "email": "harsh.bansal@example.com",
+  "phone": "7569284130"
+}
+
+###
+
+POST {{baseUrl}}/customers
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Pooja",
+  "email": "pooja.joshi@example.com",
+  "phone": "8693157240"
+}

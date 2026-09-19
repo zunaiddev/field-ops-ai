@@ -29,6 +29,10 @@ export class CustomerService {
         return customer;
     }
 
+    async deleteByIdAndOrgId(customerId: string, orgId: string): Promise<void> {
+        await this.repo.delete({id: customerId, organizationId: orgId});
+    }
+
     async create(membership: OrganizationMember, dto: CreateCustomerReq): Promise<Customer> {
         if (await this.existsByEmail(dto.email)) {
             throw new ConflictException("Email already exists");
@@ -51,5 +55,15 @@ export class CustomerService {
         const addresses = await this.addressRepo.findBy({customerId: customer.id});
 
         return new CustomerRes(customer, addresses);
+    }
+
+    async deleteCustomer(customerId: string, membership: OrganizationMember): Promise<void> {
+        const customer = await this.findByIdAndOrgId(customerId, membership.organizationId);
+
+        if (customer.organizationId !== membership.organizationId) {
+            throw new NotFoundException("Could not find customer in current organization");
+        }
+
+        await this.deleteByIdAndOrgId(customerId, membership.organizationId);
     }
 }

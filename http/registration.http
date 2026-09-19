@@ -1,0 +1,50 @@
+
+
+### Register organization 1
+POST {{$baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "orgName": "Northstar Logistics",
+  "orgSlug": "northstar-logistics",
+  "timezone": "America/Chicago",
+  "currency": "USD",
+  "firstName": "Maya",
+  "lastName": "Rowan",
+  "email": "maya.rowan@northstar.example",
+  "password": "NorthstarPass1!"
+}
+
+###
+
+### Register organization 2
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "orgName": "Cedarline Services",
+  "orgSlug": "cedarline-services",
+  "timezone": "Europe/Dublin",
+  "currency": "EUR",
+  "firstName": "Elias",
+  "lastName": "Mercer",
+  "email": "elias.mercer@cedarline.example",
+  "password": "CedarlinePass1!"
+}
+
+###
+
+### Register organization 3
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "orgName": "Bluehaven Maintenance",
+  "orgSlug": "bluehaven-maintenance",
+  "timezone": "Australia/Sydney",
+  "currency": "AUD",
+  "firstName": "Sofia",
+  "lastName": "Bennett",
+  "email": "sofia.bennett@bluehaven.example",
+  "password": "BluehavenPass1!"
+}

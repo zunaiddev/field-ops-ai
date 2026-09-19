@@ -1,0 +1,35 @@
+
+
+### Login as Northstar Logistics owner
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "maya.rowan@northstar.example",
+  "password": "NorthstarPass1!",
+  "remember": true
+}
+
+###
+
+### Login as Cedarline Services owner
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "elias.mercer@cedarline.example",
+  "password": "CedarlinePass1!",
+  "remember": true
+}
+
+###
+
+### Login as Bluehaven Maintenance owner
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "sofia.bennett@bluehaven.example",
+  "password": "BluehavenPass1!",
+  "remember": true
+}

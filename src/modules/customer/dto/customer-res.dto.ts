@@ -27,7 +27,7 @@ export class CustomerRes {
     status: string;
 
     @Expose()
-    @Type(() => CustomerAddressRes)
+    @Type((): typeof CustomerAddressRes => CustomerAddressRes)
     addresses: CustomerAddressRes[];
 
     @Expose()

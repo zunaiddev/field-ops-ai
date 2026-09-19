@@ -1,0 +1,16 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6Ijg0MmM3YzdlLWViMWQtNDlmOC04NDFlLWNmN2E1MDE3OGRmYiIsImlhdCI6MTc4OTgwMDcyOSwiZXhwIjoxNzg5ODAxNjI5LCJzdWIiOiJiODdhMjRiOC0yMWYyLTQ1NzQtYjUzYi01YTVhOGJiZjg1OWIifQ.M3ndpigEM6InDdWpB6lmny3dytdX8EWERZuHC26W-QM
+@id = f7b0e576-5201-4e35-af68-17842449f0bb
+
+POST {{baseUrl}}/customers/{{id}}/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "45 Green Park Lane",
+  "addressLine2": "Opposite Sunrise Apartments",
+  "city": "Bengaluru",
+  "state": "Karnataka",
+  "postalCode": "560078",
+  "country": "India",
+  "isPrimary": true
+}

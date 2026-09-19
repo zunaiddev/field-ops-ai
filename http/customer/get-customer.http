@@ -1,0 +1,5 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6Ijk4NGRmZmQwLThkNWItNDc2MC1hNWZlLTU5ZDRkODU2ZjA4MSIsImlhdCI6MTc4OTgwMDExOSwiZXhwIjoxNzg5ODAxMDE5LCJzdWIiOiIxNWMzMTU4MS0yOTk5LTQ0NDYtYTY1Ni03MjgzNTBiZDgwZWMifQ.CwWgYVZfi70tFyJGIJImlXrdxjFhhA7jS-iFblc_LyU
+@id = 6ab5a423-dfe3-444b-b240-a9234ce12e72
+
+GET {{baseUrl}}/customers/{{id}}
+Authorization: Bearer {{accessToken}}

@@ -31,7 +31,7 @@ export class MailService {
             userName,
             organizationName,
             token,
-            verificationUrl = `${this.baseUrl}/api/v1/verify?token=${token}`,
+            verificationUrl = `${this.baseUrl}/api/v1/verify/email?token=${token}`,
             expiresIn = '15 minutes',
             supportEmail = 'support@fieldops.ai',
         } = options;

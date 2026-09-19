@@ -1,4 +1,15 @@
-import {Body, Controller, Get, Param, ParseUUIDPipe, Post, UseGuards} from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Param,
+    ParseUUIDPipe,
+    Post,
+    UseGuards
+} from '@nestjs/common';
 import {OrgGuard} from "../../common/guards/org.guard.js";
 import {CustomerService} from "./customer.service.js";
 import {CurrentMember} from "../../common/decorators/current-member.decorator.js";
@@ -27,6 +38,13 @@ export class CustomerController {
         @CurrentMember() member: OrganizationMember,
     ): Promise<CustomerRes> {
         return await this.customerService.getCustomer(id, member);
+    }
+
+    @Delete(':id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async deleteCustomer(@Param('id', ParseUUIDPipe) id: string,
+                         @CurrentMember() member: OrganizationMember): Promise<void> {
+        await this.customerService.deleteCustomer(id, member);
     }
 
     @Post(':customerId/addresses')
