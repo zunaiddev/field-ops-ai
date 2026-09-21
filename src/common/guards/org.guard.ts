@@ -1,4 +1,11 @@
-import {CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException} from '@nestjs/common';
+import {
+    CanActivate,
+    ExecutionContext,
+    ForbiddenException,
+    Injectable,
+    Logger,
+    UnauthorizedException
+} from '@nestjs/common';
 import {OrganizationMemberService} from "../../modules/orgnization-member/organization-member.service.js";
 import {Organization} from "../../modules/orgnization/entity/organization.entity.js";
 import {
@@ -15,12 +22,13 @@ export interface OrgAuthenticatedReq extends JwtAuthenticatedRequest {
 
 @Injectable()
 export class OrgGuard implements CanActivate {
+    private readonly logger: Logger
 
     constructor(private readonly orgMemberService: OrganizationMemberService) {
+        this.logger = new Logger(OrgGuard.name);
     }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        console.log("Inside Org Guard");
         const request: OrgAuthenticatedReq = context.switchToHttp().getRequest<OrgAuthenticatedReq>();
 
         const {sub: userId}: CustomJwtPayload = request.payload;
@@ -42,6 +50,7 @@ export class OrgGuard implements CanActivate {
         request.member = member;
         request.organization = member.organization;
 
+        this.logger.debug("Request Processes by Organization Guard");
         return true;
     }
 }

@@ -16,6 +16,8 @@ export class RolesGuard implements CanActivate {
                 [context.getHandler(), context.getClass()],
             );
 
+        console.log(requiredRoles);
+
         if (!requiredRoles || requiredRoles.length === 0) {
             return true;
         }
@@ -28,6 +30,8 @@ export class RolesGuard implements CanActivate {
         if (!member) {
             throw new UnauthorizedException('Organization member not found');
         }
+
+        console.log(member.role);
 
         if (!requiredRoles.includes(member.role)) {
             throw new ForbiddenException(

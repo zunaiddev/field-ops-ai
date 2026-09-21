@@ -15,7 +15,7 @@ import {
 import {OrgGuard} from "../../common/guards/org.guard.js";
 import {CustomerService} from "./customer.service.js";
 import {CurrentMember} from "../../common/decorators/current-member.decorator.js";
-import {OrganizationMember} from "../orgnization-member/entity/organization-member.entity.js";
+import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
 import {CreateCustomerReq} from "./dto/create-customer.dto.js";
 import {CreateAddressDto} from "./dto/create-address.dto.js";
 import {UpdateAddressDto} from "./dto/update-address.dto.js";
@@ -24,8 +24,12 @@ import {CustomerRes} from "./dto/customer-res.dto.js";
 import {PaginatedCustomersRes} from "./dto/paginated-customers-res.dto.js";
 import {UpdateCustomerDto} from "./dto/update-customer.dto.js";
 import {GetCustomersQueryDto} from "./dto/get-customers-query.dto.js";
+import {RolesGuard} from "../../common/guards/roles.guard.js";
+import {Roles} from "../../common/decorators/roles.decorator.js";
 
-@UseGuards(OrgGuard)
+@Roles(OrganizationRole.ORG_OWNER, OrganizationRole.ORG_ADMIN,
+    OrganizationRole.MANAGER)
+@UseGuards(OrgGuard, RolesGuard)
 @Controller('customers')
 export class CustomerController {
     constructor(private readonly customerService: CustomerService) {

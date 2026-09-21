@@ -3,7 +3,7 @@ import {OrganizationService} from "./organization.service.js";
 import {OrganizationRes} from "./dto/organization-res.dto.js";
 import {OrganizationUpdateReq} from "./dto/organization-update-req.dto.js";
 import {CurrentMember} from "../../common/decorators/current-member.decorator.js";
-import {OrganizationMember} from "../orgnization-member/entity/organization-member.entity.js";
+import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
 import {Organization} from "./entity/organization.entity.js";
 import {CurrentOrg} from "../../common/decorators/current-org.js";
 import {AddMemberDto} from "./dto/add-member.dto.js";
@@ -11,8 +11,11 @@ import {OrganizationMembersRes} from "./dto/organization-members-res.dto.js";
 import {UpdateMemberReq} from "./dto/update-member.dto.js";
 import {UserDto} from "../users/dto/user.dto.js";
 import {OrgGuard} from "../../common/guards/org.guard.js";
+import {RolesGuard} from "../../common/guards/roles.guard.js";
+import {Roles} from "../../common/decorators/roles.decorator.js";
 
-@UseGuards(OrgGuard)
+@Roles(OrganizationRole.ORG_OWNER, OrganizationRole.ORG_ADMIN)
+@UseGuards(OrgGuard, RolesGuard)
 @Controller('organizations')
 export class OrganizationController {
     constructor(private readonly organizationService: OrganizationService) {
