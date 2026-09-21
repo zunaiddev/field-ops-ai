@@ -13,7 +13,7 @@ import {CacheService, TTL} from "../cache/cache.service.js";
 import {JwtService} from "../jwt/jwt.service.js";
 import {AuthRes} from "./dto/auth-res.dto.js";
 import {LoginReq} from "./dto/login-req.dto.js";
-import {Employee} from "../employee/entity/employee.entity.js";
+import {Employee, EmployeeRole} from "../employee/entity/employee.entity.js";
 import {EmailRes} from "./dto/email-res.dto.js";
 import {CacheKeys} from "../../utils/cache.keys.utils.js";
 import * as argon2 from "argon2";
@@ -71,7 +71,8 @@ export class AuthService {
                 firstName: req.firstName,
                 lastName: req.lastName,
                 email: req.email,
-                passwordHash: await argon2.hash(req.password)
+                passwordHash: await argon2.hash(req.password),
+                role: EmployeeRole.ORG_OWNER,
             }, manager);
 
             const organization: Organization = await this.organizationService.save({

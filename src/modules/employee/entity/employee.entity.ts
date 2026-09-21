@@ -19,7 +19,7 @@ export class Employee {
 
     @Column({
         update: false, unique: true,
-        default: () => `'EMP-' || lpad(nextval('employee_seq')::text, 6, '0')`,
+        default: () => `'EMP-' || lpad(nextval('employees_id_seq')::text, 6, '0')`,
     })
     employeeId: string;
 
