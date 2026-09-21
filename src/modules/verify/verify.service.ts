@@ -4,8 +4,8 @@ import {CustomJwtPayload, JwtType} from "../jwt/jwt.types.js";
 import {Public} from "../../common/decorators/public.decorator.js";
 import {CacheService, TTL} from "../cache/cache.service.js";
 import {CacheKeys} from "../../utils/cache.keys.utils.js";
-import {UserService} from "../users/user.service.js";
-import {User} from "../users/entity/user.entity.js";
+import {EmployeeService} from "../users/employee.service.js";
+import {Employee} from "../users/entity/employee.entity.js";
 import {AuthRes} from "../auth/dto/auth-res.dto.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
@@ -15,7 +15,7 @@ export class VerifyService {
 
     constructor(private readonly cacheService: CacheService,
                 private readonly jwtService: JwtService,
-                private readonly userService: UserService) {
+                private readonly userService: EmployeeService) {
     }
 
     async verifyEmail(token: string): Promise<AuthRes> {
@@ -28,7 +28,7 @@ export class VerifyService {
             });
         }
 
-        const user: User | null = await this.userService.findById(payload.sub);
+        const user: Employee | null = await this.userService.findById(payload.sub);
 
         if (!user) {
             throw new BadRequestException({

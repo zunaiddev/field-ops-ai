@@ -9,7 +9,7 @@ import {CurrentOrg} from "../../common/decorators/current-org.js";
 import {AddMemberDto} from "./dto/add-member.dto.js";
 import {OrganizationMembersRes} from "./dto/organization-members-res.dto.js";
 import {UpdateMemberReq} from "./dto/update-member.dto.js";
-import {UserDto} from "../users/dto/user.dto.js";
+import {EmployeeDto} from "../users/dto/employee.dto.js";
 import {OrgGuard} from "../../common/guards/org.guard.js";
 import {RolesGuard} from "../../common/guards/roles.guard.js";
 import {Roles} from "../../common/decorators/roles.decorator.js";
@@ -45,7 +45,7 @@ export class OrganizationController {
     }
 
     @Patch('current/members/:id')
-    async updateMemberRole(@Param('id') id: string, @CurrentMember() orgMember: OrganizationMember, @Body() dto: UpdateMemberReq): Promise<UserDto> {
+    async updateMemberRole(@Param('id') id: string, @CurrentMember() orgMember: OrganizationMember, @Body() dto: UpdateMemberReq): Promise<EmployeeDto> {
         return await this.organizationService.updateMember(id, orgMember, dto);
     }
 

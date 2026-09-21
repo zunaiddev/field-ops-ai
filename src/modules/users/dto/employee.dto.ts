@@ -1,9 +1,9 @@
 import {Exclude, Expose} from "class-transformer";
-import {User} from "../entity/user.entity.js";
+import {Employee} from "../entity/employee.entity.js";
 import {OrganizationRole} from "../../orgnization-member/entity/organization-member.entity.js";
 
 @Exclude()
-export class UserDto {
+export class EmployeeDto {
     @Expose()
     id: string;
 
@@ -34,7 +34,7 @@ export class UserDto {
     @Expose()
     updatedAt: Date;
 
-    constructor(user: User, role?: OrganizationRole | string) {
+    constructor(user: Employee, role?: OrganizationRole | string) {
         this.id = user.id;
         this.firstName = user.firstName;
         this.lastName = user.lastName;

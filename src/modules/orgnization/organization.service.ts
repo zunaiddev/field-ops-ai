@@ -8,24 +8,24 @@ import {
 import {DataSource, EntityManager, Repository} from "typeorm";
 import {Organization} from "./entity/organization.entity.js";
 import {InjectDataSource, InjectRepository} from "@nestjs/typeorm";
-import {User} from "../users/entity/user.entity.js";
+import {Employee, EmployeeRole} from "../users/entity/employee.entity.js";
 import {OrganizationRes} from "./dto/organization-res.dto.js";
 import {OrganizationMemberService} from "../orgnization-member/organization-member.service.js";
 import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
 import {OrganizationUpdateReq} from "./dto/organization-update-req.dto.js";
 import {AddMemberDto} from "./dto/add-member.dto.js";
 import {UpdateMemberDto} from "./dto/update-member.dto.js";
-import {UserService} from "../users/user.service.js";
+import {EmployeeService} from "../users/employee.service.js";
 import * as argon2 from "argon2";
 import {OrganizationMembersRes} from "./dto/organization-members-res.dto.js";
-import {UserDto} from "../users/dto/user.dto.js";
+import {EmployeeDto} from "../users/dto/employee.dto.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
 @Injectable()
 export class OrganizationService {
     constructor(@InjectRepository(Organization) private readonly organizationRepo: Repository<Organization>,
                 @InjectDataSource() private readonly dataSource: DataSource,
-                private readonly userService: UserService,
+                private readonly userService: EmployeeService,
                 private readonly orgMemberService: OrganizationMemberService) {
     }
 
@@ -86,8 +86,11 @@ export class OrganizationService {
         }
 
         const orgMember: OrganizationMember = await this.dataSource.transaction(async (manager: EntityManager): Promise<OrganizationMember> => {
-            const user: User = await this.userService.save({
-                ...dto,
+            const user: Employee = await this.userService.save({
+                firstName: dto.firstName,
+                lastName: dto.lastName,
+                email: dto.email,
+                role: dto.role as unknown as EmployeeRole,
                 emailVerifiedAt: new Date(),
                 passwordHash: await argon2.hash(dto.password)
             }, manager);
@@ -97,7 +100,7 @@ export class OrganizationService {
         return new OrganizationRes(orgMember);
     }
 
-    async updateMember(id: string, orgMember: OrganizationMember, dto: UpdateMemberDto): Promise<UserDto> {
+    async updateMember(id: string, orgMember: OrganizationMember, dto: UpdateMemberDto): Promise<EmployeeDto> {
         const orgId: string = orgMember.organization?.id ?? orgMember.organizationId;
         const member = await this.orgMemberService.findMemberInOrg(id, orgId);
 
@@ -153,7 +156,7 @@ export class OrganizationService {
             }
         });
 
-        return new UserDto(member.user, member.role);
+        return new EmployeeDto(member.user, member.role);
     }
 
     async deleteMember(id: string, orgMember: OrganizationMember): Promise<void> {

@@ -1,8 +1,8 @@
 import {Exclude, Expose} from "class-transformer";
 import {Organization} from "../entity/organization.entity.js";
-import {User} from "../../users/entity/user.entity.js";
+import {Employee} from "../../users/entity/employee.entity.js";
 import {OrganizationMember, OrganizationRole} from "../../orgnization-member/entity/organization-member.entity.js";
-import {UserDto} from "../../users/dto/user.dto.js";
+import {EmployeeDto} from "../../users/dto/employee.dto.js";
 
 @Exclude()
 export class OrganizationRes {
@@ -31,11 +31,11 @@ export class OrganizationRes {
     updatedAt: Date;
 
     @Expose()
-    user?: UserDto;
+    user?: EmployeeDto;
 
     constructor(organizationMember: OrganizationMember);
-    constructor(organization: Organization, user?: User, role?: OrganizationRole | string);
-    constructor(orgOrMember: Organization | OrganizationMember, user?: User, role?: OrganizationRole | string) {
+    constructor(organization: Organization, user?: Employee, role?: OrganizationRole | string);
+    constructor(orgOrMember: Organization | OrganizationMember, user?: Employee, role?: OrganizationRole | string) {
         if ('organization' in orgOrMember) {
             const orgMember = orgOrMember as OrganizationMember;
             this.id = orgMember.organization.id;
@@ -47,7 +47,7 @@ export class OrganizationRes {
             this.createdAt = orgMember.organization.createdAt;
             this.updatedAt = orgMember.organization.updatedAt;
             if (orgMember.user) {
-                this.user = new UserDto(orgMember.user, orgMember.role);
+                this.user = new EmployeeDto(orgMember.user, orgMember.role);
             }
         } else {
             const org = orgOrMember as Organization;
@@ -60,7 +60,7 @@ export class OrganizationRes {
             this.createdAt = org.createdAt;
             this.updatedAt = org.updatedAt;
             if (user) {
-                this.user = new UserDto(user, role);
+                this.user = new EmployeeDto(user, role);
             }
         }
     }

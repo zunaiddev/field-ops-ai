@@ -2,7 +2,7 @@ import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/co
 import {InjectRepository} from "@nestjs/typeorm";
 import {OrganizationMember} from "./entity/organization-member.entity.js";
 import {DeepPartial, EntityManager, Repository} from "typeorm";
-import {User} from "../users/entity/user.entity.js";
+import {Employee} from "../users/entity/employee.entity.js";
 import {Organization} from "../orgnization/entity/organization.entity.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
@@ -17,7 +17,7 @@ export class OrganizationMemberService {
         return await repo.save(organization);
     }
 
-    async findByUserOrThrow(user: User): Promise<OrganizationMember> {
+    async findByUserOrThrow(user: Employee): Promise<OrganizationMember> {
         const member = await this.organizationMemberRepo.findOne({
             where: {userId: user.id},
             relations: {organization: true},
