@@ -19,6 +19,7 @@ import {UserService} from "../users/user.service.js";
 import * as argon2 from "argon2";
 import {OrganizationMembersRes} from "./dto/organization-members-res.dto.js";
 import {UserDto} from "../users/dto/user.dto.js";
+import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
 @Injectable()
 export class OrganizationService {
@@ -54,7 +55,10 @@ export class OrganizationService {
         const organization: Organization = orgMember.organization;
 
         if (dto.slug !== organization.slug && dto.slug && await this.organizationRepo.existsBy({slug: dto.slug})) {
-            throw new BadRequestException("Slug already exists");
+            throw new BadRequestException({
+                message: "Slug already exists",
+                errorCode: ErrorCode.SLUG_ALREADY_EXISTS,
+            });
         }
 
         Object.assign(organization, {
@@ -70,12 +74,15 @@ export class OrganizationService {
 
     async getCurrentMembers(orgMember: OrganizationMember): Promise<OrganizationMembersRes> {
         const members = await this.orgMemberService.findAllMembersByOrg(orgMember.organization);
-        return new OrganizationMembersRes(orgMember.organization, members);
+        return new OrganizationMembersRes(members.filter(member => member.userId !== orgMember.userId));
     }
 
     async addMember(organization: Organization, dto: AddMemberDto): Promise<OrganizationRes> {
         if (await this.orgMemberService.existsByEmail(dto.email)) {
-            throw new ConflictException("user with email already exists");
+            throw new ConflictException({
+                message: "user with email already exists",
+                errorCode: ErrorCode.USER_ALREADY_EXISTS,
+            });
         }
 
         const orgMember: OrganizationMember = await this.dataSource.transaction(async (manager: EntityManager): Promise<OrganizationMember> => {
@@ -95,16 +102,25 @@ export class OrganizationService {
         const member = await this.orgMemberService.findMemberInOrg(id, orgId);
 
         if (!member) {
-            throw new NotFoundException("Member not found in this organization");
+            throw new NotFoundException({
+                message: "Member not found in this organization",
+                errorCode: ErrorCode.MEMBER_NOT_FOUND,
+            });
         }
 
         if (member.role === OrganizationRole.ORG_OWNER) {
-            throw new BadRequestException("Organization owner details cannot be modified");
+            throw new BadRequestException({
+                message: "Organization owner details cannot be modified",
+                errorCode: ErrorCode.OWNER_CANNOT_BE_MODIFIED,
+            });
         }
 
         if (dto.email && dto.email !== member.user.email) {
             if (await this.userService.existsByEmail(dto.email)) {
-                throw new ConflictException("User with this email already exists");
+                throw new ConflictException({
+                    message: "User with this email already exists",
+                    errorCode: ErrorCode.USER_ALREADY_EXISTS,
+                });
             }
         }
 
@@ -145,15 +161,24 @@ export class OrganizationService {
         const member = await this.orgMemberService.findMemberInOrg(id, orgId);
 
         if (!member) {
-            throw new NotFoundException("Member not found in this organization");
+            throw new NotFoundException({
+                message: "Member not found in this organization",
+                errorCode: ErrorCode.MEMBER_NOT_FOUND,
+            });
         }
 
         if (member.userId === orgMember.userId) {
-            throw new BadRequestException("You can't delete yourself");
+            throw new BadRequestException({
+                message: "You can't delete yourself",
+                errorCode: ErrorCode.CANNOT_DELETE_SELF,
+            });
         }
 
         if (member.role === OrganizationRole.ORG_OWNER) {
-            throw new ForbiddenException("You can't delete an owner");
+            throw new ForbiddenException({
+                message: "You can't delete an owner",
+                errorCode: ErrorCode.CANNOT_DELETE_OWNER,
+            });
         }
 
         await this.userService.delete(member.userId);

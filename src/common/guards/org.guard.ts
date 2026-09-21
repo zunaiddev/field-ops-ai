@@ -14,6 +14,7 @@ import {
 } from "../../modules/orgnization-member/entity/organization-member.entity.js";
 import {JwtAuthenticatedRequest} from "./jwt.guard.js";
 import {CustomJwtPayload} from "../../modules/jwt/jwt.types.js";
+import {ErrorCode} from "../enums/error-code.enum.js";
 
 export interface OrgAuthenticatedReq extends JwtAuthenticatedRequest {
     organization: Organization,
@@ -36,15 +37,24 @@ export class OrgGuard implements CanActivate {
         const member: OrganizationMember = await this.orgMemberService.getFullMemberByUserId(userId);
 
         if (!(member && member.user && member.user.emailVerifiedAt)) {
-            throw new UnauthorizedException("Could not find user or user email not verified");
+            throw new UnauthorizedException({
+                message: "Could not find user or user email not verified",
+                errorCode: ErrorCode.USER_NOT_FOUND_OR_UNVERIFIED,
+            });
         }
 
         if (!(member.role === OrganizationRole.ORG_OWNER || member.role === OrganizationRole.ORG_ADMIN)) {
-            throw new ForbiddenException("You are not authorized to access this resource");
+            throw new ForbiddenException({
+                message: "You are not authorized to access this resource",
+                errorCode: ErrorCode.FORBIDDEN_RESOURCE,
+            });
         }
 
         if (!member.organization) {
-            throw new UnauthorizedException("Could not find any organization for this user");
+            throw new UnauthorizedException({
+                message: "Could not find any organization for this user",
+                errorCode: ErrorCode.ORG_NOT_FOUND,
+            });
         }
 
         request.member = member;

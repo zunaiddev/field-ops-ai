@@ -27,6 +27,7 @@ import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity
 import {DataSource, EntityManager} from "typeorm";
 import {InjectDataSource} from "@nestjs/typeorm";
 import {MailService} from "../../mail/mail.service.js";
+import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
 @Injectable()
 export class AuthService {
@@ -47,13 +48,19 @@ export class AuthService {
         const existingUser: User | null = await this.userService.findByEmail(email);
 
         if (existingUser) {
-            throw new ConflictException(`user with ${email} already exists`);
+            throw new ConflictException({
+                message: `user with ${email} already exists`,
+                errorCode: ErrorCode.USER_ALREADY_EXISTS,
+            });
         }
 
         const slug: string = req.orgSlug ?? orgNameToSlug(req.orgName);
 
         if (await this.organizationService.existsBySlug(slug)) {
-            throw new ConflictException({message: `organization with ${slug} already exists`, slug});
+            throw new ConflictException({
+                message: `organization with ${slug} already exists`,
+                errorCode: ErrorCode.SLUG_CONFLICT,
+            });
         }
 
         const {
@@ -100,16 +107,25 @@ export class AuthService {
         const user: User | null = await this.userService.findByEmail(req.email);
 
         if (!user) {
-            throw new BadRequestException(`could not find user with ${req.email}`);
+            throw new BadRequestException({
+                message: `could not find user with ${req.email}`,
+                errorCode: ErrorCode.INVALID_EMAIL,
+            });
         }
 
         if (!user.emailVerifiedAt) {
-            throw new UnauthorizedException("Please verify your email first to login");
+            throw new UnauthorizedException({
+                message: "Please verify your email first to login",
+                errorCode: ErrorCode.EMAIL_NOT_VERIFIED,
+            });
         }
 
         if (await this.cacheService.get<boolean>(CacheKeys.accountLocked(user.email))) {
             throw new HttpException(
-                "Too many failed attempts try again after some time",
+                {
+                    message: "Too many failed attempts try again after some time",
+                    errorCode: ErrorCode.TOO_MANY_ATTEMPTS,
+                },
                 HttpStatus.TOO_MANY_REQUESTS,
             );
         }
@@ -126,7 +142,10 @@ export class AuthService {
                 await this.cacheService.set<number>(CacheKeys.failedPasswordAttempts(user.email), failedAttempts + 1, TTL.ofHours(2));
             }
 
-            throw new UnauthorizedException("Invalid password");
+            throw new UnauthorizedException({
+                message: "Invalid password",
+                errorCode: ErrorCode.INVALID_PASSWORD,
+            });
         }
 
         await this.cacheService.remove(CacheKeys.failedPasswordAttempts(user.email));
@@ -141,7 +160,10 @@ export class AuthService {
     async resendVerifyEmail(email: string): Promise<EmailRes> {
         if (await this.cacheService.get<string>(CacheKeys.resendVerifyEmail(email))) {
             throw new HttpException(
-                "Please try again after some time",
+                {
+                    message: "Please try again after some time",
+                    errorCode: ErrorCode.TOO_MANY_REQUESTS,
+                },
                 HttpStatus.TOO_MANY_REQUESTS,
             );
         }
@@ -149,11 +171,17 @@ export class AuthService {
         const user: User | null = await this.userService.findByEmail(email);
 
         if (!user) {
-            throw new BadRequestException(`user with ${email} does not exists`);
+            throw new BadRequestException({
+                message: `user with ${email} does not exists`,
+                errorCode: ErrorCode.USER_NOT_FOUND,
+            });
         }
 
         if (user.emailVerifiedAt) {
-            throw new BadRequestException(`user with ${email} has been verified`);
+            throw new BadRequestException({
+                message: `user with ${email} has been verified`,
+                errorCode: ErrorCode.USER_ALREADY_VERIFIED,
+            });
         }
 
         await this.cacheService.set(CacheKeys.resendVerifyEmail(email),
@@ -167,7 +195,10 @@ export class AuthService {
 
     async refreshToken(token: string): Promise<RefreshTokenRes> {
         if (!token) {
-            throw new UnauthorizedException("refresh-token cookie is missing");
+            throw new UnauthorizedException({
+                message: "refresh-token cookie is missing",
+                errorCode: ErrorCode.REFRESH_TOKEN_MISSING,
+            });
         }
 
         const payload: CustomJwtPayload = this.jwtService.validateToken(token, JwtType.REFRESH);

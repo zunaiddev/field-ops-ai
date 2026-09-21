@@ -4,6 +4,7 @@ import {ConfigService} from "@nestjs/config";
 import {CustomJwtPayload, JwtType} from "./jwt.types.js";
 import {randomUUID} from "node:crypto";
 import {OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
+import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
 @Injectable()
 export class JwtService {
@@ -26,18 +27,12 @@ export class JwtService {
         });
     }
 
-    /**
-     * Expires in 15 minutes
-     */
     orgAccessToken(userId: string, orgId: string, role: OrganizationRole): string {
         return this.generateToken(userId, JwtType.AUTH, "15m", {
             orgId, role
         });
     }
 
-    /**
-     * Expires in 30 Days
-     */
     orgRefreshToken(userId: string, orgId: string, role: OrganizationRole): string {
         return this.generateToken(userId, JwtType.REFRESH, "30d", {
             orgId, role
@@ -56,10 +51,6 @@ export class JwtService {
         return this.generateToken(email, JwtType.RESET_PASSWORD, "30d");
     }
 
-    /**
-     * expires in 15 minutes
-     * @param id - user id for token
-     */
     generateEmailVerifyToken(id: string): string {
         return this.generateToken(id, JwtType.VERIFY_EMAIL, "15m");
     }
@@ -70,17 +61,29 @@ export class JwtService {
             payload = jwt.verify(token, this.SECRET);
         } catch (e: any) {
             if (e instanceof jwt.TokenExpiredError) {
-                throw new UnauthorizedException("Token has expired");
+                throw new UnauthorizedException({
+                    message: "Token has expired",
+                    errorCode: ErrorCode.TOKEN_EXPIRED,
+                });
             }
-            throw new UnauthorizedException("Invalid token");
+            throw new UnauthorizedException({
+                message: "Invalid token",
+                errorCode: ErrorCode.INVALID_TOKEN,
+            });
         }
 
         if (typeof payload === "string" || !payload || !payload.sub || !payload.jti) {
-            throw new UnauthorizedException("Invalid token");
+            throw new UnauthorizedException({
+                message: "Invalid token",
+                errorCode: ErrorCode.INVALID_TOKEN,
+            });
         }
 
         if (payload.type !== type) {
-            throw new UnauthorizedException("Invalid token type");
+            throw new UnauthorizedException({
+                message: "Invalid token type",
+                errorCode: ErrorCode.INVALID_TOKEN_TYPE,
+            });
         }
 
         return {

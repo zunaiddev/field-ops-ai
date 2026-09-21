@@ -4,6 +4,7 @@ import {OrganizationMember} from "./entity/organization-member.entity.js";
 import {DeepPartial, EntityManager, Repository} from "typeorm";
 import {User} from "../users/entity/user.entity.js";
 import {Organization} from "../orgnization/entity/organization.entity.js";
+import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
 @Injectable()
 export class OrganizationMemberService {
@@ -23,7 +24,10 @@ export class OrganizationMemberService {
         });
 
         if (!member) {
-            throw new BadRequestException(`Could not found org details for email ${user.email}`)
+            throw new BadRequestException({
+                message: `Could not found org details for email ${user.email}`,
+                errorCode: ErrorCode.ORG_MEMBER_NOT_FOUND,
+            });
         }
 
         return member;
@@ -36,7 +40,10 @@ export class OrganizationMemberService {
         });
 
         if (!member) {
-            throw new UnauthorizedException("Could not find any organization for this user");
+            throw new UnauthorizedException({
+                message: "Could not find any organization for this user",
+                errorCode: ErrorCode.ORG_NOT_FOUND,
+            });
         }
 
         return member;
@@ -70,7 +77,10 @@ export class OrganizationMemberService {
         });
 
         if (!member) {
-            throw new UnauthorizedException("Could not find organization member");
+            throw new UnauthorizedException({
+                message: "Could not find organization member",
+                errorCode: ErrorCode.ORG_MEMBER_NOT_FOUND,
+            });
         }
 
         return member;

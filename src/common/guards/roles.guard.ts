@@ -3,6 +3,7 @@ import {Reflector} from "@nestjs/core";
 import {OrganizationRole} from "../../modules/orgnization-member/entity/organization-member.entity.js";
 import {OrgAuthenticatedReq} from "./org.guard.js";
 import {ROLES_KEY} from "../decorators/roles.decorator.js";
+import {ErrorCode} from "../enums/error-code.enum.js";
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -28,15 +29,19 @@ export class RolesGuard implements CanActivate {
         const member = request.member;
 
         if (!member) {
-            throw new UnauthorizedException('Organization member not found');
+            throw new UnauthorizedException({
+                message: 'Organization member not found',
+                errorCode: ErrorCode.MEMBER_NOT_FOUND,
+            });
         }
 
         console.log(member.role);
 
         if (!requiredRoles.includes(member.role)) {
-            throw new ForbiddenException(
-                'You are not authorized to access this resource',
-            );
+            throw new ForbiddenException({
+                message: 'You are not authorized to access this resource',
+                errorCode: ErrorCode.FORBIDDEN_RESOURCE,
+            });
         }
 
         return true;

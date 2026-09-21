@@ -7,6 +7,7 @@ import {CacheKeys} from "../../utils/cache.keys.utils.js";
 import {UserService} from "../users/user.service.js";
 import {User} from "../users/entity/user.entity.js";
 import {AuthRes} from "../auth/dto/auth-res.dto.js";
+import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
 @Public()
 @Injectable()
@@ -21,17 +22,26 @@ export class VerifyService {
         const payload: CustomJwtPayload = this.jwtService.validateToken(token, JwtType.VERIFY_EMAIL);
 
         if (await this.cacheService.exists(CacheKeys.usedToken(payload.jti))) {
-            throw new BadRequestException("user has already been verified");
+            throw new BadRequestException({
+                message: "user has already been verified",
+                errorCode: ErrorCode.USER_ALREADY_VERIFIED,
+            });
         }
 
         const user: User | null = await this.userService.findById(payload.sub);
 
         if (!user) {
-            throw new BadRequestException(`user not found`);
+            throw new BadRequestException({
+                message: "user not found",
+                errorCode: ErrorCode.USER_NOT_FOUND,
+            });
         }
 
         if (user.emailVerifiedAt) {
-            throw new BadRequestException("user already verified");
+            throw new BadRequestException({
+                message: "user already verified",
+                errorCode: ErrorCode.USER_ALREADY_VERIFIED,
+            });
         }
 
         user.emailVerifiedAt = new Date();

@@ -1,7 +1,8 @@
-import {Injectable} from "@nestjs/common";
+import {BadRequestException, Injectable} from "@nestjs/common";
 import {EntityManager, Repository} from "typeorm";
 import {User} from "./entity/user.entity.js";
 import {InjectRepository} from "@nestjs/typeorm";
+import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
 @Injectable()
 export class UserService {
@@ -20,7 +21,10 @@ export class UserService {
 
     async update(user: User): Promise<User> {
         if (!user.id) {
-            throw new Error("User id must be provided while updating")
+            throw new BadRequestException({
+                message: "User id must be provided while updating",
+                errorCode: ErrorCode.USER_ID_REQUIRED,
+            });
         }
 
         return await this.userRepo.save(user);

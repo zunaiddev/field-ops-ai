@@ -14,6 +14,7 @@ import {UpdateCustomerDto} from "./dto/update-customer.dto.js";
 import {CustomerHistory, CustomerHistoryAction} from "./entity/customer-history.js";
 import {EventBusService} from "../../common/events/event-bus.service.js";
 import {EventName} from "../../common/events/event.types.js";
+import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
 export interface CustomerSearchOptions {
     email?: string;
@@ -43,7 +44,10 @@ export class CustomerService {
         const customer: Customer | null = await this.customerRepo
             .findOneBy({id: customerId, organizationId: orgId});
         if (!customer) {
-            throw new NotFoundException("could not found customer in current organization");
+            throw new NotFoundException({
+                message: "could not found customer in current organization",
+                errorCode: ErrorCode.CUSTOMER_NOT_FOUND,
+            });
         }
 
         return customer;
@@ -93,7 +97,10 @@ export class CustomerService {
             });
 
         if (!address) {
-            throw new NotFoundException("could not find address");
+            throw new NotFoundException({
+                message: "could not find address",
+                errorCode: ErrorCode.ADDRESS_NOT_FOUND,
+            });
         }
 
         return address;
@@ -109,7 +116,10 @@ export class CustomerService {
 
     async create(membership: OrganizationMember, dto: CreateCustomerReq): Promise<CustomerRes> {
         if (await this.existsByEmail(dto.email)) {
-            throw new ConflictException("Email already exists");
+            throw new ConflictException({
+                message: "Email already exists",
+                errorCode: ErrorCode.EMAIL_ALREADY_EXISTS,
+            });
         }
 
         const customer: Customer = await this.dataSource.transaction(async manager => {
@@ -232,11 +242,17 @@ export class CustomerService {
         const customer: Customer = await this.findByIdAndOrgId(customerId, membership.organizationId);
 
         if (!customer) {
-            throw new NotFoundException("could not find customer in current organization");
+            throw new NotFoundException({
+                message: "could not find customer in current organization",
+                errorCode: ErrorCode.CUSTOMER_NOT_FOUND,
+            });
         }
 
         if (dto.email && await this.existsByEmail(dto.email)) {
-            throw new ConflictException(`Customer with email ${dto.email} already exists`);
+            throw new ConflictException({
+                message: `Customer with email ${dto.email} already exists`,
+                errorCode: ErrorCode.CUSTOMER_EMAIL_ALREADY_EXISTS,
+            });
         }
 
         const updatedCustomer: Customer = await this.dataSource.transaction(async manager => {
@@ -265,7 +281,10 @@ export class CustomerService {
         const customer = await this.findByIdAndOrgId(customerId, membership.organizationId);
 
         if (customer.organizationId !== membership.organizationId) {
-            throw new NotFoundException("Could not find customer in current organization");
+            throw new NotFoundException({
+                message: "Could not find customer in current organization",
+                errorCode: ErrorCode.CUSTOMER_NOT_FOUND,
+            });
         }
 
         await this.dataSource.transaction(async manager => {

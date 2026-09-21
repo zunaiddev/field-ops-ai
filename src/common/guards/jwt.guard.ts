@@ -4,6 +4,7 @@ import {CustomJwtPayload, JwtType} from "../../modules/jwt/jwt.types.js";
 import {IS_PUBLIC_KEY} from "../decorators/public.decorator.js";
 import {Reflector} from "@nestjs/core";
 import {JwtService} from "../../modules/jwt/jwt.service.js";
+import {ErrorCode} from "../enums/error-code.enum.js";
 
 export interface JwtAuthenticatedRequest extends Request {
     payload: CustomJwtPayload;
@@ -34,13 +35,19 @@ export class JwtGuard implements CanActivate {
         const authHeader: string | undefined = request.headers.authorization;
 
         if (!authHeader) {
-            throw new UnauthorizedException("Auth header is missing");
+            throw new UnauthorizedException({
+                message: "Auth header is missing",
+                errorCode: ErrorCode.AUTH_HEADER_MISSING,
+            });
         }
 
         const [type, token] = authHeader.split(' ');
 
         if (type !== "Bearer" || !token) {
-            throw new UnauthorizedException("Missing or invalid Bearer token");
+            throw new UnauthorizedException({
+                message: "Missing or invalid Bearer token",
+                errorCode: ErrorCode.INVALID_BEARER_TOKEN,
+            });
         }
 
         request.payload = this.jwtService.validateToken(token, JwtType.AUTH);
