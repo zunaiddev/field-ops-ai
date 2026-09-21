@@ -8,12 +8,12 @@ import {
 } from "@nestjs/common";
 import {RegistrationReq} from "./dto/signup-req.dto.js";
 import {RegistrationRes} from "./dto/signup-res.dto.js";
-import {EmployeeService} from "../users/employee.service.js";
+import {EmployeeService} from "../employee/employee.service.js";
 import {CacheService, TTL} from "../cache/cache.service.js";
 import {JwtService} from "../jwt/jwt.service.js";
 import {AuthRes} from "./dto/auth-res.dto.js";
 import {LoginReq} from "./dto/login-req.dto.js";
-import {Employee} from "../users/entity/employee.entity.js";
+import {Employee} from "../employee/entity/employee.entity.js";
 import {EmailRes} from "./dto/email-res.dto.js";
 import {CacheKeys} from "../../utils/cache.keys.utils.js";
 import * as argon2 from "argon2";
@@ -83,7 +83,7 @@ export class AuthService {
 
             const organizationMember: OrganizationMember = await this.organizationMemberService.save({
                 organization: organization,
-                user: user,
+                employee: user,
                 role: OrganizationRole.ORG_OWNER
             }, manager);
 
@@ -202,7 +202,8 @@ export class AuthService {
         }
 
         const payload: CustomJwtPayload = this.jwtService.validateToken(token, JwtType.REFRESH);
-        const accessToken: string = this.jwtService.generateAccessToken(payload.sub);
+        const accessToken: string =
+            this.jwtService.generateAccessToken(parseInt(payload.sub));
 
         return new RefreshTokenRes(payload.sub, accessToken);
     }

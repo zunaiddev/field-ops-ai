@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards} from '@nestjs/common';
 import {OrganizationService} from "./organization.service.js";
 import {OrganizationRes} from "./dto/organization-res.dto.js";
 import {OrganizationUpdateReq} from "./dto/organization-update-req.dto.js";
@@ -9,7 +9,7 @@ import {CurrentOrg} from "../../common/decorators/current-org.js";
 import {AddMemberDto} from "./dto/add-member.dto.js";
 import {OrganizationMembersRes} from "./dto/organization-members-res.dto.js";
 import {UpdateMemberReq} from "./dto/update-member.dto.js";
-import {EmployeeDto} from "../users/dto/employee.dto.js";
+import {EmployeeDto} from "../employee/dto/employee.dto.js";
 import {OrgGuard} from "../../common/guards/org.guard.js";
 import {RolesGuard} from "../../common/guards/roles.guard.js";
 import {Roles} from "../../common/decorators/roles.decorator.js";
@@ -45,12 +45,12 @@ export class OrganizationController {
     }
 
     @Patch('current/members/:id')
-    async updateMemberRole(@Param('id') id: string, @CurrentMember() orgMember: OrganizationMember, @Body() dto: UpdateMemberReq): Promise<EmployeeDto> {
+    async updateMemberRole(@Param('id', ParseIntPipe) id: number, @CurrentMember() orgMember: OrganizationMember, @Body() dto: UpdateMemberReq): Promise<EmployeeDto> {
         return await this.organizationService.updateMember(id, orgMember, dto);
     }
 
     @Delete('current/members/:id')
-    async deleteMember(@Param('id') id: string, @CurrentMember() orgMember: OrganizationMember): Promise<void> {
+    async deleteMember(@Param('id', ParseIntPipe) id: number, @CurrentMember() orgMember: OrganizationMember): Promise<void> {
         await this.organizationService.deleteMember(id, orgMember);
     }
 }

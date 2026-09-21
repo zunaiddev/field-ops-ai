@@ -3,7 +3,7 @@ import {HealthModule} from "./health/health.module.js";
 import {DatabaseModule} from "./database/database.module.js";
 import {OrganisationModule} from "./modules/orgnization/organisation.module.js";
 import {OrganizationMemberModule} from "./modules/orgnization-member/organization-member.module.js";
-import {UsersModule} from "./modules/users/users.module.js";
+import {EmployeeModule} from "./modules/employee/employee.module.js";
 import {ConfigModule} from "@nestjs/config";
 import configuration from "./config/configuration.js";
 import {GuardModule} from "./common/guards/guard.module.js";
@@ -22,7 +22,7 @@ import {EventBusModule} from './common/events/event-bus.module.js';
         ConfigModule.forRoot({isGlobal: true, load: [configuration]}),
         AuthModule,
         RedisCacheModule,
-        UsersModule,
+        EmployeeModule,
         OrganisationModule,
         OrganizationMemberModule,
         DatabaseModule,

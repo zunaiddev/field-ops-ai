@@ -3,11 +3,11 @@ import {Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateD
 @Entity("customers")
 @Index(['organizationId'])
 export class Customer {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column({name: "organization_id"})
-    organizationId: string;
+    organizationId: number;
 
     @Column({length: 150})
     name: string;

@@ -12,15 +12,15 @@ export enum CustomerHistoryAction {
 
 @Entity('customer_histories')
 export class CustomerHistory {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @ManyToOne(() => Customer, {onDelete: 'CASCADE'})
     @JoinColumn({name: 'customer_id'})
     customer: Customer;
 
     @Column({name: 'organization_id'})
-    organizationId: string;
+    organizationId: number;
 
     @Column({
         type: "enum", enum: CustomerHistoryAction,
@@ -31,8 +31,8 @@ export class CustomerHistory {
     @Column({type: "text", nullable: true})
     description?: string;
 
-    @Column({name: 'created_by', type: 'uuid'})
-    createdBy: string;
+    @Column({name: 'created_by'})
+    createdBy: number;
 
     @CreateDateColumn({name: 'created_at'})
     createdAt: Date;

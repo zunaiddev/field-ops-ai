@@ -1,13 +1,13 @@
 import {Exclude, Expose} from "class-transformer";
 import {Organization} from "../entity/organization.entity.js";
-import {Employee} from "../../users/entity/employee.entity.js";
+import {Employee} from "../../employee/entity/employee.entity.js";
 import {OrganizationMember, OrganizationRole} from "../../orgnization-member/entity/organization-member.entity.js";
-import {EmployeeDto} from "../../users/dto/employee.dto.js";
+import {EmployeeDto} from "../../employee/dto/employee.dto.js";
 
 @Exclude()
 export class OrganizationRes {
     @Expose()
-    id: string;
+    id: number;
 
     @Expose()
     name: string;
@@ -46,8 +46,8 @@ export class OrganizationRes {
             this.currency = orgMember.organization.currency;
             this.createdAt = orgMember.organization.createdAt;
             this.updatedAt = orgMember.organization.updatedAt;
-            if (orgMember.user) {
-                this.user = new EmployeeDto(orgMember.user, orgMember.role);
+            if (orgMember.employee) {
+                this.user = new EmployeeDto(orgMember.employee, orgMember.role);
             }
         } else {
             const org = orgOrMember as Organization;

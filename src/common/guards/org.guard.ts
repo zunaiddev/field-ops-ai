@@ -34,9 +34,10 @@ export class OrgGuard implements CanActivate {
 
         const {sub: userId}: CustomJwtPayload = request.payload;
 
-        const member: OrganizationMember = await this.orgMemberService.getFullMemberByUserId(userId);
+        const member: OrganizationMember = await
+            this.orgMemberService.getFullMemberByUserId(Number(userId));
 
-        if (!(member && member.user && member.user.emailVerifiedAt)) {
+        if (!(member && member.employee && member.employee.emailVerifiedAt)) {
             throw new UnauthorizedException({
                 message: "Could not find user or user email not verified",
                 errorCode: ErrorCode.USER_NOT_FOUND_OR_UNVERIFIED,

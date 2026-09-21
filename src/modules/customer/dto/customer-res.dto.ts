@@ -6,10 +6,10 @@ import {CustomerAddressRes} from "./customer-address-res.dto.js";
 @Exclude()
 export class CustomerRes {
     @Expose()
-    id: string;
+    id: number;
 
     @Expose()
-    organizationId: string;
+    organizationId: number;
 
     @Expose()
     name: string;

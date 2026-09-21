@@ -2,7 +2,7 @@ import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/co
 import {InjectRepository} from "@nestjs/typeorm";
 import {OrganizationMember} from "./entity/organization-member.entity.js";
 import {DeepPartial, EntityManager, Repository} from "typeorm";
-import {Employee} from "../users/entity/employee.entity.js";
+import {Employee} from "../employee/entity/employee.entity.js";
 import {Organization} from "../orgnization/entity/organization.entity.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
@@ -19,7 +19,7 @@ export class OrganizationMemberService {
 
     async findByUserOrThrow(user: Employee): Promise<OrganizationMember> {
         const member = await this.organizationMemberRepo.findOne({
-            where: {userId: user.id},
+            where: {employeeId: user.id},
             relations: {organization: true},
         });
 
@@ -33,10 +33,10 @@ export class OrganizationMemberService {
         return member;
     }
 
-    async getFullMemberByUserId(userId: string): Promise<OrganizationMember> {
+    async getFullMemberByUserId(userId: number): Promise<OrganizationMember> {
         const member: OrganizationMember | null = await this.organizationMemberRepo.findOne({
-            where: {userId},
-            relations: {organization: true, user: true}
+            where: {employeeId: userId},
+            relations: {organization: true, employee: true}
         });
 
         if (!member) {
@@ -49,31 +49,31 @@ export class OrganizationMemberService {
         return member;
     }
 
-    async findMemberInOrg(id: string, organizationId: string): Promise<OrganizationMember | null> {
+    async findMemberInOrg(id: number, organizationId: number): Promise<OrganizationMember | null> {
         return await this.organizationMemberRepo.findOne({
             where: [
                 {id, organizationId},
-                {userId: id, organizationId}
+                {employeeId: id, organizationId}
             ],
-            relations: {user: true, organization: true}
+            relations: {employee: true, organization: true}
         });
     }
 
     async findAllMembersByOrg(organization: Organization): Promise<OrganizationMember[]> {
         return await this.organizationMemberRepo.find({
             where: {organizationId: organization.id},
-            relations: {user: true}
+            relations: {employee: true}
         });
     }
 
     async existsByEmail(email: string): Promise<boolean> {
-        return await this.organizationMemberRepo.existsBy({user: {email}});
+        return await this.organizationMemberRepo.existsBy({employee: {email}});
     }
 
-    async getMemberByOrgId(orgId: string): Promise<OrganizationMember> {
+    async getMemberByOrgId(orgId: number): Promise<OrganizationMember> {
         const member: OrganizationMember | null = await this.organizationMemberRepo.findOne({
             where: {organizationId: orgId},
-            relations: {organization: true, user: false}
+            relations: {organization: true, employee: false}
         });
 
         if (!member) {

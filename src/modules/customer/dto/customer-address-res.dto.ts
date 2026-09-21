@@ -4,10 +4,10 @@ import {CustomerAddress} from "../entity/customer-address.entity.js";
 @Exclude()
 export class CustomerAddressRes {
     @Expose()
-    id: string;
+    id: number;
 
     @Expose()
-    customerId: string;
+    customerId: number;
 
     @Expose()
     addressLine1: string;

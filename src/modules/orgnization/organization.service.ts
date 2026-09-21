@@ -8,17 +8,17 @@ import {
 import {DataSource, EntityManager, Repository} from "typeorm";
 import {Organization} from "./entity/organization.entity.js";
 import {InjectDataSource, InjectRepository} from "@nestjs/typeorm";
-import {Employee, EmployeeRole} from "../users/entity/employee.entity.js";
+import {Employee, EmployeeRole} from "../employee/entity/employee.entity.js";
 import {OrganizationRes} from "./dto/organization-res.dto.js";
 import {OrganizationMemberService} from "../orgnization-member/organization-member.service.js";
 import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
 import {OrganizationUpdateReq} from "./dto/organization-update-req.dto.js";
 import {AddMemberDto} from "./dto/add-member.dto.js";
 import {UpdateMemberDto} from "./dto/update-member.dto.js";
-import {EmployeeService} from "../users/employee.service.js";
+import {EmployeeService} from "../employee/employee.service.js";
 import * as argon2 from "argon2";
 import {OrganizationMembersRes} from "./dto/organization-members-res.dto.js";
-import {EmployeeDto} from "../users/dto/employee.dto.js";
+import {EmployeeDto} from "../employee/dto/employee.dto.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
 @Injectable()
@@ -35,7 +35,7 @@ export class OrganizationService {
         return await repo.save(organization);
     }
 
-    async findById(id: string): Promise<Organization> {
+    async findById(id: number): Promise<Organization> {
         return await this.organizationRepo.findOneByOrFail({id});
     }
 
@@ -74,7 +74,7 @@ export class OrganizationService {
 
     async getCurrentMembers(orgMember: OrganizationMember): Promise<OrganizationMembersRes> {
         const members = await this.orgMemberService.findAllMembersByOrg(orgMember.organization);
-        return new OrganizationMembersRes(members.filter(member => member.userId !== orgMember.userId));
+        return new OrganizationMembersRes(members.filter(member => member.employeeId !== orgMember.employeeId));
     }
 
     async addMember(organization: Organization, dto: AddMemberDto): Promise<OrganizationRes> {
@@ -94,14 +94,14 @@ export class OrganizationService {
                 emailVerifiedAt: new Date(),
                 passwordHash: await argon2.hash(dto.password)
             }, manager);
-            return await this.orgMemberService.save({user, organization, role: dto.role}, manager);
+            return await this.orgMemberService.save({employee: user, organization, role: dto.role}, manager);
         });
 
         return new OrganizationRes(orgMember);
     }
 
-    async updateMember(id: string, orgMember: OrganizationMember, dto: UpdateMemberDto): Promise<EmployeeDto> {
-        const orgId: string = orgMember.organization?.id ?? orgMember.organizationId;
+    async updateMember(id: number, orgMember: OrganizationMember, dto: UpdateMemberDto): Promise<EmployeeDto> {
+        const orgId: number = orgMember.organization?.id ?? orgMember.organizationId;
         const member = await this.orgMemberService.findMemberInOrg(id, orgId);
 
         if (!member) {
@@ -118,7 +118,7 @@ export class OrganizationService {
             });
         }
 
-        if (dto.email && dto.email !== member.user.email) {
+        if (dto.email && dto.email !== member.employee.email) {
             if (await this.userService.existsByEmail(dto.email)) {
                 throw new ConflictException({
                     message: "User with this email already exists",
@@ -140,14 +140,14 @@ export class OrganizationService {
                 passwordHash !== undefined ||
                 dto.status !== undefined
             ) {
-                Object.assign(member.user, {
+                Object.assign(member.employee, {
                     ...(dto.firstName !== undefined && {firstName: dto.firstName}),
                     ...(dto.lastName !== undefined && {lastName: dto.lastName}),
                     ...(dto.email !== undefined && {email: dto.email}),
                     ...(passwordHash !== undefined && {passwordHash}),
                     ...(dto.status !== undefined && {status: dto.status}),
                 });
-                await this.userService.save(member.user, manager);
+                await this.userService.save(member.employee, manager);
             }
 
             if (dto.role !== undefined) {
@@ -156,11 +156,11 @@ export class OrganizationService {
             }
         });
 
-        return new EmployeeDto(member.user, member.role);
+        return new EmployeeDto(member.employee, member.role);
     }
 
-    async deleteMember(id: string, orgMember: OrganizationMember): Promise<void> {
-        const orgId: string = orgMember.organization?.id ?? orgMember.organizationId;
+    async deleteMember(id: number, orgMember: OrganizationMember): Promise<void> {
+        const orgId: number = orgMember.organization?.id ?? orgMember.organizationId;
         const member = await this.orgMemberService.findMemberInOrg(id, orgId);
 
         if (!member) {
@@ -170,7 +170,7 @@ export class OrganizationService {
             });
         }
 
-        if (member.userId === orgMember.userId) {
+        if (member.employeeId === orgMember.employeeId) {
             throw new BadRequestException({
                 message: "You can't delete yourself",
                 errorCode: ErrorCode.CANNOT_DELETE_SELF,
@@ -184,6 +184,6 @@ export class OrganizationService {
             });
         }
 
-        await this.userService.delete(member.userId);
+        await this.userService.delete(member.employeeId);
     }
 }

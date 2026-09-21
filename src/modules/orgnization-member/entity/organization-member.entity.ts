@@ -1,5 +1,5 @@
 import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
-import {Employee} from "../../users/entity/employee.entity.js";
+import {Employee} from "../../employee/entity/employee.entity.js";
 import {Organization} from "../../orgnization/entity/organization.entity.js";
 
 export enum OrganizationRole {
@@ -15,14 +15,14 @@ export enum OrganizationRole {
 
 @Entity('organization_members')
 export class OrganizationMember {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column({name: 'organization_id'})
-    organizationId: string;
+    organizationId: number;
 
     @Column({name: 'user_id'})
-    userId: string;
+    employeeId: number;
 
     @Column({
         type: 'enum',
@@ -40,5 +40,5 @@ export class OrganizationMember {
         onDelete: 'CASCADE',
     })
     @JoinColumn({name: 'user_id'})
-    user: Employee;
+    employee: Employee;
 }

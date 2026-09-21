@@ -39,20 +39,20 @@ export class JwtService {
         });
     }
 
-    generateAccessToken(id: string): string {
-        return this.generateToken(id, JwtType.AUTH, "15m");
+    generateAccessToken(id: number): string {
+        return this.generateToken(id.toString(), JwtType.AUTH, "15m");
     }
 
-    generateRefreshToken(id: string): string {
-        return this.generateToken(id, JwtType.REFRESH, "30d");
+    generateRefreshToken(id: number): string {
+        return this.generateToken(id.toString(), JwtType.REFRESH, "30d");
     }
 
     generateResetPasswordToken(email: string): string {
         return this.generateToken(email, JwtType.RESET_PASSWORD, "30d");
     }
 
-    generateEmailVerifyToken(id: string): string {
-        return this.generateToken(id, JwtType.VERIFY_EMAIL, "15m");
+    generateEmailVerifyToken(id: number): string {
+        return this.generateToken(id.toString(), JwtType.VERIFY_EMAIL, "15m");
     }
 
     validateToken(token: string, type: JwtType): CustomJwtPayload {

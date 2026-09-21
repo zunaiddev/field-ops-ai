@@ -6,7 +6,7 @@ import {
     HttpCode,
     HttpStatus,
     Param,
-    ParseUUIDPipe,
+    ParseIntPipe,
     Patch,
     Post,
     Query,
@@ -55,14 +55,14 @@ export class CustomerController {
     }
 
     @Get(':id')
-    async getCustomer(@Param('id', ParseUUIDPipe) id: string,
+    async getCustomer(@Param('id', ParseIntPipe) id: number,
                       @CurrentMember() member: OrganizationMember): Promise<CustomerRes> {
         return await this.customerService.getCustomer(id, member);
     }
 
     @Patch(':id')
     async updateCustomer(
-        @Param('id', ParseUUIDPipe) id: string,
+        @Param('id', ParseIntPipe) id: number,
         @Body() dto: UpdateCustomerDto,
         @CurrentMember() member: OrganizationMember,
     ): Promise<CustomerRes> {
@@ -71,14 +71,14 @@ export class CustomerController {
 
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteCustomer(@Param('id', ParseUUIDPipe) id: string,
+    async deleteCustomer(@Param('id', ParseIntPipe) id: number,
                          @CurrentMember() member: OrganizationMember): Promise<void> {
         await this.customerService.deleteCustomer(id, member);
     }
 
     @Post(':customerId/addresses')
     async addAddress(
-        @Param('customerId', ParseUUIDPipe) customerId: string,
+        @Param('customerId', ParseIntPipe) customerId: number,
         @Body() dto: CreateAddressDto,
         @CurrentMember() member: OrganizationMember,
     ): Promise<CustomerAddressRes> {
@@ -86,7 +86,7 @@ export class CustomerController {
     }
 
     @Get(':customerId/addresses')
-    async getAddress(@Param('customerId', ParseUUIDPipe) customerId: string,
+    async getAddress(@Param('customerId', ParseIntPipe) customerId: number,
                      @CurrentMember() member: OrganizationMember)
         : Promise<CustomerAddressRes[]> {
         return await this.customerService.getAddress(customerId, member);
@@ -94,7 +94,7 @@ export class CustomerController {
 
     @Patch('addresses/:addressId')
     async updateAddress(
-        @Param('addressId', ParseUUIDPipe) addressId: string,
+        @Param('addressId', ParseIntPipe) addressId: number,
         @Body() dto: UpdateAddressDto,
         @CurrentMember() member: OrganizationMember,
     ): Promise<CustomerAddressRes> {
@@ -104,7 +104,7 @@ export class CustomerController {
     @Delete('addresses/:addressId')
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteAddress(
-        @Param('addressId', ParseUUIDPipe) addressId: string,
+        @Param('addressId', ParseIntPipe) addressId: number,
         @CurrentMember() member: OrganizationMember,
     ): Promise<void> {
         await this.customerService.deleteAddress(addressId, member);

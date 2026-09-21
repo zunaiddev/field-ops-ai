@@ -12,11 +12,11 @@ import {Customer} from './customer.entity.js';
 
 @Entity('customer_addresses')
 export class CustomerAddress {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column({name: 'customer_id'})
-    customerId: string;
+    customerId: number;
 
     @Column({length: 100})
     addressLine1: string;

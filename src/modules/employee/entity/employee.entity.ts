@@ -1,4 +1,4 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn,} from 'typeorm';
 
 export enum EmployeeRole {
     SUPER_ADMIN = 'SUPER_ADMIN',
@@ -14,10 +14,13 @@ export enum EmployeeRole {
 
 @Entity('employees')
 export class Employee {
-    @PrimaryGeneratedColumn()
-    id: string;
+    @PrimaryGeneratedColumn({type: "bigint"})
+    id: number;
 
-    @Column({update: false, unique: true})
+    @Column({
+        update: false, unique: true,
+        default: () => `'EMP-' || lpad(nextval('employee_seq')::text, 6, '0')`,
+    })
     employeeId: string;
 
     @Column({unique: true})

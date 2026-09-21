@@ -40,7 +40,7 @@ export class CustomerService {
         return await this.customerRepo.existsBy({email});
     }
 
-    private async findByIdAndOrgId(customerId: string, orgId: string): Promise<Customer> {
+    private async findByIdAndOrgId(customerId: number, orgId: number): Promise<Customer> {
         const customer: Customer | null = await this.customerRepo
             .findOneBy({id: customerId, organizationId: orgId});
         if (!customer) {
@@ -53,7 +53,7 @@ export class CustomerService {
         return customer;
     }
 
-    private async findAllByOrgIdAndOptions(orgId: string, options?: GetCustomersOptions): Promise<[Customer[], number]> {
+    private async findAllByOrgIdAndOptions(orgId: number, options?: GetCustomersOptions): Promise<[Customer[], number]> {
         const where: FindOptionsWhere<Customer> = {
             organizationId: orgId,
         };
@@ -76,7 +76,7 @@ export class CustomerService {
         });
     }
 
-    private async deleteByIdAndOrgId(customerId: string, orgId: string, manager?: EntityManager): Promise<void> {
+    private async deleteByIdAndOrgId(customerId: number, orgId: number, manager?: EntityManager): Promise<void> {
         const repository: Repository<Customer> = manager ?
             manager.getRepository(Customer) : this.customerRepo;
 
@@ -89,7 +89,7 @@ export class CustomerService {
         return await repository.save(history);
     }
 
-    private async findAddressByIdAndOrgId(addressId: string, organizationId: string): Promise<CustomerAddress> {
+    private async findAddressByIdAndOrgId(addressId: number, organizationId: number): Promise<CustomerAddress> {
         const address: CustomerAddress | null = await this.addressRepo
             .findOne({
                 where: {id: addressId, customer: {organizationId}},
@@ -130,7 +130,7 @@ export class CustomerService {
 
             await this.saveHistory({
                 action: CustomerHistoryAction.CREATED,
-                createdBy: membership.userId,
+                createdBy: membership.employeeId,
                 customer,
                 organizationId: membership.organizationId,
                 description: "Customer is created"
@@ -142,13 +142,13 @@ export class CustomerService {
         await this.eventBusService.publish(EventName.CUSTOMER_CREATED, {
             customerId: customer.id,
             organizationId: customer.organizationId,
-            userId: membership.userId,
+            userId: membership.employeeId,
         });
 
         return new CustomerRes(customer);
     }
 
-    async addAddress(customerId: string, dto: CreateAddressDto,
+    async addAddress(customerId: number, dto: CreateAddressDto,
                      membership: OrganizationMember): Promise<CustomerAddressRes> {
         const customer: Customer = await this.findByIdAndOrgId(customerId, membership.organizationId);
 
@@ -158,7 +158,7 @@ export class CustomerService {
 
             await this.saveHistory({
                 customer, action: CustomerHistoryAction.ADDRESS_CREATED,
-                description: "Address Created", createdBy: membership.userId,
+                description: "Address Created", createdBy: membership.employeeId,
                 organizationId: membership.organizationId
             }, manager);
 
@@ -168,13 +168,13 @@ export class CustomerService {
         await this.eventBusService.publish(EventName.CUSTOMER_ADDRESS_CREATED, {
             customerId: customer.id,
             organizationId: customer.organizationId,
-            userId: membership.userId,
+            userId: membership.employeeId,
         });
 
         return new CustomerAddressRes(address);
     }
 
-    async updateAddress(addressId: string, dto: UpdateAddressDto,
+    async updateAddress(addressId: number, dto: UpdateAddressDto,
                         membership: OrganizationMember): Promise<CustomerAddressRes> {
         const address: CustomerAddress = await this.findAddressByIdAndOrgId(addressId, membership.organizationId);
 
@@ -186,7 +186,7 @@ export class CustomerService {
                 customer: address.customer,
                 action: CustomerHistoryAction.ADDRESS_UPDATED,
                 description: "Address Updated",
-                createdBy: membership.userId,
+                createdBy: membership.employeeId,
                 organizationId: membership.organizationId
             }, manager);
 
@@ -196,7 +196,7 @@ export class CustomerService {
         return new CustomerAddressRes(updatedAddress);
     }
 
-    async deleteAddress(addressId: string, membership: OrganizationMember): Promise<void> {
+    async deleteAddress(addressId: number, membership: OrganizationMember): Promise<void> {
         const address: CustomerAddress = await this.findAddressByIdAndOrgId(addressId, membership.organizationId);
 
         await this.dataSource.transaction(async manager => {
@@ -206,13 +206,13 @@ export class CustomerService {
                 customer: address.customer,
                 action: CustomerHistoryAction.ADDRESS_DELETED,
                 description: `Address (${address.addressLine1}, ${address.city}) deleted`,
-                createdBy: membership.userId,
+                createdBy: membership.employeeId,
                 organizationId: membership.organizationId
             }, manager);
         });
     }
 
-    async getCustomer(customerId: string, membership: OrganizationMember): Promise<CustomerRes> {
+    async getCustomer(customerId: number, membership: OrganizationMember): Promise<CustomerRes> {
         const customer: Customer = await this.findByIdAndOrgId(customerId, membership.organizationId);
 
         const addresses: CustomerAddress[] = await this.addressRepo.findBy({customerId: customer.id});
@@ -237,7 +237,7 @@ export class CustomerService {
         return new PaginatedCustomersRes(customerResponses, total, page, pageSize);
     }
 
-    async updateCustomer(customerId: string, dto: UpdateCustomerDto,
+    async updateCustomer(customerId: number, dto: UpdateCustomerDto,
                          membership: OrganizationMember): Promise<CustomerRes> {
         const customer: Customer = await this.findByIdAndOrgId(customerId, membership.organizationId);
 
@@ -261,7 +261,7 @@ export class CustomerService {
 
             await this.saveHistory({
                 customer, action: CustomerHistoryAction.UPDATED,
-                description: "Customer Updated", createdBy: membership.userId,
+                description: "Customer Updated", createdBy: membership.employeeId,
                 organizationId: membership.organizationId
             }, manager);
 
@@ -271,13 +271,13 @@ export class CustomerService {
         await this.eventBusService.publish(EventName.CUSTOMER_UPDATED, {
             customerId: customer.id,
             organizationId: customer.organizationId,
-            userId: membership.userId,
+            userId: membership.employeeId,
         });
 
         return new CustomerRes(updatedCustomer);
     }
 
-    async deleteCustomer(customerId: string, membership: OrganizationMember): Promise<void> {
+    async deleteCustomer(customerId: number, membership: OrganizationMember): Promise<void> {
         const customer = await this.findByIdAndOrgId(customerId, membership.organizationId);
 
         if (customer.organizationId !== membership.organizationId) {
@@ -294,7 +294,7 @@ export class CustomerService {
                 customer,
                 action: CustomerHistoryAction.DELETED,
                 description: `user named ${customer.name} and email ${customer.email} has been deleted`,
-                createdBy: membership.userId,
+                createdBy: membership.employeeId,
                 organizationId: membership.organizationId
             }, manager);
         });
@@ -302,11 +302,11 @@ export class CustomerService {
         await this.eventBusService.publish(EventName.CUSTOMER_DELETED, {
             customerId: customer.id,
             organizationId: customer.organizationId,
-            userId: membership.userId,
+            userId: membership.employeeId,
         });
     }
 
-    async getAddress(customerId: string, member: OrganizationMember): Promise<CustomerAddressRes[]> {
+    async getAddress(customerId: number, member: OrganizationMember): Promise<CustomerAddressRes[]> {
         const addresses: CustomerAddress[] = await this.addressRepo
             .findBy({customer: {id: customerId, organizationId: member.organizationId}});
 

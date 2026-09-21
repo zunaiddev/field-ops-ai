@@ -1,6 +1,6 @@
 import {Exclude, Expose} from "class-transformer";
 import {OrganizationMember} from "../../orgnization-member/entity/organization-member.entity.js";
-import {EmployeeDto} from "../../users/dto/employee.dto.js";
+import {EmployeeDto} from "../../employee/dto/employee.dto.js";
 
 @Exclude()
 export class OrganizationMembersRes {
@@ -8,6 +8,6 @@ export class OrganizationMembersRes {
     employees: EmployeeDto[];
 
     constructor(members: OrganizationMember[]) {
-        this.employees = members.map((member) => new EmployeeDto(member.user, member.role));
+        this.employees = members.map((member) => new EmployeeDto(member.employee, member.role));
     }
 }

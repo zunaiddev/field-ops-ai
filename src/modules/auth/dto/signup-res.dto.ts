@@ -12,7 +12,7 @@ export class RegistrationRes {
     lastName: string;
 
     @Expose()
-    organizationId: string;
+    organizationId: number;
 
     constructor({email, firstName, lastName, organizationId}: RegistrationRes) {
         this.email = email;

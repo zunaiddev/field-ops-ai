@@ -4,8 +4,8 @@ import {CustomJwtPayload, JwtType} from "../jwt/jwt.types.js";
 import {Public} from "../../common/decorators/public.decorator.js";
 import {CacheService, TTL} from "../cache/cache.service.js";
 import {CacheKeys} from "../../utils/cache.keys.utils.js";
-import {EmployeeService} from "../users/employee.service.js";
-import {Employee} from "../users/entity/employee.entity.js";
+import {EmployeeService} from "../employee/employee.service.js";
+import {Employee} from "../employee/entity/employee.entity.js";
 import {AuthRes} from "../auth/dto/auth-res.dto.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
@@ -28,7 +28,7 @@ export class VerifyService {
             });
         }
 
-        const user: Employee | null = await this.userService.findById(payload.sub);
+        const user: Employee | null = await this.userService.findById(Number(payload.sub));
 
         if (!user) {
             throw new BadRequestException({
