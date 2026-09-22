@@ -1,0 +1,47 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiT1JHX09XTkVSIiwidHlwZSI6IkFVVEgiLCJqdGkiOiIzYTljNWM2Mi05ZTc4LTQzMTItODQyNC03YWUwMjJhZGY5MjMiLCJpYXQiOjE3OTAwNzkwNTMsImV4cCI6MTc5MDA3OTk1Mywic3ViIjoiMyJ9.rhQrHpb0kZXSLpvPe10vl5gHbN1MIKfQY_ICiZTLQ8g
+
+### Create Service Request - Installation
+POST {{baseUrl}}/service-requests
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "customerId": 1,
+  "addressId": 1,
+  "title": "Install Fiber Optic Router",
+  "description": "Customer requested new high-speed fiber internet setup and router configuration.",
+  "category": "INSTALLATION",
+  "priority": "HIGH"
+}
+
+###
+
+### Create Service Request - Repair
+POST {{baseUrl}}/service-requests
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "customerId": 1,
+  "addressId": 1,
+  "title": "Fix Network Connectivity Issues",
+  "description": "Intermittent loss of connection reported during peak hours.",
+  "category": "REPAIR",
+  "priority": "CRITICAL"
+}
+
+###
+
+### Create Service Request - Maintenance / Inspection
+POST {{baseUrl}}/service-requests
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "customerId": 2,
+  "addressId": 3,
+  "title": "Routine HVAC Maintenance",
+  "description": "Quarterly inspection and filter replacement.",
+  "category": "MAINTENANCE",
+  "priority": "MEDIUM"
+}

@@ -33,6 +33,16 @@ export class AuthController {
         return response;
     }
 
+    @Post('login/customer')
+    @HttpCode(HttpStatus.OK)
+    async customerLogin(@Body() req: LoginReq, @Res({passthrough: true}) res: Response): Promise<AuthRes> {
+        const response: AuthRes = await this.authService.login(req);
+
+        setRefreshCookie(res, response.refreshToken);
+
+        return response;
+    }
+
     @Get('resend-email')
     async resendVerifyEmail(@Query() {email}: ResendEmailReq): Promise<EmailRes> {
         return await this.authService.resendVerifyEmail(email);

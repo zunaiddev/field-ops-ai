@@ -17,10 +17,10 @@ export class OrganizationMemberService {
         return await repo.save(organization);
     }
 
-    async findMemberById(employeeId: number) {
+    async findMemberById(employeeId: number, organization: boolean = true, employee: boolean = true) {
         return await this.organizationMemberRepo.findOne({
             where: {employeeId},
-            relations: {organization: true, employee: true}
+            relations: {organization, employee}
         });
     }
 

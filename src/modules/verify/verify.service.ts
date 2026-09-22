@@ -6,7 +6,6 @@ import {CacheService, TTL} from "../cache/cache.service.js";
 import {CacheKeys} from "../../utils/cache.keys.utils.js";
 import {EmployeeService} from "../employee/employee.service.js";
 import {Employee} from "../employee/entity/employee.entity.js";
-import {AuthRes} from "../auth/dto/auth-res.dto.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
 
 @Public()
@@ -18,7 +17,7 @@ export class VerifyService {
                 private readonly userService: EmployeeService) {
     }
 
-    async verifyEmail(token: string): Promise<AuthRes> {
+    async verifyEmail(token: string) {
         const payload: CustomJwtPayload = this.jwtService.validateToken(token, JwtType.VERIFY_EMAIL);
 
         if (await this.cacheService.exists(CacheKeys.usedToken(payload.jti))) {
@@ -50,9 +49,6 @@ export class VerifyService {
 
         await this.cacheService.set(CacheKeys.usedToken(payload.jti), {email: user.email}, TTL.ofMinutes(16));
 
-        const accessToken: string = this.jwtService.generateAccessToken(user.id);
-        const refreshToken: string = this.jwtService.generateRefreshToken(user.id);
-
-        return new AuthRes(user, accessToken, refreshToken);
+        return {message: "Verified"};
     }
 }

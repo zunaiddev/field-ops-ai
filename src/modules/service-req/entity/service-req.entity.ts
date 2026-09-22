@@ -6,17 +6,19 @@ import {
     ServiceRequestStatus
 } from "./service-req.enums.js";
 
-
 @Entity('service_requests')
 export class ServiceRequest {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     id: string;
 
-    @Column({name: 'organization_id', type: 'uuid'})
-    organizationId: string;
+    @Column({name: 'organization_id'})
+    organizationId: number;
 
-    @Column({name: 'customer_id', type: 'uuid'})
-    customerId: string;
+    @Column({name: 'customer_id'})
+    customerId: number;
+
+    @Column({name: 'created_by'})
+    createdBy: number;
 
     @Column({length: 255})
     title: string;

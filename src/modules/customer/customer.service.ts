@@ -90,6 +90,23 @@ export class CustomerService {
         return await repository.save(history);
     }
 
+    async findCustomerById(customerId: number): Promise<Customer | null> {
+        return await this.customerRepo.findOneBy({id: customerId});
+    }
+
+    async findCustomerByIdAndOrgId(customerId: number, organizationId: number) {
+        const customer = await this.customerRepo.findOneBy({id: customerId, organizationId});
+
+        if (!customer) {
+            throw new NotFoundException({
+                message: "could not find customer",
+                code: ErrorCode.CUSTOMER_NOT_FOUND,
+            });
+        }
+
+        return customer;
+    }
+
     private async findAddressByIdAndOrgId(addressId: number, organizationId: number): Promise<CustomerAddress> {
         const address: CustomerAddress | null = await this.addressRepo
             .findOne({
@@ -105,6 +122,14 @@ export class CustomerService {
         }
 
         return address;
+    }
+
+    async existsByIdAndOrgId(customerId: number, organizationId: number): Promise<boolean> {
+        return await this.customerRepo.existsBy({id: customerId, organizationId});
+    }
+
+    async addressExistsByIdAndCustomerId(addressId: number, customerId: number): Promise<boolean> {
+        return await this.addressRepo.existsBy({id: addressId, customerId});
     }
 
     private async saveCustomer(customer: Omit<Customer, 'id' | 'createdAt' | 'updatedAt'>,

@@ -1,9 +1,6 @@
 export enum ServiceRequestSource {
-    ADMIN = "ADMIN",
-    TECHNICIAN = "TECHNICIAN",
-    CUSTOMER_PORTAL = "CUSTOMER_PORTAL",
-    API = "API",
-    WEBHOOK = "WEBHOOK",
+    EMPLOYEE = "EMPLOYEE",
+    CUSTOMER = "CUSTOMER",
 }
 
 export enum ServiceRequestCategory {

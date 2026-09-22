@@ -104,7 +104,7 @@ export class AuthService {
         return new RegistrationRes({...user, organizationId: organization.id});
     }
 
-    async login(req: LoginReq): Promise<AuthRes> {
+    async login(req: LoginReq, isCustomer = false): Promise<AuthRes> {
         const user: Employee | null = await this.userService.findByEmail(req.email);
 
         if (!user) {
@@ -152,8 +152,8 @@ export class AuthService {
         await this.cacheService.remove(CacheKeys.failedPasswordAttempts(user.email));
         await this.userService.update({...user, lastLoginAt: new Date()});
 
-        const accessToken: string = this.jwtService.generateAccessToken(user.id);
-        const refreshToken: string = this.jwtService.generateRefreshToken(user.id);
+        const accessToken: string = this.jwtService.generateAccessToken(user.id, user.role);
+        const refreshToken: string = this.jwtService.generateRefreshToken(user.id, user.role);
 
         return new AuthRes(user, accessToken, refreshToken);
     }
@@ -204,7 +204,7 @@ export class AuthService {
 
         const payload: CustomJwtPayload = this.jwtService.validateToken(token, JwtType.REFRESH);
         const accessToken: string =
-            this.jwtService.generateAccessToken(parseInt(payload.sub));
+            this.jwtService.generateAccessToken(parseInt(payload.sub), payload.role);
 
         return new RefreshTokenRes(payload.sub, accessToken);
     }

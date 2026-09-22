@@ -14,7 +14,7 @@ export enum EmployeeRole {
 
 @Entity('employees')
 export class Employee {
-    @PrimaryGeneratedColumn({type: "bigint"})
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column({

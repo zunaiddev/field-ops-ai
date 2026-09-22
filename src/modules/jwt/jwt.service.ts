@@ -5,6 +5,7 @@ import {CustomJwtPayload, JwtType} from "./jwt.types.js";
 import {randomUUID} from "node:crypto";
 import {OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
+import {EmployeeRole} from "../employee/entity/employee.entity.js";
 
 @Injectable()
 export class JwtService {
@@ -39,12 +40,16 @@ export class JwtService {
         });
     }
 
-    generateAccessToken(id: number): string {
-        return this.generateToken(id.toString(), JwtType.AUTH, "15m");
+    generateAccessToken(id: number, role: EmployeeRole | string): string {
+        return this.generateToken(id.toString(), JwtType.AUTH, "15m", {
+            role
+        });
     }
 
-    generateRefreshToken(id: number): string {
-        return this.generateToken(id.toString(), JwtType.REFRESH, "30d");
+    generateRefreshToken(id: number, role: EmployeeRole | string): string {
+        return this.generateToken(id.toString(), JwtType.REFRESH, "30d", {
+            role
+        });
     }
 
     generateResetPasswordToken(email: string): string {
