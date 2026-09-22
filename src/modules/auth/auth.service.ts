@@ -6,7 +6,7 @@ import {
     Injectable,
     UnauthorizedException,
 } from "@nestjs/common";
-import {RegistrationReq} from "./dto/signup-req.dto.js";
+import {RegistrationReq} from "./dto/registration-req.dto.js";
 import {RegistrationRes} from "./dto/signup-res.dto.js";
 import {EmployeeService} from "../employee/employee.service.js";
 import {CacheService, TTL} from "../cache/cache.service.js";

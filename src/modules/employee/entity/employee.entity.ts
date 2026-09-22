@@ -26,6 +26,9 @@ export class Employee {
     @Column({unique: true})
     email: string;
 
+    @Column({length: 100, nullable: true})
+    phone: string;
+
     @Column({name: 'password_hash'})
     passwordHash: string;
 

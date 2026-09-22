@@ -8,6 +8,9 @@ export class EmployeeDto {
     id: number;
 
     @Expose()
+    employeeId: string;
+
+    @Expose()
     firstName: string;
 
     @Expose()
@@ -18,6 +21,9 @@ export class EmployeeDto {
 
     @Expose()
     status: string;
+
+    @Expose()
+    phone: string;
 
     @Expose()
     role?: OrganizationRole | string;
@@ -36,10 +42,12 @@ export class EmployeeDto {
 
     constructor(employee: Employee, _?: OrganizationRole | string) {
         this.id = employee.id;
+        this.employeeId = employee.employeeId;
         this.firstName = employee.firstName;
         this.lastName = employee.lastName;
         this.email = employee.email;
         this.status = employee.status;
+        this.phone = employee.phone;
         this.role = employee.role;
         this.emailVerifiedAt = employee.emailVerifiedAt;
         this.lastLoginAt = employee.lastLoginAt;

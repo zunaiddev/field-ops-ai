@@ -1,11 +1,16 @@
-import {Injectable} from "@nestjs/common";
+import {Injectable, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import {EntityManager, Repository} from "typeorm";
 import {Employee} from "./entity/employee.entity.js";
 import {InjectRepository} from "@nestjs/typeorm";
+import {isNumberString} from "class-validator";
+import {ErrorCode} from "../../common/enums/error-code.enum.js";
+import {OrganizationMemberService} from "../orgnization-member/organization-member.service.js";
+import {EmployeeRes} from "./dto/employee-res.dto.js";
 
 @Injectable()
 export class EmployeeService {
     constructor(@InjectRepository(Employee) private readonly employeeRepo: Repository<Employee>,
+                private readonly orgMemberService: OrganizationMemberService,
     ) {
     }
 
@@ -33,5 +38,25 @@ export class EmployeeService {
     async delete(id: number, entityManager?: EntityManager): Promise<void> {
         const repo = entityManager ? entityManager.getRepository(Employee) : this.employeeRepo;
         await repo.delete({id});
+    }
+
+    async getEmployee(sub: string) {
+        if (!isNumberString(sub)) {
+            throw new UnauthorizedException({
+                message: "Invalid Jwt sub",
+                code: ErrorCode.INVALID_TOKEN
+            });
+        }
+
+        const organizationMember = await this.orgMemberService.findMemberById(Number(sub));
+
+        if (!organizationMember) {
+            throw new NotFoundException({
+                message: "employee not found",
+                code: ErrorCode.MEMBER_NOT_FOUND
+            });
+        }
+
+        return new EmployeeRes(organizationMember);
     }
 }

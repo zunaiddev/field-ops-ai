@@ -24,6 +24,7 @@ import {CustomerRes} from "./dto/customer-res.dto.js";
 import {PaginatedCustomersRes} from "./dto/paginated-customers-res.dto.js";
 import {UpdateCustomerDto} from "./dto/update-customer.dto.js";
 import {GetCustomersQueryDto} from "./dto/get-customers-query.dto.js";
+import {CustomerHistoryRes} from "./dto/customer-history-res.dto.js";
 import {RolesGuard} from "../../common/guards/roles.guard.js";
 import {Roles} from "../../common/decorators/roles.decorator.js";
 
@@ -74,6 +75,14 @@ export class CustomerController {
     async deleteCustomer(@Param('id', ParseIntPipe) id: number,
                          @CurrentMember() member: OrganizationMember): Promise<void> {
         await this.customerService.deleteCustomer(id, member);
+    }
+
+    @Get(':customerId/history')
+    async getHistory(
+        @Param('customerId', ParseIntPipe) customerId: number,
+        @CurrentMember() member: OrganizationMember,
+    ): Promise<CustomerHistoryRes[]> {
+        return await this.customerService.getHistory(customerId, member);
     }
 
     @Post(':customerId/addresses')

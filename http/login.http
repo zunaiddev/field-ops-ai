@@ -17,8 +17,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "elias.mercer@cedarline.example",
-  "password": "CedarlinePass1!",
+  "email": "john@gmail.com",
+  "password": "John@123",
   "remember": true
 }
 

@@ -6,7 +6,7 @@ import {CurrentMember} from "../../common/decorators/current-member.decorator.js
 import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
 import {Organization} from "./entity/organization.entity.js";
 import {CurrentOrg} from "../../common/decorators/current-org.js";
-import {AddMemberDto} from "./dto/add-member.dto.js";
+import {AddEmployeeDto} from "./dto/add-employee.dto.js";
 import {OrganizationMembersRes} from "./dto/organization-members-res.dto.js";
 import {UpdateMemberReq} from "./dto/update-member.dto.js";
 import {EmployeeDto} from "../employee/dto/employee.dto.js";
@@ -40,12 +40,19 @@ export class OrganizationController {
     }
 
     @Post('current/members')
-    async addMember(@Body() dto: AddMemberDto, @CurrentOrg() org: Organization): Promise<OrganizationRes> {
+    async addMember(@Body() dto: AddEmployeeDto, @CurrentOrg() org: Organization): Promise<OrganizationRes> {
         return await this.organizationService.addMember(org, dto);
     }
 
+    @Get('current/members/:id')
+    async getMember(@Param('id', ParseIntPipe) id: number,
+                    @CurrentMember() orgMember: OrganizationMember): Promise<EmployeeDto> {
+        return await this.organizationService.getEmployee(id, orgMember);
+    }
+
     @Patch('current/members/:id')
-    async updateMemberRole(@Param('id', ParseIntPipe) id: number, @CurrentMember() orgMember: OrganizationMember, @Body() dto: UpdateMemberReq): Promise<EmployeeDto> {
+    async updateMemberRole(@Param('id', ParseIntPipe) id: number,
+                           @CurrentMember() orgMember: OrganizationMember, @Body() dto: UpdateMemberReq): Promise<EmployeeDto> {
         return await this.organizationService.updateMember(id, orgMember, dto);
     }
 

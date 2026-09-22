@@ -1,36 +1,18 @@
 import {
     IsEmail,
+    IsEnum,
     IsNotEmpty,
-    IsOptional,
+    IsPhoneNumber,
     IsString,
     IsStrongPassword,
-    Length,
-    Matches,
     MaxLength,
-    MinLength
+    MinLength,
+    NotEquals
 } from "class-validator";
 import {CleanEmail, CleanName} from "../../../common/decorators/transform.decorators.js";
+import {OrganizationRole} from "../../orgnization-member/entity/organization-member.entity.js";
 
-export class SignupReqDto {
-    @IsNotEmpty({message: "First name is required"})
-    @IsString({message: "First name must be a string"})
-    @MaxLength(150, {message: "First name cannot exceed 150 characters"})
-    orgName: string;
-
-    @IsOptional()
-    @IsString()
-    @Matches(/^[a-z0-9-]+$/, {message: 'slug must be lowercase, alphanumeric, hyphens only'})
-    orgSlug?: string;
-
-    @IsOptional()
-    @IsString()
-    timezone?: string;
-
-    @IsOptional()
-    @IsString()
-    @Length(3, 3)
-    currency?: string;
-
+export class AddEmployeeDto {
     @CleanName()
     @IsNotEmpty({message: "First name is required"})
     @IsString({message: "First name must be a string"})
@@ -48,6 +30,11 @@ export class SignupReqDto {
     @IsEmail({}, {message: "Please provide a valid email address"})
     @MaxLength(255, {message: "Email cannot exceed 255 characters"})
     email: string;
+
+    @CleanEmail()
+    @IsNotEmpty({message: "Email is required"})
+    @IsPhoneNumber()
+    phone: string;
 
     @IsNotEmpty({message: "Password is required"})
     @IsString({message: "Password must be a string"})
@@ -67,6 +54,9 @@ export class SignupReqDto {
         },
     )
     password: string;
-}
 
-export {SignupReqDto as RegistrationReq};
+    @IsNotEmpty({message: "Role is required"})
+    @IsEnum(OrganizationRole, {message: `Role must be one of ${OrganizationRole} except ${OrganizationRole.ORG_OWNER}`})
+    @NotEquals(OrganizationRole.ORG_OWNER, {message: "Role cannot be owner"})
+    role: Exclude<OrganizationRole, OrganizationRole.ORG_OWNER>;
+}

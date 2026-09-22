@@ -1,6 +1,7 @@
 export default () => ({
     nodeEnv: process.env.NODE_ENV || 'development',
     baseUrl: process.env.BASE_URL,
+    frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
     port: parseInt(process.env.PORT || '3000', 10),
     jwt: {
         secret: process.env.JWT_SECRET,

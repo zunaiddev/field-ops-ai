@@ -1,14 +1,16 @@
 import {
     IsEmail,
     IsEnum,
+    IsNotEmpty,
     IsOptional,
+    IsPhoneNumber,
     IsString,
     IsStrongPassword,
     MaxLength,
     MinLength,
     NotEquals
 } from "class-validator";
-import {CleanEmail, CleanName} from "../../../common/decorators/transform.decorators.js";
+import {CleanEmail, CleanName, Trim} from "../../../common/decorators/transform.decorators.js";
 import {OrganizationRole} from "../../orgnization-member/entity/organization-member.entity.js";
 
 export class UpdateMemberDto {
@@ -29,6 +31,12 @@ export class UpdateMemberDto {
     @IsEmail({}, {message: "Please provide a valid email address"})
     @MaxLength(255, {message: "Email cannot exceed 255 characters"})
     email?: string;
+
+    @Trim()
+    @IsNotEmpty()
+    @IsString()
+    @IsPhoneNumber()
+    phone?: string;
 
     @IsOptional()
     @IsString({message: "Password must be a string"})

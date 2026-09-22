@@ -17,6 +17,13 @@ export class OrganizationMemberService {
         return await repo.save(organization);
     }
 
+    async findMemberById(employeeId: number) {
+        return await this.organizationMemberRepo.findOne({
+            where: {employeeId},
+            relations: {organization: true, employee: true}
+        });
+    }
+
     async findByUserOrThrow(user: Employee): Promise<OrganizationMember> {
         const member = await this.organizationMemberRepo.findOne({
             where: {employeeId: user.id},

@@ -13,19 +13,21 @@ import {OrganizationRes} from "./dto/organization-res.dto.js";
 import {OrganizationMemberService} from "../orgnization-member/organization-member.service.js";
 import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity/organization-member.entity.js";
 import {OrganizationUpdateReq} from "./dto/organization-update-req.dto.js";
-import {AddMemberDto} from "./dto/add-member.dto.js";
+import {AddEmployeeDto} from "./dto/add-employee.dto.js";
 import {UpdateMemberDto} from "./dto/update-member.dto.js";
 import {EmployeeService} from "../employee/employee.service.js";
 import * as argon2 from "argon2";
 import {OrganizationMembersRes} from "./dto/organization-members-res.dto.js";
 import {EmployeeDto} from "../employee/dto/employee.dto.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
+import {MailService} from "../../mail/mail.service.js";
 
 @Injectable()
 export class OrganizationService {
     constructor(@InjectRepository(Organization) private readonly organizationRepo: Repository<Organization>,
                 @InjectDataSource() private readonly dataSource: DataSource,
-                private readonly userService: EmployeeService,
+                private readonly employeeService: EmployeeService,
+                private readonly emailService: MailService,
                 private readonly orgMemberService: OrganizationMemberService) {
     }
 
@@ -49,6 +51,19 @@ export class OrganizationService {
 
     async getCurrent(orgMember: OrganizationMember): Promise<OrganizationRes> {
         return new OrganizationRes(orgMember);
+    }
+
+    async getEmployee(employeeId: number, orgMember: OrganizationMember): Promise<EmployeeDto> {
+        const fetchedOrg = await this.orgMemberService.findMemberInOrg(employeeId, orgMember.organizationId);
+
+        if (!fetchedOrg || !fetchedOrg.employee) {
+            throw new NotFoundException({
+                message: "Could not employee in organization",
+                code: ErrorCode.MEMBER_NOT_FOUND
+            });
+        }
+
+        return new EmployeeDto(fetchedOrg.employee);
     }
 
     async updateCurrent(orgMember: OrganizationMember, dto: OrganizationUpdateReq): Promise<OrganizationRes> {
@@ -77,7 +92,7 @@ export class OrganizationService {
         return new OrganizationMembersRes(members.filter(member => member.employeeId !== orgMember.employeeId));
     }
 
-    async addMember(organization: Organization, dto: AddMemberDto): Promise<OrganizationRes> {
+    async addMember(organization: Organization, dto: AddEmployeeDto): Promise<OrganizationRes> {
         if (await this.orgMemberService.existsByEmail(dto.email)) {
             throw new ConflictException({
                 message: "user with email already exists",
@@ -85,17 +100,29 @@ export class OrganizationService {
             });
         }
 
-        const orgMember: OrganizationMember = await this.dataSource.transaction(async (manager: EntityManager): Promise<OrganizationMember> => {
-            const user: Employee = await this.userService.save({
+        const {employee, orgMember} = await this.dataSource.transaction(async (manager: EntityManager) => {
+            const employee: Employee = await this.employeeService.save({
                 firstName: dto.firstName,
                 lastName: dto.lastName,
+                phone: dto.phone,
                 email: dto.email,
                 role: dto.role as unknown as EmployeeRole,
                 emailVerifiedAt: new Date(),
                 passwordHash: await argon2.hash(dto.password)
             }, manager);
-            return await this.orgMemberService.save({employee: user, organization, role: dto.role}, manager);
+
+
+            return {
+                employee,
+                orgMember: await this.orgMemberService.save({
+                    employee: employee,
+                    organization,
+                    role: dto.role
+                }, manager),
+            };
         });
+
+        this.emailService.sendEmployeeCreation(employee, dto.password);
 
         return new OrganizationRes(orgMember);
     }
@@ -119,7 +146,7 @@ export class OrganizationService {
         }
 
         if (dto.email && dto.email !== member.employee.email) {
-            if (await this.userService.existsByEmail(dto.email)) {
+            if (await this.employeeService.existsByEmail(dto.email)) {
                 throw new ConflictException({
                     message: "User with this email already exists",
                     errorCode: ErrorCode.USER_ALREADY_EXISTS,
@@ -128,6 +155,7 @@ export class OrganizationService {
         }
 
         let passwordHash: string | undefined;
+
         if (dto.password) {
             passwordHash = await argon2.hash(dto.password);
         }
@@ -146,8 +174,10 @@ export class OrganizationService {
                     ...(dto.email !== undefined && {email: dto.email}),
                     ...(passwordHash !== undefined && {passwordHash}),
                     ...(dto.status !== undefined && {status: dto.status}),
+                    ...(dto.role !== undefined && {role: dto.role}),
+                    ...(dto.phone !== undefined && {phone: dto.phone}),
                 });
-                await this.userService.save(member.employee, manager);
+                await this.employeeService.save(member.employee, manager);
             }
 
             if (dto.role !== undefined) {
@@ -184,6 +214,6 @@ export class OrganizationService {
             });
         }
 
-        await this.userService.delete(member.employeeId);
+        await this.employeeService.delete(member.employeeId);
     }
 }

@@ -12,6 +12,7 @@ import {CustomerRes} from "./dto/customer-res.dto.js";
 import {PaginatedCustomersRes} from "./dto/paginated-customers-res.dto.js";
 import {UpdateCustomerDto} from "./dto/update-customer.dto.js";
 import {CustomerHistory, CustomerHistoryAction} from "./entity/customer-history.js";
+import {CustomerHistoryRes} from "./dto/customer-history-res.dto.js";
 import {EventBusService} from "../../common/events/event-bus.service.js";
 import {EventName} from "../../common/events/event.types.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
@@ -248,7 +249,7 @@ export class CustomerService {
             });
         }
 
-        if (dto.email && await this.existsByEmail(dto.email)) {
+        if (dto.email && dto.email !== customer.email && await this.existsByEmail(dto.email)) {
             throw new ConflictException({
                 message: `Customer with email ${dto.email} already exists`,
                 errorCode: ErrorCode.CUSTOMER_EMAIL_ALREADY_EXISTS,
@@ -287,17 +288,7 @@ export class CustomerService {
             });
         }
 
-        await this.dataSource.transaction(async manager => {
-            await this.deleteByIdAndOrgId(customerId, membership.organizationId, manager);
-
-            await this.saveHistory({
-                customer,
-                action: CustomerHistoryAction.DELETED,
-                description: `user named ${customer.name} and email ${customer.email} has been deleted`,
-                createdBy: membership.employeeId,
-                organizationId: membership.organizationId
-            }, manager);
-        });
+        await this.deleteByIdAndOrgId(customerId, membership.organizationId);
 
         await this.eventBusService.publish(EventName.CUSTOMER_DELETED, {
             customerId: customer.id,
@@ -311,5 +302,14 @@ export class CustomerService {
             .findBy({customer: {id: customerId, organizationId: member.organizationId}});
 
         return addresses.map(address => new CustomerAddressRes(address));
+    }
+
+    async getHistory(customerId: number, membership: OrganizationMember): Promise<CustomerHistoryRes[]> {
+        const history = await this.historyRepo.findBy({
+            customer: {id: customerId},
+            organizationId: membership.organizationId,
+        });
+
+        return history.map(item => new CustomerHistoryRes(item, customerId));
     }
 }

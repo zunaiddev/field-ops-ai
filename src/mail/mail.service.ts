@@ -1,6 +1,7 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {MailerService} from "@nestjs-modules/mailer";
 import {ConfigService} from "@nestjs/config";
+import {Employee} from "../modules/employee/entity/employee.entity.js";
 
 export interface SendVerificationEmailOptions {
     to: string;
@@ -15,13 +16,18 @@ export interface SendVerificationEmailOptions {
 @Injectable()
 export class MailService {
     private readonly baseUrl: string;
+    private readonly frontendUrl: string;
     private readonly logger: Logger;
 
     constructor(
         private readonly mailerService: MailerService,
         private readonly configService: ConfigService,
     ) {
-        this.baseUrl = this.configService.getOrThrow<string>('baseUrl');
+        this.baseUrl = this.configService.get<string>('baseUrl') || 'http://localhost:3000';
+        this.frontendUrl = this.configService.get<string>('frontendUrl')
+            || this.configService.get<string>('FRONTEND_URL')
+            || process.env.FRONTEND_URL
+            || 'http://localhost:3000';
         this.logger = new Logger(MailService.name);
     }
 
@@ -54,6 +60,34 @@ export class MailService {
             this.logger.log(`Verification email sent to ${to}`);
         } catch (error) {
             this.logger.error(`Could not send verification email to ${to}`, error);
+        }
+    }
+
+    async sendEmployeeCreation(employee: Employee, password: string) {
+        const loginUrl = `${this.frontendUrl.replace(/\/+$/, '')}/auth/login`;
+        const userName = `${employee.firstName || ''} ${employee.lastName || ''}`.trim() || employee.email;
+
+        try {
+            await this.mailerService.sendMail({
+                to: employee.email,
+                subject: 'Welcome to FieldOps AI - Account Credentials',
+                template: './employee-created',
+                context: {
+                    userName,
+                    firstName: employee.firstName,
+                    lastName: employee.lastName,
+                    email: employee.email,
+                    password,
+                    employeeId: employee.employeeId,
+                    role: employee.role,
+                    loginUrl,
+                    supportEmail: 'support@fieldops.ai',
+                    currentYear: new Date().getFullYear(),
+                },
+            });
+            this.logger.log(`Employee creation email sent to ${employee.email}`);
+        } catch (error) {
+            this.logger.error(`Could not send employee creation email to ${employee.email}`, error);
         }
     }
 }

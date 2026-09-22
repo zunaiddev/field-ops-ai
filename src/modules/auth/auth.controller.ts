@@ -1,6 +1,6 @@
 import {Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Res} from '@nestjs/common';
 import {AuthService} from './auth.service.js';
-import {RegistrationReq} from './dto/signup-req.dto.js';
+import {RegistrationReq} from './dto/registration-req.dto.js';
 import {RegistrationRes} from './dto/signup-res.dto.js';
 import {LoginReq} from './dto/login-req.dto.js';
 import {AuthRes} from './dto/auth-res.dto.js';
