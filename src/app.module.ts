@@ -17,6 +17,7 @@ import {JwtGuard} from "./common/guards/jwt.guard.js";
 import {CustomerModule} from "./modules/customer/customer.module.js";
 import {EventBusModule} from './common/events/event-bus.module.js';
 import {ServiceReqModule} from "./modules/service-req/service-req.module.js";
+import { TechnicianModule } from './modules/technician/technician.module.js';
 
 @Module({
     imports: [
@@ -35,6 +36,7 @@ import {ServiceReqModule} from "./modules/service-req/service-req.module.js";
         CustomerModule,
         ServiceReqModule,
         EventBusModule,
+        TechnicianModule,
     ],
     providers: [{provide: APP_GUARD, useClass: JwtGuard}],
 })

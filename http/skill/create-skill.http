@@ -1,0 +1,99 @@
+### 1. HVAC Maintenance & Heat Pump Repair
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "HVAC Maintenance & Heat Pump Repair",
+  "description": "Comprehensive inspection, refrigerant charging, and compressor diagnostics for heating and cooling systems."
+}
+
+### 2. Fiber Optic Splicing & OTDR Testing
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Fiber Optic Splicing & OTDR Testing",
+  "description": "Fusion splicing, optical loss verification, and fiber line troubleshooting using OTDR equipment."
+}
+
+### 3. Solar PV & Inverter Systems
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Solar PV & Inverter Systems",
+  "description": "Rooftop and ground-mount PV panel setup, string inverter diagnostics, and battery storage integration."
+}
+
+### 4. CCTV & Access Control Installation
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "CCTV & Access Control Installation",
+  "description": "Deploying IP surveillance cameras, biometric scanners, magnetic door locks, and security monitoring hubs."
+}
+
+### 5. Elevator & Escalator Servicing
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Elevator & Escalator Servicing",
+  "description": "Routine safety inspections, cable tension adjustments, hydraulic lift maintenance, and emergency brake testing."
+}
+
+### 6. EV Charging Station Deployment
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "EV Charging Station Deployment",
+  "description": "Level 2 and DC fast charger installation, load balancing configuration, and OCPP connectivity setup."
+}
+
+### 7. Commercial Refrigeration & Cold Storage
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Commercial Refrigeration & Cold Storage",
+  "description": "Walk-in freezer diagnostics, defrost cycle calibration, condenser maintenance, and temperature sensor audits."
+}
+
+### 8. Backup Generator & ATS Systems
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Backup Generator & ATS Systems",
+  "description": "Preventative servicing, battery bank testing, and automatic transfer switch (ATS) calibration for uninterruptible power."
+}
+
+### 9. Fire Alarm & Suppression Systems
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Fire Alarm & Suppression Systems",
+  "description": "NFPA compliance checks, smoke sensor testing, sprinkler control valve inspection, and panel programming."
+}
+
+### 10. Building Automation Systems (BAS/BMS)
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Building Automation Systems (BAS/BMS)",
+  "description": "BACnet/Modbus integration, digital thermostat calibration, and central building management diagnostics."
+}

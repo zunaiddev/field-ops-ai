@@ -1,0 +1,4 @@
+@id = 18
+
+DELETE {{baseUrl}}/technicians/skill/{{id}}
+Authorization: Bearer {{accessToken}}

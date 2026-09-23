@@ -1,0 +1,8 @@
+POST {{baseUrl}}/technicians/skills
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "SOMETHING",
+  "description": "He can do everything"
+}

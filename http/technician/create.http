@@ -1,0 +1,11 @@
+POST {{baseUrl}}/technicians
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "employeeId": 1,
+  "homeAddress": {
+  },
+  "currentAddress": {
+  }
+}

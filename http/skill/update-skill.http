@@ -1,0 +1,9 @@
+@id = 1
+
+PATCH {{baseUrl}}/technicians/skills/{{id}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "HVAC Diagnostics"
+}
