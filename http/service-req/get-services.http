@@ -1,0 +1,6 @@
+GET {{baseUrl}}/service-requests
+Authorization: Bearer {{accessToken}}
+
+### Second request
+GET {{baseUrl}}/service-requests/2
+Authorization: Bearer {{accessToken}}

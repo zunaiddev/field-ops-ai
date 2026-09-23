@@ -1,0 +1,15 @@
+
+
+### Create Service Request - Installation
+PUT {{baseUrl}}/service-requests/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressId": 2,
+  "title": "Laptop is not working",
+  "description": "My laptop is not working",
+  "category": "INSTALLATION",
+  "priority": "LOW",
+  "status": "NEW"
+}

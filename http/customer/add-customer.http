@@ -1,13 +1,11 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6ImM4MzMwMjBhLWRjMmEtNDcxZS1iZGQyLTM0ZGRjYTQ1ZjhiZSIsImlhdCI6MTc4OTgyMDI0NiwiZXhwIjoxNzg5ODIxMTQ2LCJzdWIiOiIxNWMzMTU4MS0yOTk5LTQ0NDYtYTY1Ni03MjgzNTBiZDgwZWMifQ.JFEI6k-ymk_Lh4TblUEpjXopcHEv23t0tk8ndN-_Nh4
-
 POST {{baseUrl}}/customers
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-  "name": "Sergio Marking",
-  "email": "sargio.markina@gmail.com",
-  "phone": "9690578859"
+  "name": "Microserver",
+  "email": "micro.markina@gmail.com",
+  "phone": "8847859657"
 }
 
 ###

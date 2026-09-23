@@ -1,7 +1,5 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6Ijk3NWFlY2IwLWZlZTMtNDI0MS05NDI4LTc2NGVkZTI5YjQxYSIsImlhdCI6MTc4OTgxNjAxNywiZXhwIjoxNzg5ODE2OTE3LCJzdWIiOiIxNWMzMTU4MS0yOTk5LTQ0NDYtYTY1Ni03MjgzNTBiZDgwZWMifQ.OtoWDCsw8zkqFsJphroO3IRl2UWOt1n-vdxrmzYpRWI
-
-### Customer 1
-POST {{baseUrl}}/customers/1eb629ed-d2f2-4a00-b46e-073135c5c319/addresses
+### Customer 1 - Address 1 (Primary)
+POST {{baseUrl}}/customers/6/addresses
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -15,8 +13,23 @@ Content-Type: application/json
   "isPrimary": true
 }
 
-### Customer 2
-POST {{baseUrl}}/customers/5c36c571-4dc2-4b4a-9003-a70052456275/addresses
+### Customer 1 - Address 2 (Secondary)
+POST {{baseUrl}}/customers/1/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "Site No. 12, 4th Main Road",
+  "addressLine2": "Indiranagar",
+  "city": "Bengaluru",
+  "state": "Karnataka",
+  "postalCode": "560038",
+  "country": "India",
+  "isPrimary": false
+}
+
+### Customer 2 - Address 1 (Primary)
+POST {{baseUrl}}/customers/2/addresses
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -30,8 +43,23 @@ Content-Type: application/json
   "isPrimary": true
 }
 
-### Customer 3
-POST {{baseUrl}}/customers/398f6d07-b85f-4f0f-955f-a850aa722d98/addresses
+### Customer 2 - Address 2 (Secondary)
+POST {{baseUrl}}/customers/2/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "Tower 3, Apt 804, Prestige Tech Vista",
+  "addressLine2": "Kadubeesanahalli, Outer Ring Road",
+  "city": "Bengaluru",
+  "state": "Karnataka",
+  "postalCode": "560103",
+  "country": "India",
+  "isPrimary": false
+}
+
+### Customer 3 - Address 1 (Primary)
+POST {{baseUrl}}/customers/3/addresses
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -45,8 +73,23 @@ Content-Type: application/json
   "isPrimary": true
 }
 
-### Customer 4
-POST {{baseUrl}}/customers/6ab5a423-dfe3-444b-b240-a9234ce12e72/addresses
+### Customer 3 - Address 2 (Secondary)
+POST {{baseUrl}}/customers/3/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "Bldg 7, Mindspace IT Park",
+  "addressLine2": "Malad West",
+  "city": "Mumbai",
+  "state": "Maharashtra",
+  "postalCode": "400064",
+  "country": "India",
+  "isPrimary": false
+}
+
+### Customer 4 - Address 1 (Primary)
+POST {{baseUrl}}/customers/4/addresses
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -60,53 +103,8 @@ Content-Type: application/json
   "isPrimary": true
 }
 
-### Customer 5
-POST {{baseUrl}}/customers/ef0a7b4b-a638-456e-b88e-09c733438b15/addresses
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
-
-{
-  "addressLine1": "B-24, Sector 62",
-  "addressLine2": "Near Electronic City Metro",
-  "city": "Noida",
-  "state": "Uttar Pradesh",
-  "postalCode": "201309",
-  "country": "India",
-  "isPrimary": true
-}
-
-### Customer 6
-POST {{baseUrl}}/customers/d5a6955e-aeb9-49e1-9804-4ce0d83ecf66/addresses
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
-
-{
-  "addressLine1": "14/A South Extension Part 2",
-  "addressLine2": "Main Market",
-  "city": "New Delhi",
-  "state": "Delhi",
-  "postalCode": "110049",
-  "country": "India",
-  "isPrimary": true
-}
-
-### Customer 7
-POST {{baseUrl}}/customers/68822ca3-1869-4a7d-a0d4-d577de2e30ad/addresses
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
-
-{
-  "addressLine1": "78 MG Road, Camp",
-  "addressLine2": "Near East Street",
-  "city": "Pune",
-  "state": "Maharashtra",
-  "postalCode": "411001",
-  "country": "India",
-  "isPrimary": true
-}
-
-### Customer 8 (Secondary address for Customer 4)
-POST {{baseUrl}}/customers/6ab5a423-dfe3-444b-b240-a9234ce12e72/addresses
+### Customer 4 - Address 2 (Secondary)
+POST {{baseUrl}}/customers/4/addresses
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
@@ -120,17 +118,32 @@ Content-Type: application/json
   "isPrimary": false
 }
 
-### Customer 9
-POST {{baseUrl}}/customers/5a0ed5e2-c552-4044-b322-a369b7403436/addresses
+### Customer 5 - Address 1 (Primary)
+POST {{baseUrl}}/customers/5/addresses
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-  "addressLine1": "21 Anna Salai",
-  "addressLine2": "Opposite Spencer Plaza",
-  "city": "Chennai",
-  "state": "Tamil Nadu",
-  "postalCode": "600002",
+  "addressLine1": "B-24, Sector 62",
+  "addressLine2": "Near Electronic City Metro",
+  "city": "Noida",
+  "state": "Uttar Pradesh",
+  "postalCode": "201309",
   "country": "India",
   "isPrimary": true
+}
+
+### Customer 5 - Address 2 (Secondary)
+POST {{baseUrl}}/customers/5/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "Tower 2, Floor 8, Logix Cyber Park",
+  "addressLine2": "C-28/29, Sector 62",
+  "city": "Noida",
+  "state": "Uttar Pradesh",
+  "postalCode": "201309",
+  "country": "India",
+  "isPrimary": false
 }

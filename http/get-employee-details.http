@@ -1,4 +1,2 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiT1JHX09XTkVSIiwidHlwZSI6IkFVVEgiLCJqdGkiOiI2NjE0MGQzMS1kMjJlLTQ0MGUtYTEyYy0zNmU2NDc3OTUyYjUiLCJpYXQiOjE3OTAwNzI3NDcsImV4cCI6MTc5MDA3MzY0Nywic3ViIjoiMyJ9.uZGFgOeQC6SlJ_HhfsxOgHTw8ERX4SAepKgRf8RRBn0
-
 GET {{baseUrl}}/employees
 Authorization: Bearer {{accessToken}}

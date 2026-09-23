@@ -10,13 +10,16 @@ import {
 @Exclude()
 export class ServiceReqDto {
     @Expose()
-    id: string;
+    id: number;
 
     @Expose()
     organizationId: number;
 
     @Expose()
     customerId: number;
+
+    @Expose()
+    addressId: number;
 
     @Expose()
     createdBy: number;
@@ -53,6 +56,7 @@ export class ServiceReqDto {
 
     constructor(serviceReq: ServiceRequest) {
         this.id = serviceReq.id;
+        this.addressId = serviceReq.addressId;
         this.organizationId = serviceReq.organizationId;
         this.customerId = serviceReq.customerId;
         this.createdBy = serviceReq.createdBy;

@@ -12,8 +12,8 @@ export class Customer {
     @Column({length: 150})
     name: string;
 
-    @Column({name: "phone_no", length: 30, nullable: true})
-    phone?: string;
+    @Column({name: "phone_no", length: 30})
+    phone: string;
 
     @Column()
     email: string;

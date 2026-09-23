@@ -9,10 +9,9 @@ export class CreateCustomerReq {
     name: string;
 
     @Trim()
-    @IsOptional()
     @IsString({message: "Phone number must be a string"})
     @MaxLength(30, {message: "Phone number cannot exceed 30 characters"})
-    phone?: string;
+    phone: string;
 
     @CleanEmail()
     @IsNotEmpty({message: "Email is required"})

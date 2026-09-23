@@ -1,5 +1,4 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6IjJmMjI1NDA2LTdkZTItNDRiOS04YmQyLTMzY2RmYWNmMDhlNyIsImlhdCI6MTc4OTgxODQ3NywiZXhwIjoxNzg5ODE5Mzc3LCJzdWIiOiJiODdhMjRiOC0yMWYyLTQ1NzQtYjUzYi01YTVhOGJiZjg1OWIifQ.fxI8p8lsf8LBnYJoyakrccJJNzBgW_gRsA5aLG1klYM
-@id = 1eb629ed-d2f2-4a00-b46e-073135c5c319
+@id = 6
 
 GET {{baseUrl}}/customers/{{id}}/addresses
 Authorization: Bearer {{accessToken}}

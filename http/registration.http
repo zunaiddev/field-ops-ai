@@ -1,7 +1,7 @@
 
 
 ### Register organization 1
-POST {{$baseUrl}}/auth/register
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
   "firstName": "Maya",
   "lastName": "Rowan",
   "email": "maya.rowan@northstar.example",
-  "password": "NorthstarPass1!"
+  "password": "Maya@123"
 }
 
 ###
@@ -29,7 +29,7 @@ Content-Type: application/json
   "firstName": "Elias",
   "lastName": "Mercer",
   "email": "elias.mercer@cedarline.example",
-  "password": "CedarlinePass1!"
+  "password": "Elias@123"
 }
 
 ###

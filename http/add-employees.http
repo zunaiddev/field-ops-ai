@@ -1,4 +1,18 @@
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiQVVUSCIsImp0aSI6IjcxYjlkNDVlLWNmNzEtNDk4OS05ODU1LTk3Zjc0MzA3Mjc1ZCIsImlhdCI6MTc4OTc5ODU2NywiZXhwIjoxNzg5Nzk5NDY3LCJzdWIiOiJkMDUwNmRkMi00M2QwLTRkZjctODZmMS1mMjFhZDlhN2U0NmEifQ.FmedWj3o1PesOpvseLsKAMpwhZtZnkU1u25mMeQXenw
+### Login and update accessToken
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "maya.rowan@northstar.example",
+  "password": "Maya@123",
+  "remember": true
+}
+
+> {%
+    client.global.set("accessToken", response.body.accessToken);
+%}
+
+###
 
 ### Add organization admin
 POST {{baseUrl}}/organizations/current/members
@@ -9,6 +23,7 @@ Content-Type: application/json
   "firstName": "Harper",
   "lastName": "Bennett",
   "email": "harper.bennett@redwood.example",
+  "phone": "+919876543210",
   "role": "ORG_ADMIN",
   "password": "HarperAdmin9$"
 }
@@ -24,6 +39,7 @@ Content-Type: application/json
   "firstName": "Noah",
   "lastName": "Sinclair",
   "email": "noah.sinclair@redwood.example",
+  "phone": "+919876543211",
   "role": "DISPATCHER",
   "password": "NoahDispatch9$"
 }
@@ -39,6 +55,7 @@ Content-Type: application/json
   "firstName": "Amara",
   "lastName": "Holloway",
   "email": "amara.holloway@redwood.example",
+  "phone": "+919876543212",
   "role": "MANAGER",
   "password": "AmaraManager9$"
 }
@@ -54,6 +71,7 @@ Content-Type: application/json
   "firstName": "Liam",
   "lastName": "Donovan",
   "email": "liam.donovan@redwood.example",
+  "phone": "+919876543213",
   "role": "TECHNICIAN",
   "password": "LiamTech9$"
 }
@@ -69,6 +87,7 @@ Content-Type: application/json
   "firstName": "Zoe",
   "lastName": "Fairchild",
   "email": "zoe.fairchild@redwood.example",
+  "phone": "+919876543214",
   "role": "INVENTORY_MANAGER",
   "password": "ZoeInventory9$"
 }
@@ -84,6 +103,7 @@ Content-Type: application/json
   "firstName": "Iris",
   "lastName": "Kensington",
   "email": "iris.kensington@redwood.example",
+  "phone": "+919876543215",
   "role": "FINANCE",
   "password": "IrisFinance9$"
 }
@@ -99,6 +119,7 @@ Content-Type: application/json
   "firstName": "Finn",
   "lastName": "Ashford",
   "email": "finn.ashford@redwood.example",
+  "phone": "+919876543216",
   "role": "VIEWER",
   "password": "FinnViewer9$"
 }

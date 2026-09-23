@@ -9,13 +9,16 @@ import {
 @Entity('service_requests')
 export class ServiceRequest {
     @PrimaryGeneratedColumn()
-    id: string;
+    id: number;
 
     @Column({name: 'organization_id'})
     organizationId: number;
 
     @Column({name: 'customer_id'})
     customerId: number;
+
+    @Column({name: 'address_id'})
+    addressId: number;
 
     @Column({name: 'created_by'})
     createdBy: number;
