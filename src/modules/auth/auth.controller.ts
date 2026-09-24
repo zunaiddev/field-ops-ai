@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Res} from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Res} from '@nestjs/common';
 import {AuthService} from './auth.service.js';
 import {RegistrationReq} from './dto/registration-req.dto.js';
 import {RegistrationRes} from './dto/signup-res.dto.js';
@@ -23,7 +23,7 @@ export class AuthController {
         return await this.authService.register(req);
     }
 
-    @Post('login')
+    @Post('login/')
     @HttpCode(HttpStatus.OK)
     async login(@Body() req: LoginReq, @Res({passthrough: true}) res: Response): Promise<AuthRes> {
         const response: AuthRes = await this.authService.login(req);
@@ -36,11 +36,16 @@ export class AuthController {
     @Post('login/customer')
     @HttpCode(HttpStatus.OK)
     async customerLogin(@Body() req: LoginReq, @Res({passthrough: true}) res: Response): Promise<AuthRes> {
-        const response: AuthRes = await this.authService.login(req);
+        const response: AuthRes = await this.authService.login(req, true);
 
         setRefreshCookie(res, response.refreshToken);
 
         return response;
+    }
+
+    @Post('/forgot-password/customer')
+    async forgotPassword(@Query('email') email: string) {
+        return await this.authService.forgotPassword(email, true);
     }
 
     @Get('resend-email')

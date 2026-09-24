@@ -1,4 +1,4 @@
-import {IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength,} from "class-validator";
+import {IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength,} from "class-validator";
 import {CleanEmail, CleanName, Trim} from "../../../common/decorators/transform.decorators.js";
 
 export class CreateCustomerReq {
@@ -18,6 +18,11 @@ export class CreateCustomerReq {
     @IsEmail({}, {message: "Please provide a valid email address"})
     @MaxLength(255, {message: "Email cannot exceed 255 characters"})
     email: string;
+
+    @IsNotEmpty({message: "Password is required"})
+    @MaxLength(60, {message: "Password cannot exceed 60 characters"})
+    @MinLength(6, {message: "Password should be least 6 characters"})
+    password: string;
 
     @Trim()
     @IsOptional()

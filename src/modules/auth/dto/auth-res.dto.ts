@@ -1,5 +1,4 @@
 import {Exclude, Expose} from "class-transformer";
-import {Employee} from "../../employee/entity/employee.entity.js";
 
 @Exclude()
 export class AuthRes {
@@ -17,10 +16,11 @@ export class AuthRes {
 
     refreshToken: string;
 
-    constructor(employee: Employee, accessToken: string, refreshToken: string) {
-        this.id = employee.id;
-        this.email = employee.email;
-        this.role = employee.role;
+    constructor({id, email, role}: { id: number, email: string, role: string },
+                accessToken: string, refreshToken: string) {
+        this.id = id;
+        this.email = email;
+        this.role = role;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }

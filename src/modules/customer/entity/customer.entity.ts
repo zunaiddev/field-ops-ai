@@ -18,6 +18,9 @@ export class Customer {
     @Column()
     email: string;
 
+    @Column()
+    passwordHash: string;
+
     @Column({
         name: 'external_reference',
         length: 100,

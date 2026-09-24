@@ -28,11 +28,14 @@ import {DataSource, EntityManager} from "typeorm";
 import {InjectDataSource} from "@nestjs/typeorm";
 import {MailService} from "../../mail/mail.service.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
+import {Customer} from "../customer/entity/customer.entity.js";
+import {CustomerService} from "../customer/customer.service.js";
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectDataSource() private readonly dataSource: DataSource,
+        private readonly customerService: CustomerService,
         private readonly userService: EmployeeService,
         private readonly jwtService: JwtService,
         private readonly organizationService: OrganizationService,
@@ -105,7 +108,9 @@ export class AuthService {
     }
 
     async login(req: LoginReq, isCustomer = false): Promise<AuthRes> {
-        const user: Employee | null = await this.userService.findByEmail(req.email);
+        const user: Customer | Employee | null = isCustomer
+            ? await this.customerService.findByEmail(req.email)
+            : await this.userService.findByEmail(req.email);
 
         if (!user) {
             throw new BadRequestException({
@@ -114,7 +119,14 @@ export class AuthService {
             });
         }
 
-        if (!user.emailVerifiedAt) {
+        if (user instanceof Customer && user.status === "ACTIVE") {
+            throw new UnauthorizedException({
+                message: "You are not allowed to login",
+                errorCode: ErrorCode.NOT_ALLOWED
+            });
+        }
+
+        if (user instanceof Employee && !user.emailVerifiedAt) {
             throw new UnauthorizedException({
                 message: "Please verify your email first to login",
                 errorCode: ErrorCode.EMAIL_NOT_VERIFIED,
@@ -150,12 +162,14 @@ export class AuthService {
         }
 
         await this.cacheService.remove(CacheKeys.failedPasswordAttempts(user.email));
-        await this.userService.update({...user, lastLoginAt: new Date()});
+        (user instanceof Employee) && await this.userService.update({...user, lastLoginAt: new Date()});
 
-        const accessToken: string = this.jwtService.generateAccessToken(user.id, user.role);
-        const refreshToken: string = this.jwtService.generateRefreshToken(user.id, user.role);
+        const role = user instanceof Employee ? user.role : "CUSTOMER";
 
-        return new AuthRes(user, accessToken, refreshToken);
+        const accessToken: string = this.jwtService.generateAccessToken(user.id, role);
+        const refreshToken: string = this.jwtService.generateRefreshToken(user.id, role);
+
+        return new AuthRes({id: user.id, email: user.email, role}, accessToken, refreshToken);
     }
 
     async resendVerifyEmail(email: string): Promise<EmailRes> {
@@ -207,5 +221,10 @@ export class AuthService {
             this.jwtService.generateAccessToken(parseInt(payload.sub), payload.role);
 
         return new RefreshTokenRes(payload.sub, accessToken);
+    }
+
+    // ToDo: implement functionality
+    async forgotPassword(email: string, isCustomer: boolean = false) {
+        return Promise.resolve(undefined);
     }
 }

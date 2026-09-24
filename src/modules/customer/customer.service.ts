@@ -16,6 +16,7 @@ import {CustomerHistoryRes} from "./dto/customer-history-res.dto.js";
 import {EventBusService} from "../../common/events/event-bus.service.js";
 import {EventName} from "../../common/events/event.types.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
+import * as argon2 from "argon2";
 
 export interface CustomerSearchOptions {
     email?: string;
@@ -52,6 +53,10 @@ export class CustomerService {
         }
 
         return customer;
+    }
+
+    async findByEmail(email: string): Promise<Customer | null> {
+        return await this.customerRepo.findOneBy({email});
     }
 
     private async findAllByOrgIdAndOptions(orgId: number, options?: GetCustomersOptions): Promise<[Customer[], number]> {
@@ -151,7 +156,8 @@ export class CustomerService {
         const customer: Customer = await this.dataSource.transaction(async manager => {
             const customer: Customer = await this.saveCustomer({
                 ...dto, status: dto.status ?? 'ACTIVE',
-                organizationId: membership.organizationId
+                organizationId: membership.organizationId,
+                passwordHash: await argon2.hash(dto.password)
             }, manager);
 
             await this.saveHistory({

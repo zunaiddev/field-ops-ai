@@ -5,9 +5,10 @@ import {JwtModule} from "../jwt/jwt.module.js";
 import {EmployeeModule} from "../employee/employee.module.js";
 import {OrganisationModule} from "../orgnization/organisation.module.js";
 import {OrganizationMemberModule} from "../orgnization-member/organization-member.module.js";
+import {CustomerModule} from "../customer/customer.module.js";
 
 @Module({
-    imports: [JwtModule, EmployeeModule, OrganisationModule, OrganizationMemberModule],
+    imports: [JwtModule, EmployeeModule, CustomerModule, OrganisationModule, OrganizationMemberModule],
     controllers: [AuthController],
     providers: [AuthService],
 })
