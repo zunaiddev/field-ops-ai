@@ -3,9 +3,27 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-  "employeeId": 1,
+  "employeeId": 3,
+  "skills": [
+    1,
+    19
+  ],
   "homeAddress": {
+    "addressLine1": "123 Knowledge Park",
+    "postalCode": "201310",
+    "city": "Greater Noida",
+    "state": "Uttar Pradesh",
+    "country": "India",
+    "longitude": "77.5040",
+    "latitude": "28.4744"
   },
   "currentAddress": {
+    "addressLine1": "456 Sector 18",
+    "postalCode": "201320",
+    "city": "Noida",
+    "state": "Uttar Pradesh",
+    "country": "India",
+    "longitude": "77.3910",
+    "latitude": "28.5355"
   }
 }

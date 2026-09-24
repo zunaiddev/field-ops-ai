@@ -21,8 +21,7 @@ export class TechnicianController {
     @Post()
     async create(@Body() dto: CreateTechnicianReq,
                  @CurrentMember() membership: OrganizationMember) {
-        // return await this.technicianService.create(dto, membership);
-        return dto;
+        return await this.technicianService.create(dto, membership);
     }
 
     @Post("/skills")

@@ -1,2 +1,2 @@
-GET {{baseUrl}}/technicians/skills/2
+GET {{baseUrl}}/technicians/skills
 Authorization: Bearer {{accessToken}}

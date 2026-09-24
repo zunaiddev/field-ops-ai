@@ -58,10 +58,7 @@ export class OrganizationMemberService {
 
     async findMemberInOrg(id: number, organizationId: number): Promise<OrganizationMember | null> {
         return await this.organizationMemberRepo.findOne({
-            where: [
-                {id, organizationId},
-                {employeeId: id, organizationId}
-            ],
+            where: {employeeId: id, organizationId},
             relations: {employee: true, organization: true}
         });
     }

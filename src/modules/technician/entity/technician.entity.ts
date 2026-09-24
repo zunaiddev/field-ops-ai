@@ -15,6 +15,9 @@ export class Technician {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column({name: "employee_id"})
+    employeeId: number;
+
     @OneToOne(() => Employee, employee => employee.id, {
         cascade: true
     })
