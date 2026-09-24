@@ -1,0 +1,3 @@
+DELETE {{baseUrl}}/technicians/6
+Authorization: Bearer {{accessToken}}
+Accept: application/json

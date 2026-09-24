@@ -33,13 +33,17 @@ export class Technician {
     @Column({name: "availability_status"})
     availabilityStatus: string;
 
-    @OneToOne(type => TechnicianAddress,
-        technicianAddress => technicianAddress.id)
+    @OneToOne(() => TechnicianAddress, {
+        cascade: true,
+        onDelete: 'CASCADE'
+    })
     @JoinColumn({name: "home_address_id"})
     homeAddress: TechnicianAddress;
 
-    @OneToOne(type => TechnicianAddress,
-        technicianAddress => technicianAddress.id)
+    @OneToOne(() => TechnicianAddress, {
+        cascade: true,
+        onDelete: 'CASCADE'
+    })
     @JoinColumn({name: "current_address_id"})
     currentAddress: TechnicianAddress;
 

@@ -262,4 +262,29 @@ export class TechnicianService {
 
         await this.technicianSkillRepo.delete(technicianSkill);
     }
+
+    async deleteTechnician(technicianId: number, member: OrganizationMember) {
+        const technician = await this.technicianRepo.findOne({
+            where: {id: technicianId, organizationId: member.organizationId},
+            relations: {homeAddress: true, currentAddress: true}
+        });
+
+        if (!technician) {
+            throw new NotFoundException({
+                message: "Technician not found",
+                code: ErrorCode.TECHNICIAN_NOT_FOUND
+            });
+        }
+
+        await this.dataSource.transaction(async manager => {
+            const skillRepo = manager.getRepository(TechnicianSkill);
+            const addressRepo = manager.getRepository(TechnicianAddress);
+
+            await skillRepo.delete({technicianId: technician.id});
+            await manager.getRepository(Technician).delete({id: technician.id});
+
+            await Promise.all([addressRepo.delete({id: technician.homeAddress.id}),
+                addressRepo.delete({id: technician.currentAddress.id})]);
+        });
+    }
 }

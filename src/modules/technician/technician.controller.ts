@@ -30,6 +30,12 @@ export class TechnicianController {
         return await this.technicianService.getTechnicians(member);
     }
 
+    @Delete(":technicianId")
+    async deleteTechnician(@Param("technicianId", ParseIntPipe) technicianId: number,
+                           @CurrentMember() member: OrganizationMember) {
+        await this.technicianService.deleteTechnician(technicianId, member);
+    }
+
     @Get(":technicianId/skills")
     async getTechnicianSkills(@Param("technicianId", ParseIntPipe)
                               technicianId: number,
@@ -51,7 +57,6 @@ export class TechnicianController {
                       @CurrentMember() member: OrganizationMember) {
         await this.technicianService.removeSkill(technicianId, skillId, member);
     }
-
 
     @Patch(":technicianId/skills/:skillId")
     async addSkill(@Param("technicianId", ParseIntPipe) technicianId: number,
