@@ -1,0 +1,8 @@
+PATCH {{baseUrl}}/technicians/10
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "status": "BOOKED",
+  "availabilityStatus": "AVAILABLE"
+}

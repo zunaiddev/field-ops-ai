@@ -17,6 +17,7 @@ import {OrganizationMemberService} from "../orgnization-member/organization-memb
 import {EmployeeRole} from "../employee/entity/employee.entity.js";
 import {TechnicianAddressDto} from "./dto/technician-address.dto.js";
 import {TechnicianAddressRes} from "./dto/technician-address-res.dto.js";
+import {UpdateStatusReq} from "./dto/update-status-req.dto.js";
 
 @Injectable()
 export class TechnicianService {
@@ -85,10 +86,12 @@ export class TechnicianService {
             });
         }
 
-        const skills: Skill[] = await this.skillRepo.findBy(dto.skills
+        const dtoSkills = [...new Set(dto.skills)];
+
+        const skills: Skill[] = await this.skillRepo.findBy(dtoSkills
             .map(s => ({id: s, organizationId: membership.organizationId})));
 
-        if (skills.length !== dto.skills.length) {
+        if (skills.length !== dtoSkills.length) {
             throw new NotFoundException({
                 message: "Could not found all the skills",
                 code: ErrorCode.SKILL_NOT_FOUND
@@ -203,7 +206,6 @@ export class TechnicianService {
         return new TechnicianAddressRes(updatesAddress);
     }
 
-
     async addSkill(technicianId: number, skillId: number, member: OrganizationMember) {
         const technician = await this.technicianRepo.findOne({
             where: {id: technicianId, organizationId: member.organizationId},
@@ -286,5 +288,23 @@ export class TechnicianService {
             await Promise.all([addressRepo.delete({id: technician.homeAddress.id}),
                 addressRepo.delete({id: technician.currentAddress.id})]);
         });
+    }
+
+    async updateStatus(technicianId: number, dto: UpdateStatusReq, member: OrganizationMember) {
+        const technician = await this.technicianRepo.findOneBy({
+            id: technicianId,
+            organizationId: member.organizationId
+        });
+
+        if (!technician) {
+            throw new NotFoundException({
+                message: "Technician not found",
+                code: ErrorCode.TECHNICIAN_NOT_FOUND
+            });
+        }
+
+        Object.assign(technician, dto);
+
+        return new TechnicianDto(await this.save(technician));
     }
 }

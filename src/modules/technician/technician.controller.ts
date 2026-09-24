@@ -10,6 +10,7 @@ import {CreateSkillReq} from "./dto/create-skill.req.js";
 import {SkillDto} from "./dto/skill.dto.js";
 import {UpdateSkillReq} from "./dto/update-skill-req.dto.js";
 import {TechnicianAddressDto} from "./dto/technician-address.dto.js";
+import {UpdateStatusReq} from "./dto/update-status-req.dto.js";
 
 @Roles(OrganizationRole.ORG_OWNER, OrganizationRole.ORG_ADMIN,
     OrganizationRole.MANAGER)
@@ -28,6 +29,14 @@ export class TechnicianController {
     @Get()
     async getTechnicians(@CurrentMember() member: OrganizationMember) {
         return await this.technicianService.getTechnicians(member);
+    }
+
+    @Patch(":technicianId")
+    async updateStatus(
+        @Param("technicianId", ParseIntPipe) technicianId: number,
+        @Body() dto: UpdateStatusReq,
+        @CurrentMember() member: OrganizationMember) {
+        return await this.technicianService.updateStatus(technicianId, dto, member);
     }
 
     @Delete(":technicianId")
