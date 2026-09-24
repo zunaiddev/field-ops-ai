@@ -5,7 +5,7 @@ export class Skill {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({length: 150, unique: true})
+    @Column({length: 150})
     name: string;
 
     @Column({type: 'text'})

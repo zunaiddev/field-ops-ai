@@ -10,3 +10,17 @@ Content-Type: application/json
 > {%
     client.global.set("accessToken", response.body.accessToken);
 %}
+
+### Org 2 Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "org2@test.com",
+  "password": "Org2@123",
+  "remember": true
+}
+
+> {%
+    client.global.set("accessToken", response.body.accessToken);
+%}

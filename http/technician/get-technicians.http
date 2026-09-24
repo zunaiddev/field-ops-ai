@@ -1,0 +1,3 @@
+GET {{baseUrl}}/technicians
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json

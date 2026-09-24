@@ -1,0 +1,5 @@
+GET {{baseUrl}}/technicians/9/skills
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+###

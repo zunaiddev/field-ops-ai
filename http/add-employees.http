@@ -1,31 +1,15 @@
-### Login and update accessToken
-POST {{baseUrl}}/auth/login
-Content-Type: application/json
-
-{
-  "email": "maya.rowan@northstar.example",
-  "password": "Maya@123",
-  "remember": true
-}
-
-> {%
-    client.global.set("accessToken", response.body.accessToken);
-%}
-
-###
-
 ### Add organization admin
 POST {{baseUrl}}/organizations/current/members
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-  "firstName": "Harper",
-  "lastName": "Bennett",
-  "email": "harper.bennett@redwood.example",
+  "firstName": "Org 2",
+  "lastName": "Technician 4",
+  "email": "org2Technician4@test.com",
   "phone": "+919876543210",
-  "role": "ORG_ADMIN",
-  "password": "HarperAdmin9$"
+  "role": "TECHNICIAN",
+  "password": "Technician@123"
 }
 
 ###

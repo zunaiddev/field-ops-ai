@@ -1,0 +1,17 @@
+@technicianId = 8
+@addressId = 17
+
+PATCH {{baseUrl}}/technicians/{{technicianId}}/address/{{addressId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "123 Knowledge Park",
+  "addressLine2": "This is second address line",
+  "city": "Greater",
+  "state": "Uttar Pradesh",
+  "postalCode": "201310",
+  "country": "India",
+  "longitude": "77.5040",
+  "latitude": "28.4744"
+}

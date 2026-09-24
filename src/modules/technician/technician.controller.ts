@@ -9,6 +9,7 @@ import {CreateTechnicianReq} from "./dto/create-technician-req.dto.js";
 import {CreateSkillReq} from "./dto/create-skill.req.js";
 import {SkillDto} from "./dto/skill.dto.js";
 import {UpdateSkillReq} from "./dto/update-skill-req.dto.js";
+import {TechnicianAddressDto} from "./dto/technician-address.dto.js";
 
 @Roles(OrganizationRole.ORG_OWNER, OrganizationRole.ORG_ADMIN,
     OrganizationRole.MANAGER)
@@ -22,6 +23,41 @@ export class TechnicianController {
     async create(@Body() dto: CreateTechnicianReq,
                  @CurrentMember() membership: OrganizationMember) {
         return await this.technicianService.create(dto, membership);
+    }
+
+    @Get()
+    async getTechnicians(@CurrentMember() member: OrganizationMember) {
+        return await this.technicianService.getTechnicians(member);
+    }
+
+    @Get(":technicianId/skills")
+    async getTechnicianSkills(@Param("technicianId", ParseIntPipe)
+                              technicianId: number,
+                              @CurrentMember() member: OrganizationMember) {
+        return await this.technicianService.getTechnicianSkills(technicianId, member);
+    }
+
+    @Patch(":technicianId/address/:addressId")
+    async updateAddress(@Param("technicianId", ParseIntPipe) technicianId: number,
+                        @Body() dto: TechnicianAddressDto,
+                        @Param("addressId", ParseIntPipe) addressId: number,
+                        @CurrentMember() member: OrganizationMember) {
+        return await this.technicianService.updateAddress(technicianId, addressId, dto, member);
+    }
+
+    @Delete(":technicianId/skills/:skillId")
+    async removeSkill(@Param("technicianId", ParseIntPipe) technicianId: number,
+                      @Param("skillId", ParseIntPipe) skillId: number,
+                      @CurrentMember() member: OrganizationMember) {
+        await this.technicianService.removeSkill(technicianId, skillId, member);
+    }
+
+
+    @Patch(":technicianId/skills/:skillId")
+    async addSkill(@Param("technicianId", ParseIntPipe) technicianId: number,
+                   @Param("skillId", ParseIntPipe) skillId: number,
+                   @CurrentMember() member: OrganizationMember) {
+        return await this.technicianService.addSkill(technicianId, skillId, member);
     }
 
     @Post("/skills")
@@ -38,6 +74,12 @@ export class TechnicianController {
     async getSkill(@Param("id", ParseIntPipe) id: number,
                    @CurrentMember() membership: OrganizationMember): Promise<SkillDto> {
         return await this.technicianService.getSkill(id, membership);
+    }
+
+    @Get("skills/:id/technicians")
+    async getTechnicianForSkill(@Param("id", ParseIntPipe) id: number,
+                                @CurrentMember() membership: OrganizationMember) {
+        return await this.technicianService.getAllTechnicianForSkill(id, membership);
     }
 
     @Patch("skills/:id")

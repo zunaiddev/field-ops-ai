@@ -22,14 +22,14 @@ POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "orgName": "Cedarline Services",
-  "orgSlug": "cedarline-services",
+  "orgName": "Organization 2",
+  "orgSlug": "org-2",
   "timezone": "Europe/Dublin",
   "currency": "EUR",
-  "firstName": "Elias",
-  "lastName": "Mercer",
-  "email": "elias.mercer@cedarline.example",
-  "password": "Elias@123"
+  "firstName": "Organization 2",
+  "lastName": "Member",
+  "email": "org2@test.com",
+  "password": "Org2@123"
 }
 
 ###

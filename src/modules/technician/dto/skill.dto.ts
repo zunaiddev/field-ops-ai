@@ -11,9 +11,17 @@ export class SkillDto {
     @Expose()
     description: string;
 
+    @Expose()
+    createdAt: Date;
+
+    @Expose()
+    updatedAt: Date;
+
     constructor(skill: Skill) {
         this.id = skill.id;
         this.name = skill.name;
         this.description = skill.description;
+        this.createdAt = skill.createdAt;
+        this.updatedAt = skill.updatedAt;
     }
 }

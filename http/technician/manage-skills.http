@@ -1,0 +1,11 @@
+@technicianId = 8
+@skillId = 7
+
+PATCH {{baseUrl}}/technicians/{{technicianId}}/skills/{{skillId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+### Remove Skill
+DELETE {{baseUrl}}/technicians/{{technicianId}}/skills/{{skillId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json

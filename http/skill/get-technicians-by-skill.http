@@ -1,0 +1,5 @@
+@skillId = 2
+
+GET {{baseUrl}}/technicins/skills/{{skillId}}/technicians
+Authorization: Bearer {{accessToken}}
+Accept: application/json
