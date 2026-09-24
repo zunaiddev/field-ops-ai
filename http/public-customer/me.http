@@ -1,0 +1,2 @@
+GET {{baseUrl}}/public/customers
+Authorization: Bearer {{accessToken}}

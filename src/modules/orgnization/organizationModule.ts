@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {Global, Module} from '@nestjs/common';
 import {OrganizationService} from "./organization.service.js";
 import {OrganizationController} from "./organization-controller.js";
 import {TypeOrmModule} from "@nestjs/typeorm";
@@ -7,6 +7,7 @@ import {OrganizationMemberModule} from "../orgnization-member/organization-membe
 import {EmployeeModule} from "../employee/employee.module.js";
 import {GuardModule} from "../../common/guards/guard.module.js";
 
+@Global()
 @Module({
     imports: [TypeOrmModule.forFeature([Organization]),
         OrganizationMemberModule, EmployeeModule, GuardModule],
@@ -14,5 +15,5 @@ import {GuardModule} from "../../common/guards/guard.module.js";
     controllers: [OrganizationController],
     exports: [OrganizationService],
 })
-export class OrganisationModule {
+export class OrganizationModule {
 }

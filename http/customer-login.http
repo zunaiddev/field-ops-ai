@@ -1,0 +1,12 @@
+POST {{baseUrl}}/auth/login/customer
+Content-Type: application/json
+
+{
+  "email": "customer1@test.com",
+  "password": "Cust@123",
+  "remember": true
+}
+
+> {%
+    client.global.set("accessToken", response.body.accessToken);
+%}

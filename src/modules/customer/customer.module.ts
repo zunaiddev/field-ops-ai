@@ -5,12 +5,12 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {CustomerAddress} from "./entity/customer-address.entity.js";
 import {Customer} from "./entity/customer.entity.js";
 import {CustomerHistory} from "./entity/customer-history.js";
-import {OrganizationMemberModule} from "../orgnization-member/organization-member.module.js";
+import {PublicCustomerController} from "./public-customer.controller.js";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Customer, CustomerAddress, CustomerHistory]), OrganizationMemberModule],
+    imports: [TypeOrmModule.forFeature([Customer, CustomerAddress, CustomerHistory])],
     providers: [CustomerService],
-    controllers: [CustomerController],
+    controllers: [CustomerController, PublicCustomerController],
     exports: [CustomerService],
 })
 export class CustomerModule {

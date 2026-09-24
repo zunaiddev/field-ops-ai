@@ -2,6 +2,8 @@ import {Exclude, Expose, Type} from "class-transformer";
 import {Customer} from "../entity/customer.entity.js";
 import {CustomerAddress} from "../entity/customer-address.entity.js";
 import {CustomerAddressRes} from "./customer-address-res.dto.js";
+import {OrganizationRes} from "../../orgnization/dto/organization-res.dto.js";
+import {Organization} from "../../orgnization/entity/organization.entity.js";
 
 @Exclude()
 export class CustomerRes {
@@ -31,12 +33,17 @@ export class CustomerRes {
     addresses: CustomerAddressRes[] | undefined;
 
     @Expose()
+    organization?: OrganizationRes;
+
+    @Expose()
     createdAt: Date;
 
     @Expose()
     updatedAt: Date;
 
-    constructor(customer: Customer, addresses: CustomerAddress[] | undefined = undefined) {
+    constructor(customer: Customer,
+                addresses: CustomerAddress[] | undefined = undefined,
+                organization?: Organization) {
         this.id = customer.id;
         this.organizationId = customer.organizationId;
         this.name = customer.name;
@@ -47,5 +54,6 @@ export class CustomerRes {
         this.addresses = addresses ? addresses?.map((address) => new CustomerAddressRes(address)) : undefined;
         this.createdAt = customer.createdAt;
         this.updatedAt = customer.updatedAt;
+        this.organization = organization ? new OrganizationRes(organization) : undefined;
     }
 }

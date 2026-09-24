@@ -119,7 +119,7 @@ export class AuthService {
             });
         }
 
-        if (user instanceof Customer && user.status === "ACTIVE") {
+        if (user instanceof Customer && user.status !== "ACTIVE") {
             throw new UnauthorizedException({
                 message: "You are not allowed to login",
                 errorCode: ErrorCode.NOT_ALLOWED

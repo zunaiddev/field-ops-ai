@@ -17,6 +17,7 @@ import {EventBusService} from "../../common/events/event-bus.service.js";
 import {EventName} from "../../common/events/event.types.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
 import * as argon2 from "argon2";
+import {OrganizationService} from "../orgnization/organization.service.js";
 
 export interface CustomerSearchOptions {
     email?: string;
@@ -35,6 +36,7 @@ export class CustomerService {
                 @InjectDataSource() private readonly dataSource: DataSource,
                 @InjectRepository(CustomerAddress) private readonly addressRepo: Repository<CustomerAddress>,
                 @InjectRepository(CustomerHistory) private readonly historyRepo: Repository<CustomerHistory>,
+                private readonly orgService: OrganizationService,
                 private readonly eventBusService: EventBusService) {
     }
 
@@ -342,5 +344,14 @@ export class CustomerService {
         });
 
         return history.map(item => new CustomerHistoryRes(item, customerId));
+    }
+
+    // public controller methods
+
+    async getFullCustomer(customer: Customer) {
+        console.log(customer);
+        const organization = await this.orgService.findById(customer.id);
+
+        return new CustomerRes(customer, undefined, organization);
     }
 }

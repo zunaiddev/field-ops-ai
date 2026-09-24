@@ -1,7 +1,7 @@
 import {Module} from "@nestjs/common";
 import {HealthModule} from "./health/health.module.js";
 import {DatabaseModule} from "./database/database.module.js";
-import {OrganisationModule} from "./modules/orgnization/organisation.module.js";
+import {OrganizationModule} from "./modules/orgnization/organizationModule.js";
 import {OrganizationMemberModule} from "./modules/orgnization-member/organization-member.module.js";
 import {EmployeeModule} from "./modules/employee/employee.module.js";
 import {ConfigModule} from "@nestjs/config";
@@ -17,7 +17,7 @@ import {JwtGuard} from "./common/guards/jwt.guard.js";
 import {CustomerModule} from "./modules/customer/customer.module.js";
 import {EventBusModule} from './common/events/event-bus.module.js';
 import {ServiceReqModule} from "./modules/service-req/service-req.module.js";
-import { TechnicianModule } from './modules/technician/technician.module.js';
+import {TechnicianModule} from './modules/technician/technician.module.js';
 
 @Module({
     imports: [
@@ -25,7 +25,7 @@ import { TechnicianModule } from './modules/technician/technician.module.js';
         AuthModule,
         RedisCacheModule,
         EmployeeModule,
-        OrganisationModule,
+        OrganizationModule,
         OrganizationMemberModule,
         DatabaseModule,
         HealthModule,
