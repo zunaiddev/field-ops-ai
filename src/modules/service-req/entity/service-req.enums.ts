@@ -25,4 +25,5 @@ export enum ServiceRequestStatus {
     ON_HOLD = 'ON_HOLD',
     RESOLVED = 'RESOLVED',
     CANCELLED = 'CANCELLED',
+    SCHEDULED = 'SCHEDULED',
 }

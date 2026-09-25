@@ -13,12 +13,15 @@ import {UpdatePublicCustomer} from "./dto/update-public-customer.js";
 import {CustomerAddressRes} from "./dto/customer-address-res.dto.js";
 import {CreateAddressDto} from "./dto/create-address.dto.js";
 import {UpdateAddressDto} from "./dto/update-address.dto.js";
+import {ScheduleService} from "../schedule/schedule.service.js";
+import {ScheduleDto} from "../schedule/dto/schedule.dto.js";
 
 @Injectable()
 export class PublicCustomerService {
     constructor(private readonly customerService: CustomerService,
                 private readonly orgService: OrganizationService,
-                private readonly serviceReqService: ServiceReqService) {
+                private readonly serviceReqService: ServiceReqService,
+                private readonly scheduleService: ScheduleService) {
     }
 
     async getFullCustomer(customer: Customer) {
@@ -162,5 +165,24 @@ export class PublicCustomerService {
         }
 
         await this.customerService.deleteAddressById(address.id);
+    }
+
+    async getSchedule(serviceId: number, customer: Customer) {
+        const serviceReq = await this.serviceReqService.findOne({
+            id: serviceId,
+            customerId: customer.id
+        });
+
+        if (!serviceReq) {
+            throw new NotFoundException({
+                message: "Service not found",
+                code: ErrorCode.SERVICE_NOT_FOUND
+            });
+        }
+
+        const schedule =
+            await this.scheduleService.findScheduleByServiceId(serviceReq.id);
+
+        return new ScheduleDto(schedule);
     }
 }

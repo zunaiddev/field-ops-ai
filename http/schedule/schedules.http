@@ -1,0 +1,49 @@
+### 1. Create Schedule
+POST {{baseUrl}}/schedules
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "serviceRequestId": 1,
+  "technicianId": 1,
+  "scheduledStart": "2026-10-01T09:00:00.000Z",
+  "scheduledEnd": "2026-10-01T11:00:00.000Z",
+  "notes": "Customer requested technician call 15 minutes before arrival."
+}
+
+###
+
+### 2. Get All Schedules
+GET {{baseUrl}}/schedules
+Authorization: Bearer {{accessToken}}
+
+###
+
+### 3. Get Schedule by Service Request ID
+GET {{baseUrl}}/schedules/services/1
+Authorization: Bearer {{accessToken}}
+
+###
+
+### 4. Get Schedule by ID
+GET {{baseUrl}}/schedules/1
+Authorization: Bearer {{accessToken}}
+
+###
+
+### 5. Update Schedule
+PATCH {{baseUrl}}/schedules/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "scheduledStart": "2026-10-01T10:00:00.000Z",
+  "scheduledEnd": "2026-10-01T12:00:00.000Z",
+  "notes": "Rescheduled by 1 hour on customer request."
+}
+
+###
+
+### 6. Delete Schedule
+DELETE {{baseUrl}}/schedules/1
+Authorization: Bearer {{accessToken}}

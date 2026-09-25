@@ -18,6 +18,8 @@ import {CustomerModule} from "./modules/customer/customer.module.js";
 import {EventBusModule} from './common/events/event-bus.module.js';
 import {ServiceReqModule} from "./modules/service-req/service-req.module.js";
 import {TechnicianModule} from './modules/technician/technician.module.js';
+import {ScheduleModule} from './modules/schedule/schedule.module.js';
+import {TechnicianAvailabilityModule} from './modules/technician-availability/technician-availability.module.js';
 
 @Module({
     imports: [
@@ -37,6 +39,8 @@ import {TechnicianModule} from './modules/technician/technician.module.js';
         ServiceReqModule,
         EventBusModule,
         TechnicianModule,
+        ScheduleModule,
+        TechnicianAvailabilityModule,
     ],
     providers: [{provide: APP_GUARD, useClass: JwtGuard}],
 })

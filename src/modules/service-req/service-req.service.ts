@@ -162,4 +162,12 @@ export class ServiceReqService {
     async deleteById(id: number) {
         await this.serviceRepo.delete({id});
     }
+
+    async exists(options: FindOptionsWhere<ServiceRequest>) {
+        return await this.serviceRepo.existsBy(options);
+    }
+
+    async findOne(options: FindOptionsWhere<ServiceRequest>) {
+        return await this.serviceRepo.findOneBy(options);
+    }
 }

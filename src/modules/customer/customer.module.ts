@@ -7,9 +7,11 @@ import {Customer} from "./entity/customer.entity.js";
 import {CustomerHistory} from "./entity/customer-history.js";
 import {PublicCustomerController} from "./public-customer.controller.js";
 import {PublicCustomerService} from "./public-customer.service.js";
+import {ScheduleModule} from "../schedule/schedule.module.js";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Customer, CustomerAddress, CustomerHistory])],
+    imports: [TypeOrmModule.forFeature([Customer, CustomerAddress, CustomerHistory]),
+        ScheduleModule],
     providers: [CustomerService, PublicCustomerService],
     controllers: [CustomerController, PublicCustomerController],
     exports: [CustomerService],

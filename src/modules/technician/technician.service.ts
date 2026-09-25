@@ -1,7 +1,7 @@
 import {BadRequestException, ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Technician} from "./entity/technician.entity.js";
-import {DataSource, EntityManager, Repository} from "typeorm";
+import {DataSource, EntityManager, FindOptionsWhere, Repository} from "typeorm";
 import {TechnicianAddressService} from "./technician-address.service.js";
 import {CreateTechnicianReq} from "./dto/create-technician-req.dto.js";
 import {OrganizationMember} from "../orgnization-member/entity/organization-member.entity.js";
@@ -306,5 +306,22 @@ export class TechnicianService {
         Object.assign(technician, dto);
 
         return new TechnicianDto(await this.save(technician));
+    }
+
+    async findTechnician(options: FindOptionsWhere<Technician>) {
+        const technician = await this.technicianRepo.findOneBy(options);
+
+        if (!technician) {
+            throw new NotFoundException({
+                message: "Technician not found",
+                code: ErrorCode.TECHNICIAN_NOT_FOUND
+            })
+        }
+
+        return technician;
+    }
+
+    async exists(options: FindOptionsWhere<Technician>) {
+        return await this.technicianRepo.existsBy(options);
     }
 }
