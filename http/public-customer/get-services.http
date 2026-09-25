@@ -1,3 +1,8 @@
 ### Get Customer Service Requests
 GET {{baseUrl}}/public/customers/services
 Authorization: Bearer {{accessToken}}
+
+
+### Get Customer Service Requests
+GET {{baseUrl}}/public/customers/schedule/11
+Authorization: Bearer {{accessToken}}

@@ -9,6 +9,7 @@ import {UpdateServiceReq} from "../service-req/dto/update-service-request.dto.js
 import {CreateAddressDto} from "./dto/create-address.dto.js";
 import {UpdateAddressDto} from "./dto/update-address.dto.js";
 import {UpdatePublicCustomer} from "./dto/update-public-customer.js";
+import {CustomerScheduleRes} from "./dto/customer-schedule-res.dto.js";
 
 @UseGuards(CustomerGuard)
 @Controller('public/customers')
@@ -71,5 +72,11 @@ export class PublicCustomerController {
     async deleteService(@CurrentCustomer() customer: Customer,
                         @Param("id", ParseIntPipe) id: number) {
         await this.publicCustomerService.deleteService(customer, id);
+    }
+
+    @Get('schedule/:serviceId')
+    async getSchedule(@CurrentCustomer() customer: Customer,
+                      @Param("serviceId", ParseIntPipe) serviceId: number): Promise<CustomerScheduleRes> {
+        return await this.publicCustomerService.getSchedule(serviceId, customer);
     }
 }

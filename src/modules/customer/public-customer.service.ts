@@ -14,7 +14,7 @@ import {CustomerAddressRes} from "./dto/customer-address-res.dto.js";
 import {CreateAddressDto} from "./dto/create-address.dto.js";
 import {UpdateAddressDto} from "./dto/update-address.dto.js";
 import {ScheduleService} from "../schedule/schedule.service.js";
-import {ScheduleDto} from "../schedule/dto/schedule.dto.js";
+import {CustomerScheduleRes} from "./dto/customer-schedule-res.dto.js";
 
 @Injectable()
 export class PublicCustomerService {
@@ -167,7 +167,7 @@ export class PublicCustomerService {
         await this.customerService.deleteAddressById(address.id);
     }
 
-    async getSchedule(serviceId: number, customer: Customer) {
+    async getSchedule(serviceId: number, customer: Customer): Promise<CustomerScheduleRes> {
         const serviceReq = await this.serviceReqService.findOne({
             id: serviceId,
             customerId: customer.id
@@ -183,6 +183,6 @@ export class PublicCustomerService {
         const schedule =
             await this.scheduleService.findScheduleByServiceId(serviceReq.id);
 
-        return new ScheduleDto(schedule);
+        return new CustomerScheduleRes(schedule);
     }
 }
