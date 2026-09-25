@@ -1,0 +1,15 @@
+@serviceId = 1
+
+### Update Customer Service Request
+PATCH {{baseUrl}}/public/customers/services/{{serviceId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressId": 4,
+  "title": "Urgent: Fix Network Connectivity Issues",
+  "description": "Intermittent loss of connection reported during peak hours. Connection drops frequently.",
+  "category": "REPAIR",
+  "priority": "CRITICAL",
+  "status": "NEW"
+}

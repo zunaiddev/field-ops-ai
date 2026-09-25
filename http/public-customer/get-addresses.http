@@ -1,0 +1,3 @@
+### Get Customer Addresses
+GET {{baseUrl}}/public/customers/addresses
+Authorization: Bearer {{accessToken}}

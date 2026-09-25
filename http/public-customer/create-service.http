@@ -1,0 +1,13 @@
+### Create Customer Service Request
+POST {{baseUrl}}/public/customers/services
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "customerId": 1,
+  "addressId": 2,
+  "title": "Fix Network Connectivity Issues",
+  "description": "Intermittent loss of connection reported during peak hours.",
+  "category": "REPAIR",
+  "priority": "HIGH"
+}

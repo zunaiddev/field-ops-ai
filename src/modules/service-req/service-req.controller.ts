@@ -9,10 +9,11 @@ import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity
 import {CurrentMember} from "../../common/decorators/current-member.decorator.js";
 import {PaginatedServiceRequestsRes} from "./dto/paginated-service-req-res.dto.js";
 import {ServiceReqDto} from "./dto/service-req.dto.js";
+import {RolesGuard} from "../../common/guards/roles.guard.js";
 
 @Roles(OrganizationRole.ORG_OWNER, OrganizationRole.ORG_ADMIN,
     OrganizationRole.TECHNICIAN)
-@UseGuards(OrgGuard)
+@UseGuards(OrgGuard, RolesGuard)
 @Controller('service-requests')
 export class ServiceReqController {
     constructor(private readonly serviceReqService: ServiceReqService) {

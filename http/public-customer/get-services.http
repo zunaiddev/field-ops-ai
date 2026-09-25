@@ -1,0 +1,3 @@
+### Get Customer Service Requests
+GET {{baseUrl}}/public/customers/services
+Authorization: Bearer {{accessToken}}

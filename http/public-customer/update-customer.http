@@ -1,0 +1,9 @@
+### Update Customer Profile
+PATCH {{baseUrl}}/public/customers
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Ricky",
+  "phone": "9876543210"
+}

@@ -1,0 +1,3 @@
+### Get Current Customer Profile
+GET {{baseUrl}}/public/customers
+Authorization: Bearer {{accessToken}}

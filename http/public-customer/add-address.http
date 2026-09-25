@@ -1,0 +1,14 @@
+### Add Customer Address
+POST {{baseUrl}}/public/customers/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "102 Silver Oak Residency, 3rd Cross",
+  "addressLine2": "Koramangala 6th Block",
+  "city": "Bengaluru",
+  "state": "Karnataka",
+  "postalCode": "560095",
+  "country": "India",
+  "isPrimary": true
+}

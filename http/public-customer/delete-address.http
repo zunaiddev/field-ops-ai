@@ -1,0 +1,5 @@
+@addressId = 1
+
+### Delete Customer Address
+DELETE {{baseUrl}}/public/customers/addresses/{{addressId}}
+Authorization: Bearer {{accessToken}}

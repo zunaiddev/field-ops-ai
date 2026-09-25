@@ -58,6 +58,13 @@ export class OrgGuard implements CanActivate {
             });
         }
 
+        if (member.role !== request.payload.role) {
+            throw new ForbiddenException({
+                message: "You are not authorized to access this resource",
+                code: ErrorCode.NOT_ALLOWED
+            });
+        }
+
         request.member = member;
         request.organization = member.organization;
 

@@ -1,0 +1,5 @@
+@serviceId = 5
+
+### Delete Customer Service Request (Must be in NEW status)
+DELETE {{baseUrl}}/public/customers/services/{{serviceId}}
+Authorization: Bearer {{accessToken}}

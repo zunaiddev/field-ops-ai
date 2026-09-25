@@ -57,6 +57,14 @@ export class CustomerService {
         return customer;
     }
 
+    async update(customer: Customer): Promise<Customer> {
+        return await this.customerRepo.save(customer);
+    }
+
+    async findAddressByCustomerAndAddress(customerId: number, addressId: number): Promise<CustomerAddress | null> {
+        return await this.addressRepo.findOneBy({id: addressId, customerId});
+    }
+
     async findByEmail(email: string): Promise<Customer | null> {
         return await this.customerRepo.findOneBy({email});
     }
@@ -346,12 +354,19 @@ export class CustomerService {
         return history.map(item => new CustomerHistoryRes(item, customerId));
     }
 
-    // public controller methods
+    async findAddressesByCustomer(customerId: number) {
+        return await this.addressRepo.findBy({customerId});
+    }
 
-    async getFullCustomer(customer: Customer) {
-        console.log(customer);
-        const organization = await this.orgService.findById(customer.id);
+    async findAddressByCustomer(customerId: number) {
+        return await this.addressRepo.findOneBy({customerId});
+    }
 
-        return new CustomerRes(customer, undefined, organization);
+    async saveAddress(address: Partial<CustomerAddress>) {
+        return await this.addressRepo.save(address);
+    }
+
+    async deleteAddressById(id: number) {
+        await this.addressRepo.delete({id});
     }
 }

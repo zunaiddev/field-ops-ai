@@ -1,0 +1,16 @@
+@addressId = 2
+
+### Update Customer Address
+PATCH {{baseUrl}}/public/customers/addresses/{{addressId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "addressLine1": "102 Silver Oak Residency,",
+  "addressLine2": "Koramangala 5th Block",
+  "city": "Bengaluru",
+  "state": "Karnataka",
+  "postalCode": "560095",
+  "country": "India",
+  "isPrimary": true
+}

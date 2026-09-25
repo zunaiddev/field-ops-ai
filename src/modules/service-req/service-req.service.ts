@@ -150,4 +150,16 @@ export class ServiceReqService {
     async convertToWorkOrder(id?: string) {
         return {id};
     }
+
+    async findAllByCustomer(customerId: number) {
+        return await this.serviceRepo.find({where: {customerId}, order: {id: 'ASC'}});
+    }
+
+    async findByIdAndCustomerId(customerId: number, serviceId: number) {
+        return await this.serviceRepo.findOneBy({customerId, id: serviceId});
+    }
+
+    async deleteById(id: number) {
+        await this.serviceRepo.delete({id});
+    }
 }
