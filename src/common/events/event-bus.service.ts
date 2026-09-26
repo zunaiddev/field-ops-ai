@@ -12,10 +12,14 @@ export class EventBusService implements OnModuleDestroy {
 
         const host: string = this.configService.getOrThrow<string>('REDIS_HOST');
         const port: number = this.configService.getOrThrow<number>('REDIS_PORT');
+        const username: string = this.configService.getOrThrow<string>('REDIS_USERNAME');
+        const password: string = this.configService.getOrThrow<string>('REDIS_PASSWORD');
 
         this.redis = new Redis({
             host,
             port,
+            username,
+            password
         });
     }
 

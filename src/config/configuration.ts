@@ -9,6 +9,9 @@ export default () => ({
     redis: {
         host: process.env.REDIS_HOST,
         port: parseInt(process.env.REDIS_PORT as string),
+        username: process.env.REDIS_USERNAME,
+        password: process.env.REDIS_PASSWORD,
+        url: process.env.REDIS_URL,
     },
     database: {
         host: process.env.DB_HOST,
