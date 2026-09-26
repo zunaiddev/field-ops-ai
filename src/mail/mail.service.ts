@@ -13,6 +13,17 @@ export interface SendVerificationEmailOptions {
     supportEmail?: string;
 }
 
+export interface SendUserAccountCreatedOptions {
+    to: string;
+    userName: string;
+    email?: string;
+    password?: string;
+    organizationName?: string;
+    role?: string;
+    loginUrl?: string;
+    supportEmail?: string;
+}
+
 @Injectable()
 export class MailService {
     private readonly baseUrl: string;
@@ -88,6 +99,43 @@ export class MailService {
             this.logger.log(`Employee creation email sent to ${employee.email}`);
         } catch (error) {
             this.logger.error(`Could not send employee creation email to ${employee.email}`, error);
+        }
+    }
+
+    /**
+     * Sends a welcome email when a user account is created.
+     */
+    async sendUserAccountCreated(options: SendUserAccountCreatedOptions) {
+        const {
+            to,
+            userName,
+            email = to,
+            password,
+            organizationName,
+            role,
+            loginUrl = `${this.frontendUrl.replace(/\/+$/, '')}/auth/login`,
+            supportEmail = 'support@fieldops.ai',
+        } = options;
+
+        try {
+            await this.mailerService.sendMail({
+                to,
+                subject: 'Welcome to FieldOps AI - Your Account Has Been Created',
+                template: './user-account-created',
+                context: {
+                    userName,
+                    email,
+                    password,
+                    organizationName,
+                    role,
+                    loginUrl,
+                    supportEmail,
+                    currentYear: new Date().getFullYear(),
+                },
+            });
+            this.logger.log(`User account creation email sent to ${to}`);
+        } catch (error) {
+            this.logger.error(`Could not send user account creation email to ${to}`, error);
         }
     }
 }

@@ -1,4 +1,4 @@
-import {Exclude, Expose} from "class-transformer";
+import {Exclude, Expose, Type} from "class-transformer";
 import {ServiceRequest} from "../entity/service-req.entity.js";
 import {
     ServiceRequestCategory,
@@ -6,6 +6,8 @@ import {
     ServiceRequestSource,
     ServiceRequestStatus
 } from "../entity/service-req.enums.js";
+import {CustomerRes} from "../../customer/dto/customer-res.dto.js";
+import {CustomerAddressRes} from "../../customer/dto/customer-address-res.dto.js";
 
 @Exclude()
 export class ServiceReqDto {
@@ -49,6 +51,14 @@ export class ServiceReqDto {
     slaDueAt?: Date;
 
     @Expose()
+    @Type(() => CustomerRes)
+    customer?: CustomerRes;
+
+    @Expose()
+    @Type(() => CustomerAddressRes)
+    address?: CustomerAddressRes;
+
+    @Expose()
     createdAt: Date;
 
     @Expose()
@@ -68,6 +78,8 @@ export class ServiceReqDto {
         this.source = serviceReq.source;
         this.requestedAt = serviceReq.requestedAt;
         this.slaDueAt = serviceReq.slaDueAt;
+        this.customer = serviceReq.customer ? new CustomerRes(serviceReq.customer) : undefined;
+        this.address = serviceReq.address ? new CustomerAddressRes(serviceReq.address) : undefined;
         this.createdAt = serviceReq.createdAt;
         this.updatedAt = serviceReq.updatedAt;
     }

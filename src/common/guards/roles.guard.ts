@@ -17,6 +17,8 @@ export class RolesGuard implements CanActivate {
                 [context.getHandler(), context.getClass()],
             );
 
+        console.log("Required Roles", requiredRoles);
+
         if (!requiredRoles || requiredRoles.length === 0) {
             return true;
         }
@@ -33,9 +35,6 @@ export class RolesGuard implements CanActivate {
             });
         }
 
-
-        console.log("Role:", request.payload.role);
-        console.log("Token:", request.payload.type);
 
         if (!requiredRoles.includes(member.role)) {
             throw new ForbiddenException({

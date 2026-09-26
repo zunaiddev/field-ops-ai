@@ -1,10 +1,20 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from "typeorm";
 import {
     ServiceRequestCategory,
     ServiceRequestPriority,
     ServiceRequestSource,
     ServiceRequestStatus
 } from "./service-req.enums.js";
+import {Customer} from "../../customer/entity/customer.entity.js";
+import {CustomerAddress} from "../../customer/entity/customer-address.entity.js";
 
 @Entity('service_requests')
 export class ServiceRequest {
@@ -17,8 +27,16 @@ export class ServiceRequest {
     @Column({name: 'customer_id'})
     customerId: number;
 
+    @ManyToOne(() => Customer, { onDelete: 'RESTRICT' })
+    @JoinColumn({name: 'customer_id'})
+    customer?: Customer;
+
     @Column({name: 'address_id'})
     addressId: number;
+
+    @ManyToOne(() => CustomerAddress, { onDelete: 'RESTRICT' })
+    @JoinColumn({name: 'address_id'})
+    address?: CustomerAddress;
 
     @Column({name: 'created_by'})
     createdBy: number;

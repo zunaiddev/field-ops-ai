@@ -8,7 +8,9 @@ Documentation for frontend developers to integrate the **Schedules** endpoints.
 
 - **Base URL**: `{{baseUrl}}/schedules` (e.g. `http://localhost:3000/api/v1/schedules`)
 - **Authentication**: Bearer Token required on all endpoints.
-- **Allowed Roles**: `ORG_OWNER`, `ORG_ADMIN`, `MANAGER`.
+- **Allowed Roles**: 
+  - Admin/Manager routes: `ORG_OWNER`, `ORG_ADMIN`, `MANAGER`
+  - Technician routes: `TECHNICIAN`
 - **Tenant Scoping**: All queries and mutations are automatically scoped to the authenticated user's organization.
 
 ### Request Headers
@@ -21,6 +23,7 @@ Content-Type: application/json
 
 ## 2. API Endpoints Summary
 
+### Manager / Admin Endpoints
 | Method | Endpoint | Description | Status Code |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/v1/schedules` | Create a new schedule for a service request | `201 Created` |
@@ -29,6 +32,12 @@ Content-Type: application/json
 | `GET` | `/api/v1/schedules/:id` | Get details of a single schedule by ID | `200 OK` |
 | `PATCH` | `/api/v1/schedules/:id` | Update scheduled times and notes | `200 OK` |
 | `DELETE` | `/api/v1/schedules/:id` | Delete a schedule by ID | `204 No Content` |
+
+### Technician Endpoints
+| Method | Endpoint | Description | Status Code |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/v1/schedules/technician` | Get assigned schedules with customer and address details | `200 OK` |
+| `PATCH` | `/api/v1/schedules/technician/:id/status` | Update schedule status and notes | `200 OK` |
 
 ---
 
@@ -218,7 +227,7 @@ Authorization: Bearer {{accessToken}}
 
 ---
 
-### 5. Update Schedule
+### 5. Update Schedule (Manager)
 
 Updates the scheduled time window and/or notes of an existing schedule.
 
@@ -303,6 +312,119 @@ Empty body.
 
 ---
 
+### 7. Get Technician Schedules
+
+Retrieves all schedules assigned to the authenticated technician, complete with customer contact info (`name`, `phone`, `email`) and site address details (`addressLine1`, `addressLine2`, `city`, `state`, `postalCode`).
+
+```http request
+GET {{baseUrl}}/schedules/technician
+Authorization: Bearer {{accessToken}}
+```
+
+#### Query Parameters
+| Parameter | Type | Required | Allowed Values | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `status` | `string` | No | `SCHEDULED`, `DISPATCHED`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED` | Optional filter by status. |
+
+**Example filtered request:**
+```http request
+GET {{baseUrl}}/schedules/technician?status=SCHEDULED
+Authorization: Bearer {{accessToken}}
+```
+
+#### Response (200 OK)
+```json
+[
+  {
+    "id": 10,
+    "organizationId": 1,
+    "serviceRequestId": 25,
+    "technicianId": 4,
+    "scheduledStart": "2026-10-01T09:00:00.000Z",
+    "scheduledEnd": "2026-10-01T11:00:00.000Z",
+    "status": "SCHEDULED",
+    "notes": "Gate code is #4321.",
+    "customer": {
+      "id": 14,
+      "organizationId": 1,
+      "name": "Jane Cooper",
+      "phone": "+1-555-0143",
+      "email": "jane.cooper@example.com"
+    },
+    "address": {
+      "id": 8,
+      "customerId": 14,
+      "addressLine1": "742 Evergreen Terrace",
+      "addressLine2": "Suite 4B",
+      "city": "Springfield",
+      "state": "IL",
+      "postalCode": "62704",
+      "country": "USA"
+    },
+    "serviceRequest": {
+      "id": 25,
+      "title": "HVAC Cooling Unit Malfunction",
+      "description": "System blowing ambient air.",
+      "category": "REPAIR",
+      "priority": "HIGH",
+      "status": "SCHEDULED"
+    },
+    "createdAt": "2026-09-30T15:00:00.000Z",
+    "updatedAt": "2026-09-30T15:00:00.000Z"
+  }
+]
+```
+
+---
+
+### 8. Update Technician Schedule Status
+
+Allows a technician to update the status of their assigned schedule and add job notes.
+
+```http request
+PATCH {{baseUrl}}/schedules/technician/10/status
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "status": "COMPLETED",
+  "notes": "Replaced fuse and tested system. Working properly."
+}
+```
+
+#### Parameters
+| Parameter | In | Type | Required | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | Path | `number` (integer) | **Yes** | Schedule ID assigned to the technician |
+
+#### Request Body
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `status` | `string` | **Yes** | New status: `SCHEDULED`, `DISPATCHED`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED` |
+| `notes` | `string` | No | Optional technician progress/completion notes. |
+
+#### Business Rules
+- **Cannot Update Cancelled Schedule**: If the schedule status is already `CANCELLED`, updating throws `400 Bad Request` (`SCHEDULE_NOT_UPDATABLE`).
+- **Scoped to Technician**: Technicians can only update their own assigned schedules. Others return `404 Not Found`.
+
+#### Response (200 OK)
+```json
+{
+  "id": 10,
+  "organizationId": 1,
+  "serviceRequestId": 25,
+  "technicianId": 4,
+  "scheduledStart": "2026-10-01T09:00:00.000Z",
+  "scheduledEnd": "2026-10-01T11:00:00.000Z",
+  "status": "COMPLETED",
+  "notes": "Replaced fuse and tested system. Working properly.",
+  "createdAt": "2026-09-30T15:00:00.000Z",
+  "updatedAt": "2026-10-01T10:45:00.000Z"
+}
+```
+
+---
+
 ## 4. TypeScript Types for Frontend
 
 ```typescript
@@ -314,6 +436,23 @@ export enum ScheduleStatus {
   CANCELLED = 'CANCELLED',
 }
 
+export interface CustomerSummary {
+  id: number;
+  name: string;
+  phone?: string;
+  email: string;
+}
+
+export interface AddressSummary {
+  id: number;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
 export interface Schedule {
   id: number;
   organizationId: number;
@@ -323,21 +462,15 @@ export interface Schedule {
   scheduledEnd: string;   // ISO 8601 string
   status: ScheduleStatus;
   notes?: string;
+  customer?: CustomerSummary;
+  address?: AddressSummary;
+  serviceRequest?: any;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface CreateSchedulePayload {
-  serviceRequestId: number;
-  technicianId: number;
-  scheduledStart: string; // ISO 8601 string, e.g. new Date().toISOString()
-  scheduledEnd: string;   // ISO 8601 string
-  notes?: string;
-}
-
-export interface UpdateSchedulePayload {
-  scheduledStart: string; // ISO 8601 string
-  scheduledEnd: string;   // ISO 8601 string
+export interface UpdateTechnicianScheduleStatusPayload {
+  status: ScheduleStatus;
   notes?: string;
 }
 ```
@@ -348,9 +481,10 @@ export interface UpdateSchedulePayload {
 
 | HTTP Status | Error Code | Description |
 | :--- | :--- | :--- |
+| `400 Bad Request` | `SCHEDULE_NOT_UPDATABLE` | Attempted to update a schedule that is already `CANCELLED` |
 | `401 Unauthorized` | `AUTH_HEADER_MISSING` / `INVALID_BEARER_TOKEN` | Bearer token is missing or expired |
-| `403 Forbidden` | `FORBIDDEN_RESOURCE` | Authenticated user lacks `ORG_OWNER`, `ORG_ADMIN`, or `MANAGER` role |
-| `404 Not Found` | `TECHNICIAN_NOT_FOUND` | Technician ID does not exist in the organization |
+| `403 Forbidden` | `FORBIDDEN_RESOURCE` | Authenticated user lacks required role for the endpoint |
+| `404 Not Found` | `TECHNICIAN_NOT_FOUND` | Technician ID or technician profile does not exist |
 | `404 Not Found` | `SERVICE_NOT_FOUND` | Service request ID does not exist in the organization |
-| `404 Not Found` | `SCHEDULE_NOT_FOUND` | Schedule ID or schedule for the specified service request does not exist |
+| `404 Not Found` | `SCHEDULE_NOT_FOUND` | Schedule ID does not exist or does not belong to the technician |
 | `409 Conflict` | `SCHEDULE_CONFLICT` | Service request is already scheduled |

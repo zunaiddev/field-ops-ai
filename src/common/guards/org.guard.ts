@@ -8,10 +8,7 @@ import {
 } from '@nestjs/common';
 import {OrganizationMemberService} from "../../modules/orgnization-member/organization-member.service.js";
 import {Organization} from "../../modules/orgnization/entity/organization.entity.js";
-import {
-    OrganizationMember,
-    OrganizationRole
-} from "../../modules/orgnization-member/entity/organization-member.entity.js";
+import {OrganizationMember} from "../../modules/orgnization-member/entity/organization-member.entity.js";
 import {JwtAuthenticatedRequest} from "./jwt.guard.js";
 import {CustomJwtPayload} from "../../modules/jwt/jwt.types.js";
 import {ErrorCode} from "../enums/error-code.enum.js";
@@ -44,19 +41,15 @@ export class OrgGuard implements CanActivate {
             });
         }
 
-        if (!(member.role === OrganizationRole.ORG_OWNER || member.role === OrganizationRole.ORG_ADMIN)) {
-            throw new ForbiddenException({
-                message: "You are not authorized to access this resource",
-                errorCode: ErrorCode.FORBIDDEN_RESOURCE,
-            });
-        }
-
         if (!member.organization) {
             throw new UnauthorizedException({
                 message: "Could not find any organization for this user",
                 errorCode: ErrorCode.ORG_NOT_FOUND,
             });
         }
+
+        console.log(member.role);
+        console.log(request.payload.role);
 
         if (member.role !== request.payload.role) {
             throw new ForbiddenException({

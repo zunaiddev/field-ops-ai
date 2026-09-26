@@ -50,8 +50,6 @@ export class JwtGuard implements CanActivate {
             });
         }
 
-        console.log("TOKEN: ", token)
-
         request.payload = this.jwtService.validateToken(token, JwtType.AUTH);
 
         this.logger.debug("Request Processes by Jwt Guard");

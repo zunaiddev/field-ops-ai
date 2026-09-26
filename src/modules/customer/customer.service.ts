@@ -18,6 +18,7 @@ import {EventName} from "../../common/events/event.types.js";
 import {ErrorCode} from "../../common/enums/error-code.enum.js";
 import * as argon2 from "argon2";
 import {OrganizationService} from "../orgnization/organization.service.js";
+import {MailService} from "../../mail/mail.service.js";
 
 export interface CustomerSearchOptions {
     email?: string;
@@ -37,7 +38,8 @@ export class CustomerService {
                 @InjectRepository(CustomerAddress) private readonly addressRepo: Repository<CustomerAddress>,
                 @InjectRepository(CustomerHistory) private readonly historyRepo: Repository<CustomerHistory>,
                 private readonly orgService: OrganizationService,
-                private readonly eventBusService: EventBusService) {
+                private readonly eventBusService: EventBusService,
+                private readonly mailService: MailService,) {
     }
 
     private async existsByEmail(email: string): Promise<boolean> {
@@ -177,6 +179,15 @@ export class CustomerService {
                 organizationId: membership.organizationId,
                 description: "Customer is created"
             }, manager);
+
+            await this.mailService.sendUserAccountCreated({
+                to: customer.email,
+                userName: customer.name,
+                email: customer.email,
+                password: dto.password, // Optional: only if you want to provide initial password
+                organizationName: membership.organization.name,
+                role: "CUSTOMER",
+            });
 
             return customer;
         });

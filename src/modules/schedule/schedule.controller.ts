@@ -9,6 +9,7 @@ import {
     ParseIntPipe,
     Patch,
     Post,
+    Query,
     UseGuards,
 } from '@nestjs/common';
 import {ScheduleService} from './schedule.service.js';
@@ -20,6 +21,8 @@ import {OrganizationMember, OrganizationRole} from "../orgnization-member/entity
 import {Roles} from "../../common/decorators/roles.decorator.js";
 import {OrgGuard} from "../../common/guards/org.guard.js";
 import {RolesGuard} from "../../common/guards/roles.guard.js";
+import {TechnicianScheduleQueryDto} from "./dto/technician-schedule-query.dto.js";
+import {UpdateTechnicianScheduleStatusDto} from "./dto/update-technician-schedule-status.dto.js";
 
 @Roles(
     OrganizationRole.ORG_OWNER,
@@ -38,6 +41,25 @@ export class ScheduleController {
         @CurrentMember() member: OrganizationMember,
     ): Promise<ScheduleDto> {
         return await this.scheduleService.create(createScheduleDto, member);
+    }
+
+    @Roles(OrganizationRole.TECHNICIAN)
+    @Get('/technician')
+    async getSchedules(
+        @Query() query: TechnicianScheduleQueryDto,
+        @CurrentMember() member: OrganizationMember,
+    ): Promise<ScheduleDto[]> {
+        return await this.scheduleService.findSchedulesForTechnicians(member, query.status);
+    }
+
+    @Roles(OrganizationRole.TECHNICIAN)
+    @Patch(['/technician/:id/status', '/technician/:id'])
+    async updateTechnicianScheduleStatus(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() dto: UpdateTechnicianScheduleStatusDto,
+        @CurrentMember() member: OrganizationMember,
+    ): Promise<ScheduleDto> {
+        return await this.scheduleService.updateScheduleStatusForTechnician(id, dto, member);
     }
 
     @Get("services/:serviceId")
