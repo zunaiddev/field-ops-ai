@@ -13,7 +13,7 @@
     "start": "nest start --env-file=.env",
     "start:dev": "nest start --watch --env-file=.env",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main --enc-file=.env.prod",
+    "start:prod": "node dist/main --enc-file=.env",
     "lint": "oxlint src/ test/",
     "test": "vitest run",
     "test:watch": "vitest",

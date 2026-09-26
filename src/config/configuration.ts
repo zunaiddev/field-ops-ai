@@ -19,6 +19,7 @@ export default () => ({
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         name: process.env.DB_NAME,
+        ssl: process.env.DB_SSL === 'true',
     },
     mail: {
         host: process.env.SMTP_HOST || 'localhost',
