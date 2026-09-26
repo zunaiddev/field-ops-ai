@@ -44,8 +44,13 @@ export class AuthController {
     }
 
     @Post('/forgot-password/customer')
-    async forgotPassword(@Query('email') email: string) {
+    async customerForgotPassword(@Query('email') email: string): Promise<EmailRes> {
         return await this.authService.forgotPassword(email, true);
+    }
+
+    @Post('/forgot-password')
+    async forgotPassword(@Query('email') email: string): Promise<EmailRes> {
+        return await this.authService.forgotPassword(email, false);
     }
 
     @Get('resend-email')

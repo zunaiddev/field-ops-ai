@@ -52,8 +52,10 @@ export class JwtService {
         });
     }
 
-    generateResetPasswordToken(email: string): string {
-        return this.generateToken(email, JwtType.RESET_PASSWORD, "30d");
+    generateResetPasswordToken(id: number, role: string): string {
+        return this.generateToken(id.toString(), JwtType.RESET_PASSWORD, "12h", {
+            role
+        });
     }
 
     generateEmailVerifyToken(id: number): string {

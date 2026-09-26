@@ -24,6 +24,16 @@ export interface SendUserAccountCreatedOptions {
     supportEmail?: string;
 }
 
+export interface SendResetPasswordEmailOptions {
+    to: string;
+    userName: string;
+    token: string;
+    resetUrl?: string;
+    expiresIn?: string;
+    userType?: 'customer' | 'employee' | string;
+    supportEmail?: string;
+}
+
 @Injectable()
 export class MailService {
     private readonly baseUrl: string;
@@ -136,6 +146,41 @@ export class MailService {
             this.logger.log(`User account creation email sent to ${to}`);
         } catch (error) {
             this.logger.error(`Could not send user account creation email to ${to}`, error);
+        }
+    }
+
+    /**
+     * Sends a password reset email to a user (customer or employee) with a secure reset link.
+     */
+    async sendResetPasswordEmail(options: SendResetPasswordEmailOptions) {
+        const {
+            to,
+            userName,
+            token,
+            resetUrl = `${this.frontendUrl.replace(/\/+$/, '')}/auth/reset-password?token=${token}`,
+            expiresIn = '30 minutes',
+            userType,
+            supportEmail = 'support@fieldops.ai',
+        } = options;
+
+        try {
+            await this.mailerService.sendMail({
+                to,
+                subject: 'Reset Your Password - FieldOps AI',
+                template: './reset-password',
+                context: {
+                    userName,
+                    resetUrl,
+                    token,
+                    expiresIn,
+                    userType,
+                    supportEmail,
+                    currentYear: new Date().getFullYear(),
+                },
+            });
+            this.logger.log(`Password reset email sent to ${to}`);
+        } catch (error) {
+            this.logger.error(`Could not send password reset email to ${to}`, error);
         }
     }
 }

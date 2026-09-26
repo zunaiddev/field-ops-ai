@@ -4,6 +4,7 @@ import {
     HttpException,
     HttpStatus,
     Injectable,
+    NotFoundException,
     UnauthorizedException,
 } from "@nestjs/common";
 import {RegistrationReq} from "./dto/registration-req.dto.js";
@@ -223,8 +224,59 @@ export class AuthService {
         return new RefreshTokenRes(payload.sub, accessToken);
     }
 
-    // ToDo: implement functionality
-    async forgotPassword(email: string, isCustomer: boolean = false) {
-        return Promise.resolve(undefined);
+    async forgotPassword(email: string, isCustomer: boolean = false): Promise<EmailRes> {
+        if (await this.cacheService.get<string>(CacheKeys.forgotPasswordAttempts(email))) {
+            throw new HttpException(
+                {
+                    message: "Please try again after some time",
+                    errorCode: ErrorCode.TOO_MANY_REQUESTS,
+                },
+                HttpStatus.TOO_MANY_REQUESTS,
+            );
+        }
+
+        let user: Customer | Employee | null = null;
+        let detectedCustomer = isCustomer;
+
+        if (isCustomer) {
+            user = await this.customerService.findByEmail(email);
+        } else {
+            user = await this.userService.findByEmail(email);
+            if (!user) {
+                user = await this.customerService.findByEmail(email);
+                if (user) {
+                    detectedCustomer = true;
+                }
+            }
+        }
+
+        if (!user) {
+            throw new NotFoundException({
+                message: `${isCustomer ? 'Customer' : 'User'} with ${email} not found`,
+                code: isCustomer ? ErrorCode.CUSTOMER_NOT_FOUND : ErrorCode.USER_NOT_FOUND,
+            });
+        }
+
+        await this.cacheService.set(
+            CacheKeys.forgotPasswordAttempts(email),
+            Date.now().toString(),
+            TTL.ofMinutes(3),
+        );
+
+        const role = user instanceof Customer ? 'CUSTOMER' : user.role;
+        const token = this.jwtService.generateResetPasswordToken(user.id, role);
+        const userName = user instanceof Customer
+            ? user.name
+            : `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
+
+        await this.mailService.sendResetPasswordEmail({
+            to: user.email,
+            userName,
+            token,
+            userType: detectedCustomer ? 'Customer' : 'Employee',
+            expiresIn: '12 hours',
+        });
+
+        return new EmailRes(email);
     }
 }
