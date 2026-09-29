@@ -17,7 +17,7 @@ import {ConfigService} from "@nestjs/config";
             database: configService.getOrThrow<string>('database.name'),
             ssl: configService.getOrThrow<boolean>('database.ssl'),
             autoLoadEntities: true,
-            synchronize: true,
+            synchronize: false,
         }),
     })],
     providers: [DatabaseLifecycleService],

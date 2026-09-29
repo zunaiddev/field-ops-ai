@@ -26,6 +26,6 @@ export default () => ({
         port: parseInt(process.env.SMTP_PORT || '1025', 10),
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
-        from: process.env.MAIL_FROM || 'noreply@fieldops.ai',
+        from: process.env.MAIL_FROM,
     },
 });

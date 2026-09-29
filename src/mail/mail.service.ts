@@ -39,6 +39,7 @@ export class MailService {
     private readonly baseUrl: string;
     private readonly frontendUrl: string;
     private readonly logger: Logger;
+    private readonly from: string;
 
     constructor(
         private readonly mailerService: MailerService,
@@ -50,6 +51,26 @@ export class MailService {
             || process.env.FRONTEND_URL
             || 'http://localhost:3000';
         this.logger = new Logger(MailService.name);
+        this.from = this.configService.get<string>('mail.from') || 'noreply@fieldops.ai';
+
+        this.testEmail();
+    }
+
+    private async testEmail() {
+        const to: string = this.from;
+        const date = new Date();
+
+        try {
+            await this.mailerService.sendMail({
+                to,
+                subject: 'Verify Your Email - FieldOps AI',
+                text: `This is a testing email sent at ${date.getDate()}:${date.getTime()}`,
+                html: `<p>This is a testing email sent at ${date.getDate()}:${date.getTime()}</p>`,
+            });
+            this.logger.log(`Verification email sent to ${to}`);
+        } catch (error) {
+            this.logger.error(`Could not send verification email to ${to}`, error);
+        }
     }
 
     async sendVerificationEmail(options: SendVerificationEmailOptions) {
@@ -112,9 +133,6 @@ export class MailService {
         }
     }
 
-    /**
-     * Sends a welcome email when a user account is created.
-     */
     async sendUserAccountCreated(options: SendUserAccountCreatedOptions) {
         const {
             to,
@@ -149,9 +167,6 @@ export class MailService {
         }
     }
 
-    /**
-     * Sends a password reset email to a user (customer or employee) with a secure reset link.
-     */
     async sendResetPasswordEmail(options: SendResetPasswordEmailOptions) {
         const {
             to,
