@@ -201,7 +201,7 @@ export class AuthService {
         }
 
         await this.cacheService.set(CacheKeys.resendVerifyEmail(email),
-            Date.now().toString(), TTL.ofMinutes(3));
+            Date.now().toString(), TTL.ofMinutes(1));
 
         const token: string = this.jwtService.generateEmailVerifyToken(user.id);
         const member = await this.organizationMemberService.findMemberById(user.id, true, false);
