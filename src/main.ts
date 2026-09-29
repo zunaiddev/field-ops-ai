@@ -6,6 +6,7 @@ import {LogDetailsInterceptor} from "./common/interceptors/log-details.intercept
 
 async function bootstrap() {
     const PORT = process.env.PORT || 3000;
+    const name = process.env.NODE_ENV;
     const app = await NestFactory.create(AppModule);
 
     app.enableCors({
@@ -22,7 +23,10 @@ async function bootstrap() {
     app.useGlobalFilters(new HttpExceptionFilter());
     app.useGlobalInterceptors(new LogDetailsInterceptor(), new ClassSerializerInterceptor(app.get(Reflector)));
 
-    await app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+    await app.listen(PORT, () => {
+        console.log(`Stated ${name} Server`);
+    });
 }
 
 await bootstrap();
