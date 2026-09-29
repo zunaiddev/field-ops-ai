@@ -204,6 +204,16 @@ export class AuthService {
             Date.now().toString(), TTL.ofMinutes(3));
 
         const token: string = this.jwtService.generateEmailVerifyToken(user.id);
+        const member = await this.organizationMemberService.findMemberById(user.id, true, false);
+        const userName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
+
+        await this.mailService.sendVerificationEmail({
+            to: user.email,
+            organizationName: member?.organization?.name || 'FieldOps AI',
+            token,
+            userName,
+        });
+
         console.log("Resend verify email: ", token);
 
         return new EmailRes(email);
