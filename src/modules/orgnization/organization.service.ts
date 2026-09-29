@@ -92,7 +92,7 @@ export class OrganizationService {
         return new OrganizationMembersRes(members.filter(member => member.employeeId !== orgMember.employeeId));
     }
 
-    async addMember(organization: Organization, dto: AddEmployeeDto): Promise<OrganizationRes> {
+    async addMember(organization: Organization, dto: AddEmployeeDto): Promise<EmployeeDto> {
         if (await this.orgMemberService.existsByEmail(dto.email)) {
             throw new ConflictException({
                 message: "user with email already exists",
@@ -124,7 +124,7 @@ export class OrganizationService {
 
         this.emailService.sendEmployeeCreation(employee, dto.password);
 
-        return new OrganizationRes(orgMember);
+        return new EmployeeDto(orgMember.employee);
     }
 
     async updateMember(id: number, orgMember: OrganizationMember, dto: UpdateMemberDto): Promise<EmployeeDto> {

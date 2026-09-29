@@ -40,7 +40,7 @@ export class OrganizationController {
     }
 
     @Post('current/members')
-    async addMember(@Body() dto: AddEmployeeDto, @CurrentOrg() org: Organization): Promise<OrganizationRes> {
+    async addMember(@Body() dto: AddEmployeeDto, @CurrentOrg() org: Organization): Promise<EmployeeDto> {
         return await this.organizationService.addMember(org, dto);
     }
 
